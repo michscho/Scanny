@@ -1,3 +1,7 @@
+import $ from "jquery";
+import focusLock from "dom-focus-lock";
+import VirtualizedList from "virtualized-list";
+
 // Workaround to capture Esc key on certain sites
 var isOpen = false;
 // document.onkeyup = (e) => {
@@ -5,9 +9,6 @@ var isOpen = false;
 // 		chrome.runtime.sendMessage({request:"close-omni"})
 // 	}
 // }
-
-// see where git remote is pointing
-// 
 
 $(document).ready(() => {
 	var actions = [];
@@ -20,7 +21,7 @@ $(document).ready(() => {
 		// Get checkmark image for toast
 		$("#omni-extension-toast img").attr(
 			"src",
-			chrome.runtime.getURL("assets/check.svg")
+			chrome.runtime.getURL("icons/check.svg")
 		);
 
 		// Request actions from the background
@@ -92,7 +93,7 @@ $(document).ready(() => {
 			loadimg.onerror = () => {
 				$(".omni-item[data-index='" + index + "'] img").attr(
 					"src",
-					chrome.runtime.getURL("/assets/globe.svg")
+					chrome.runtime.getURL("/icons/globe.svg")
 				);
 			};
 		}
@@ -121,7 +122,7 @@ $(document).ready(() => {
 					"' alt='favicon' onload='" +
 					onload +
 					"' onerror='this.src=&quot;" +
-					chrome.runtime.getURL("/assets/globe.svg") +
+					chrome.runtime.getURL("/icons/globe.svg") +
 					"&quot;' class='omni-icon'>";
 				renderAction(action, index, keys, img);
 			} else {
@@ -151,7 +152,7 @@ $(document).ready(() => {
 				"<img src='" +
 				action.favIconUrl +
 				"' alt='favicon' onerror='this.src=&quot;" +
-				chrome.runtime.getURL("/assets/globe.svg") +
+				chrome.runtime.getURL("/icons/globe.svg") +
 				"&quot;' class='omni-icon'>";
 			if (action.emoji) {
 				img = "<span class='omni-emoji-action'>" + action.emojiChar + "</span>";
@@ -195,7 +196,7 @@ $(document).ready(() => {
 			}
 		};
 		actions.length &&
-			new VirtualizedList.default($("#omni-extension #omni-list")[0], {
+			new VirtualizedList($("#omni-extension #omni-list")[0], {
 				height: 400,
 				rowHeight: 60,
 				rowCount: actions.length,

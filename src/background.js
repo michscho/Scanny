@@ -2,7 +2,7 @@ let actions = [];
 let newtaburl = "";
 
 // Clear actions and append default ones
-const clearActions = () => {
+export const clearActions = () => {
 	getCurrentTab().then((response) => {
 		actions = [];
 		const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
@@ -130,7 +130,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://notion.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-notion.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-notion.png"),
 				keycheck: false,
 			},
 			{
@@ -140,7 +140,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://sheets.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-sheets.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-sheets.png"),
 				keycheck: false,
 			},
 			{
@@ -150,7 +150,7 @@ const clearActions = () => {
 				action: "url",
 				emoji: false,
 				url: "https://docs.new",
-				favIconUrl: chrome.runtime.getURL("assets/logo-docs.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-docs.png"),
 				keycheck: false,
 			},
 			{
@@ -160,7 +160,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://slides.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-slides.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-slides.png"),
 				keycheck: false,
 			},
 			{
@@ -170,7 +170,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://forms.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-forms.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-forms.png"),
 				keycheck: false,
 			},
 			{
@@ -180,7 +180,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://story.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-medium.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-medium.png"),
 				keycheck: false,
 			},
 			{
@@ -190,7 +190,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://github.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-github.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-github.png"),
 				keycheck: false,
 			},
 			{
@@ -200,7 +200,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://gist.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-github.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-github.png"),
 				keycheck: false,
 			},
 			{
@@ -210,7 +210,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://pen.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-codepen.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-codepen.png"),
 				keycheck: false,
 			},
 			{
@@ -220,7 +220,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://excel.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-excel.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-excel.png"),
 				keycheck: false,
 			},
 			{
@@ -230,7 +230,7 @@ const clearActions = () => {
 				url: "https://powerpoint.new",
 				action: "url",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-powerpoint.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-powerpoint.png"),
 				keycheck: false,
 			},
 			{
@@ -240,7 +240,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://word.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-word.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-word.png"),
 				keycheck: false,
 			},
 			{
@@ -270,7 +270,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://figma.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-figma.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-figma.png"),
 				keycheck: false,
 			},
 			{
@@ -290,7 +290,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://www.producthunt.com/posts/new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-producthunt.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-producthunt.png"),
 				keycheck: false,
 			},
 			{
@@ -300,7 +300,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://twitter.com/intent/tweet",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-twitter.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-twitter.png"),
 				keycheck: false,
 			},
 			{
@@ -310,7 +310,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://playlist.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-spotify.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-spotify.png"),
 				keycheck: false,
 			},
 			{
@@ -320,7 +320,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://design.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-canva.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-canva.png"),
 				keycheck: false,
 			},
 			{
@@ -330,7 +330,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://episode.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-anchor.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-anchor.png"),
 				keycheck: false,
 			},
 			{
@@ -340,7 +340,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://photo.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-photoshop.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-photoshop.png"),
 				keycheck: false,
 			},
 			{
@@ -360,7 +360,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://scan.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-qr.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-qr.png"),
 				keycheck: false,
 			},
 			{
@@ -370,7 +370,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://task.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-asana.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-asana.png"),
 				keycheck: false,
 			},
 			{
@@ -380,7 +380,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://linear.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-linear.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-linear.png"),
 				keycheck: false,
 			},
 			{
@@ -390,7 +390,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://todo.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-wip.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-wip.png"),
 				keycheck: false,
 			},
 			{
@@ -400,7 +400,7 @@ const clearActions = () => {
 				action: "url",
 				url: "https://cal.new",
 				emoji: false,
-				favIconUrl: chrome.runtime.getURL("assets/logo-calendar.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-calendar.png"),
 				keycheck: false,
 			},
 			{
@@ -410,7 +410,7 @@ const clearActions = () => {
 				action: "url",
 				emoji: false,
 				url: "https://note.new",
-				favIconUrl: chrome.runtime.getURL("assets/logo-keep.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-keep.png"),
 				keycheck: false,
 			},
 			{
@@ -420,7 +420,7 @@ const clearActions = () => {
 				action: "url",
 				emoji: false,
 				url: "https://meet.new",
-				favIconUrl: chrome.runtime.getURL("assets/logo-meet.png"),
+				favIconUrl: chrome.runtime.getURL("icons/logo-meet.png"),
 				keycheck: false,
 			},
 			{
