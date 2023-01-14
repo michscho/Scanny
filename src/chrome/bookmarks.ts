@@ -28,7 +28,7 @@ export const getBookmarks = () => {
 	return actions;
 };
 
-export const createBookmark = (tab) => {
+export const createBookmark = (tab: chrome.tabs.Tab) => {
 	getCurrentTab().then((response) => {
 		chrome.bookmarks.create({
 			title: response.title,

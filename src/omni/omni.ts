@@ -2,7 +2,7 @@ import { resetActions } from "../actions/action-utils";
 import { Action, searchActionData } from "../actions/actions-data";
 import { getBookmarks } from "../chrome/bookmarks";
 import { getTabs } from "../chrome/tab";
-import { VirtualizedList } from "virtualized-list";
+import { VirtualizedList } from "virtualized-list/es/VirtualList";
 import $ from "jquery";
 import focusLock from "dom-focus-lock";
 
@@ -15,7 +15,12 @@ export const resetOmni = () => {
 	return [...search, ...defaultActions, ...tabsActions, ...bookmarkActions];
 };
 
-function renderAction(action: Action, index: number, keys, img) {
+function renderAction(
+	action: Action,
+	index: number,
+	keys: string,
+	img: string
+) {
 	var skip = "";
 	if (action.action == "search" || action.action == "goto") {
 		skip = "style='display:none'";
@@ -71,7 +76,7 @@ function renderAction(action: Action, index: number, keys, img) {
 	}
 }
 
-export function closeOmni(isOpen: boolean) {
+export function closeOmni(isOpen: boolean): boolean {
 	if (
 		window.location.href ==
 		"chrome-extension://mpanekjjajcabgnlbabmopeenljeoggm/newtab.html"
@@ -81,9 +86,10 @@ export function closeOmni(isOpen: boolean) {
 		isOpen = false;
 		$("#omni-extension").addClass("omni-closing");
 	}
+	return isOpen;
 }
 
-export function populateOmni(actions) {
+export function populateOmni(actions: Action[]) {
 	$("#omni-extension #omni-list").html("");
 	actions.forEach((action, index) => {
 		var keys = "";
@@ -116,9 +122,9 @@ export function populateOmni(actions) {
 	$(".omni-extension #omni-results").html(actions.length + " results");
 }
 
-export function openOmni(isOpen: boolean, actions: Action[]) {
+export function openOmni(isOpen: boolean, actions: Action[]): boolean {
+	isOpen = true;
 	chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
-		isOpen = true;
 		actions = response.actions;
 		$("#omni-extension input").val("");
 		populateOmni(actions);
@@ -130,9 +136,10 @@ export function openOmni(isOpen: boolean, actions: Action[]) {
 			$("#omni-extension input").focus();
 		}, 100);
 	});
+	return isOpen;
 }
 
-export function populateOmniFilter(actions, isFiltered) {
+export function populateOmniFilter(actions: Action[], isFiltered: boolean) {
 	isFiltered = true;
 	$("#omni-extension #omni-list").html("");
 	const renderRow = (index) => {
@@ -193,7 +200,7 @@ export function populateOmniFilter(actions, isFiltered) {
 		}
 	};
 	actions.length &&
-		new VirtualizedList.default($("#omni-extension #omni-list")[0], {
+		new VirtualizedList($("#omni-extension #omni-list")[0], {
 			height: 400,
 			rowHeight: 60,
 			rowCount: actions.length,

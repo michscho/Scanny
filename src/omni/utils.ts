@@ -1,20 +1,23 @@
 import $ from "jquery";
 
-export function checkShortHand(e, value) {
-	var el = $(".omni-extension input");
-	if (e.keyCode != 8) {
+export function checkShortHand(
+	keyEvent: JQuery.KeyUpEvent<Document, undefined, any, any>,
+	value: string
+) {
+	var element = $(".omni-extension input");
+	if (keyEvent.keyCode != 8) {
 		if (value == "/t") {
-			el.val("/tabs ");
+			element.val("/tabs ");
 		} else if (value == "/b") {
-			el.val("/bookmarks ");
+			element.val("/bookmarks ");
 		} else if (value == "/h") {
-			el.val("/history ");
+			element.val("/history ");
 		} else if (value == "/r") {
-			el.val("/remove ");
+			element.val("/remove ");
 		} else if (value == "/a") {
-			el.val("/actions ");
+			element.val("/actions ");
 		} else if (value == "/i") {
-			el.val("/interactive ");
+			element.val("/interactive ");
 		}
 	} else {
 		if (
@@ -25,7 +28,7 @@ export function checkShortHand(e, value) {
 			value == "/history" ||
 			value == "/interactive"
 		) {
-			el.val("");
+			element.val("");
 		}
 	}
 }
@@ -35,7 +38,7 @@ export function hoverItem() {
 	$(this).addClass("omni-item-active");
 }
 
-export function showToast(action) {
+export function showToast(action: { title: string }) {
 	$("#omni-extension-toast span").html(
 		'"' + action.title + '" has been successfully performed'
 	);
@@ -52,7 +55,7 @@ export function addhttp(url: string) {
 	return url;
 }
 
-export function validURL(str) {
+export function validURL(str: string) {
 	var pattern = new RegExp(
 		"^(https?:\\/\\/)?" + // protocol
 			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name

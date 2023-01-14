@@ -4,7 +4,12 @@ import { populateOmniFilter } from "../omni/omni";
 import $ from "jquery";
 import { Action } from "../actions/actions-data";
 
-export function handleHistory(query: string, actions: Action[], isFiltered) {
+export function handleHistory(
+	query: string,
+	actions: Action[],
+	isFiltered: boolean
+) {
+	console.log("handleHistory");
 	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/history ", "");
 	if (tempvalue != "/history") {
@@ -18,7 +23,11 @@ export function handleHistory(query: string, actions: Action[], isFiltered) {
 	);
 }
 
-export function handleBookmarks(query: string, actions: Action[], isFiltered) {
+export function handleBookmarks(
+	query: string,
+	actions: Action[],
+	isFiltered: boolean
+) {
 	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/bookmarks ", "");
 	if (tempvalue != "/bookmarks" && tempvalue != "") {
@@ -40,13 +49,13 @@ export function handleBookmarks(query: string, actions: Action[], isFiltered) {
 export function handleInteractive(
 	query: string,
 	actions: Action[],
-	isFiltered
+	isFiltered: boolean
 ) {
 	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/interactive ", "");
 	if (tempvalue != "/interactive") {
-		const newActions = findClickableElementsText(
-			$(this).val().toString().replace("/interactive ", "")
+		const newActions: Action[] = findClickableElementsText(
+			query.replace("/interactive ", "")
 		);
 		populateOmniFilter(newActions, isFiltered);
 		isFiltered = false;

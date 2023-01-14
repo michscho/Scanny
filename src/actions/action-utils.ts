@@ -25,6 +25,23 @@ export function resetActions(): Action[] {
 	return actions;
 }
 
+export function createAction(
+	title: string,
+	desc: string,
+	emojiChar: string
+): Action {
+	return {
+		title: title,
+		desc: desc,
+		type: "interactive",
+		action: "web-element",
+		emoji: true,
+		emojiChar: emojiChar,
+		url: desc,
+		keycheck: false,
+	};
+}
+
 function remapKeys(actions: Action[]) {
 	for (const action of actions) {
 		switch (action.action) {

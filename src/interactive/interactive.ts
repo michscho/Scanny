@@ -1,18 +1,8 @@
 import $ from "jquery";
+import { createAction } from "../actions/action-utils";
+import { Action } from "../actions/actions-data";
 
-export function createAction(title, desc, emojiChar) {
-	return {
-		title: title,
-		desc: desc,
-		type: "interactive",
-		action: "web-element",
-		emoji: true,
-		emojiChar: emojiChar,
-		url: desc,
-	};
-}
-
-export function findClickableElementsText(query) {
+export function findClickableElementsText(query: string): Action[] {
 	var aElements = [];
 	var buttonElements = [];
 	$("a")
@@ -31,16 +21,16 @@ export function findClickableElementsText(query) {
 			}
 			buttonElements.push($(this).text());
 		});
-	const aActions = filterDuplicates(aElements).map((el) => {
+	const aActions: Action[] = filterDuplicates(aElements).map((el) => {
 		return createAction(el, "Clickable link", "🔗");
 	});
-	const buttonActions = filterDuplicates(buttonElements).map((el) => {
+	const buttonActions: Action[] = filterDuplicates(buttonElements).map((el) => {
 		return createAction(el, "Clickable button", "🔘");
 	});
-	return aActions.concat(buttonActions);
+	return [...aActions, ...buttonActions];
 }
 
-export function clickElement(query) {
+export function clickElement(query: string) {
 	var $element = $("a")
 		.filter(":contains(" + query + ")")
 		.first();
@@ -52,10 +42,10 @@ export function clickElement(query) {
 	$element[0].dispatchEvent(clickEvent);
 }
 
-function containsOnlyWhitespace(str) {
+function containsOnlyWhitespace(str: string) {
 	return /^\s*$/.test(str);
 }
 
-function filterDuplicates(arr) {
+function filterDuplicates<Type>(arr: Array<Type>) {
 	return [...new Set(arr)];
 }

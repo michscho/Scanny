@@ -51,7 +51,7 @@ $(document).ready(() => {
 
 	function handleAction(e) {
 		var action = actions[$(".omni-item-active").attr("data-index")];
-		closeOmni(isOpen);
+		isOpen = closeOmni(isOpen);
 		if (
 			$(".omni-extension input")
 				.val()
@@ -211,7 +211,7 @@ $(document).ready(() => {
 				}
 			} else if (down[keyMapings.esc] && isOpen) {
 				// Esc key
-				closeOmni(isOpen);
+				isOpen = closeOmni(isOpen);
 			} else if (down[keyMapings.enter] && isOpen) {
 				// Enter key
 				handleAction(e);
@@ -249,12 +249,12 @@ $(document).ready(() => {
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		if (message.request == "open-omni") {
 			if (isOpen) {
-				closeOmni(isOpen);
+				isOpen = closeOmni(isOpen);
 			} else {
-				openOmni(isOpen, actions);
+				isOpen = openOmni(isOpen, actions);
 			}
 		} else if (message.request == "close-omni") {
-			closeOmni(isOpen);
+			isOpen = closeOmni(isOpen);
 		}
 	});
 

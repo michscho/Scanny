@@ -27,7 +27,9 @@ export function search(
 	}
 	var query = $(e.target).val().toString().toLowerCase();
 	checkShortHand(e, query);
-	query = $(this).val().toString().toLowerCase();
+	query = $(e.target).val().toString().toLowerCase();
+
+	console.log(query);
 
 	if (query.startsWith("/history")) {
 		handleHistory(query, actions, isFiltered);
@@ -40,7 +42,7 @@ export function search(
 	}
 
 	if (query.startsWith("/interactive")) {
-		handleInteractive(query, actions, isFiltered);
+		handleInteractive($(e.target).val().toString(), actions, isFiltered);
 		return;
 	}
 
@@ -49,7 +51,7 @@ export function search(
 		isFiltered = false;
 	}
 
-	$(".omni-extension #omni-list .omni-item").filter(function () {
+	$(".omni-extension #omni-list .omni-item").map(function () {
 		if (query.startsWith("/tabs")) {
 			handleTabs(query, actions);
 			return;
@@ -93,7 +95,9 @@ export function search(
 		.addClass("omni-item-active");
 }
 
-function isSpecialKeyEvent(e) {
+function isSpecialKeyEvent(
+	e: JQuery.KeyUpEvent<Document, undefined, any, any>
+) {
 	return (
 		e.keyCode == keyMapings.down ||
 		e.keyCode == keyMapings.enter ||

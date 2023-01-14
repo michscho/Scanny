@@ -48,7 +48,6 @@ chrome.runtime.onInstalled.addListener((object) => {
 		});
 	};
 
-	// Get all windows
 	chrome.windows.getAll(
 		{
 			populate: true,
@@ -110,18 +109,19 @@ chrome.commands.onCommand.addListener((command) => {
 	}
 });
 
-// Check if tabs have changed and actions need to be fetched again
+// TAB LISTENER
 chrome.tabs.onUpdated.addListener(
-	(tabId, changeInfo, tab) => (actions = resetOmni())
+	(_tabId, _changeInfo, _tab) => (actions = resetOmni())
 );
-chrome.tabs.onCreated.addListener((tab) => (actions = resetOmni()));
+
+chrome.tabs.onCreated.addListener((_tab) => (actions = resetOmni()));
 
 chrome.tabs.onRemoved.addListener(
-	(tabId, changeInfo) => (actions = resetOmni())
+	(_tabId, _changeInfo) => (actions = resetOmni())
 );
+// TAB LISTENER
 
-// Receive messages from any tab
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	switch (message.request) {
 		case "get-actions":
 			actions = resetOmni();
@@ -198,7 +198,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 				.search({ text: message.query, maxResults: 0, startTime: 0 })
 				.then((data) => {
 					var actions: Action[] = [];
-					data.forEach((ele, index) => {
+					data.forEach((ele, _index) => {
 						actions.push({
 							title: ele.title,
 							type: "history",

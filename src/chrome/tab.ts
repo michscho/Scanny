@@ -18,7 +18,7 @@ export function restoreNewTab(newtaburl: string) {
 	});
 }
 
-export const switchTab = (tab) => {
+export const switchTab = (tab: chrome.tabs.Tab) => {
 	chrome.tabs.highlight({
 		tabs: tab.index,
 		windowId: tab.windowId,
@@ -26,15 +26,15 @@ export const switchTab = (tab) => {
 	chrome.windows.update(tab.windowId, { focused: true });
 };
 
-export const goBack = (tab) => {
+export const goBack = (tab: chrome.tabs.Tab) => {
 	chrome.tabs.goBack();
 };
 
-export const goForward = (tab) => {
+export const goForward = (tab: chrome.tabs.Tab) => {
 	chrome.tabs.goForward();
 };
 
-export const duplicateTab = (tab) => {
+export const duplicateTab = (tab: chrome.tabs.Tab) => {
 	getCurrentTab().then((response) => {
 		chrome.tabs.duplicate(response.id);
 	});
@@ -73,11 +73,11 @@ export const getTabs = () => {
 	return actions;
 };
 
-export const openChromeUrl = (url) => {
+export const openChromeUrl = (url: string) => {
 	chrome.tabs.create({ url: "chrome://" + url + "/" });
 };
 
-export const closeTab = (tab) => {
+export const closeTab = (tab: chrome.tabs.Tab) => {
 	chrome.tabs.remove(tab.id);
 };
 
