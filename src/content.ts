@@ -16,6 +16,7 @@ import {
 	addhttp,
 	validURL,
 } from "./omni/utils";
+import { search } from "./search/search";
 
 var isOpen = false;
 
@@ -25,6 +26,7 @@ document.onkeyup = (e) => {
 	}
 };
 
+// TODO: use new jQuery function
 $(document).ready(() => {
 	var actions = [];
 	var isFiltered = false;
@@ -56,261 +58,27 @@ $(document).ready(() => {
 		}
 	});
 
-	function hideSearchAndGoToActions() {
-		$(
-			".omni-item[data-index='" +
-				actions.findIndex((x) => x.action == "search") +
-				"']"
-		).hide();
-		$(
-			".omni-item[data-index='" +
-				actions.findIndex((x) => x.action == "goto") +
-				"']"
-		).hide();
-	}
-
-	// Search for an action in the omni
-	function search(e) {
-		if (
-			e.keyCode == 37 ||
-			e.keyCode == 38 ||
-			e.keyCode == 39 ||
-			e.keyCode == 40 ||
-			e.keyCode == 13 ||
-			e.keyCode == 37
-		) {
-			return;
-		}
-		var value = $(this).val().toLowerCase();
-		checkShortHand(e, value);
-		value = $(this).val().toLowerCase();
-
-		if (value.startsWith("/history")) {
-			hideSearchAndGoToActions();
-			var tempvalue = value.replace("/history ", "");
-			var query = "";
-			if (tempvalue != "/history") {
-				query = value.replace("/history ", "");
-			}
-			chrome.runtime.sendMessage(
-				{ request: "search-history", query: query },
-				(response) => {
-					populateOmniFilter(response.history, isFiltered);
-				}
-			);
-		} else if (value.startsWith("/bookmarks")) {
-			hideSearchAndGoToActions();
-			var tempvalue = value.replace("/bookmarks ", "");
-			if (tempvalue != "/bookmarks" && tempvalue != "") {
-				var query = value.replace("/bookmarks ", "");
-				chrome.runtime.sendMessage(
-					{ request: "search-bookmarks", query: query },
-					(response) => {
-						populateOmniFilter(response.bookmarks, isFiltered);
-					}
-				);
-			} else {
-				populateOmniFilter(
-					actions.filter((x) => x.type == "bookmark"),
-					isFiltered
-				);
-			}
-		} else if (value.startsWith("/interactive")) {
-			hideSearchAndGoToActions();
-			var tempvalue = value.replace("/interactive ", "");
-			if (tempvalue != "/interactive") {
-				const newActions = findClickableElementsText(
-					$(this).val().replace("/interactive ", "")
-				);
-				populateOmniFilter(newActions, isFiltered);
-				isFiltered = false;
-			} else {
-				populateOmniFilter(
-					actions.filter((x) => x.type == "interactive"),
-					isFiltered
-				);
-			}
-		} else {
-			if (isFiltered) {
-				populateActions(actions);
-				isFiltered = false;
-			}
-			$(".omni-extension #omni-list .omni-item").filter(function () {
-				if (value.startsWith("/tabs")) {
-					$(
-						".omni-item[data-index='" +
-							actions.findIndex((x) => x.action == "search") +
-							"']"
-					).hide();
-					$(
-						".omni-item[data-index='" +
-							actions.findIndex((x) => x.action == "goto") +
-							"']"
-					).hide();
-					var tempvalue = value.replace("/tabs ", "");
-					if (tempvalue == "/tabs") {
-						$(this).toggle($(this).attr("data-type") == "tab");
-					} else {
-						tempvalue = value.replace("/tabs ", "");
-						$(this).toggle(
-							($(this)
-								.find(".omni-item-name")
-								.text()
-								.toLowerCase()
-								.indexOf(tempvalue) > -1 ||
-								$(this)
-									.find(".omni-item-desc")
-									.text()
-									.toLowerCase()
-									.indexOf(tempvalue) > -1) &&
-								$(this).attr("data-type") == "tab"
-						);
-					}
-				} else if (value.startsWith("/remove")) {
-					$(
-						".omni-item[data-index='" +
-							actions.findIndex((x) => x.action == "search") +
-							"']"
-					).hide();
-					$(
-						".omni-item[data-index='" +
-							actions.findIndex((x) => x.action == "goto") +
-							"']"
-					).hide();
-					var tempvalue = value.replace("/remove ", "");
-					if (tempvalue == "/remove") {
-						$(this).toggle(
-							$(this).attr("data-type") == "bookmark" ||
-								$(this).attr("data-type") == "tab"
-						);
-					} else {
-						tempvalue = value.replace("/remove ", "");
-						$(this).toggle(
-							($(this)
-								.find(".omni-item-name")
-								.text()
-								.toLowerCase()
-								.indexOf(tempvalue) > -1 ||
-								$(this)
-									.find(".omni-item-desc")
-									.text()
-									.toLowerCase()
-									.indexOf(tempvalue) > -1) &&
-								($(this).attr("data-type") == "bookmark" ||
-									$(this).attr("data-type") == "tab")
-						);
-					}
-				} else if (value.startsWith("/actions")) {
-					$(
-						".omni-item[data-index='" +
-							actions.findIndex((x) => x.action == "search") +
-							"']"
-					).hide();
-					$(
-						".omni-item[data-index='" +
-							actions.findIndex((x) => x.action == "goto") +
-							"']"
-					).hide();
-					var tempvalue = value.replace("/actions ", "");
-					if (tempvalue == "/actions") {
-						$(this).toggle($(this).attr("data-type") == "action");
-					} else {
-						tempvalue = value.replace("/actions ", "");
-						$(this).toggle(
-							($(this)
-								.find(".omni-item-name")
-								.text()
-								.toLowerCase()
-								.indexOf(tempvalue) > -1 ||
-								$(this)
-									.find(".omni-item-desc")
-									.text()
-									.toLowerCase()
-									.indexOf(tempvalue) > -1) &&
-								$(this).attr("data-type") == "action"
-						);
-					}
-				} else {
-					$(this).toggle(
-						$(this)
-							.find(".omni-item-name")
-							.text()
-							.toLowerCase()
-							.indexOf(value) > -1 ||
-							$(this)
-								.find(".omni-item-desc")
-								.text()
-								.toLowerCase()
-								.indexOf(value) > -1
-					);
-					if (value == "") {
-						$(
-							".omni-item[data-index='" +
-								actions.findIndex((x) => x.action == "search") +
-								"']"
-						).hide();
-						$(
-							".omni-item[data-index='" +
-								actions.findIndex((x) => x.action == "goto") +
-								"']"
-						).hide();
-					} else if (!validURL(value)) {
-						$(
-							".omni-item[data-index='" +
-								actions.findIndex((x) => x.action == "search") +
-								"']"
-						).show();
-						$(
-							".omni-item[data-index='" +
-								actions.findIndex((x) => x.action == "goto") +
-								"']"
-						).hide();
-						$(
-							".omni-item[data-index='" +
-								actions.findIndex((x) => x.action == "search") +
-								"'] .omni-item-name"
-						).html('"' + value + '"');
-					} else {
-						$(
-							".omni-item[data-index='" +
-								actions.findIndex((x) => x.action == "search") +
-								"']"
-						).hide();
-						$(
-							".omni-item[data-index='" +
-								actions.findIndex((x) => x.action == "goto") +
-								"']"
-						).show();
-						$(
-							".omni-item[data-index='" +
-								actions.findIndex((x) => x.action == "goto") +
-								"'] .omni-item-name"
-						).html(value);
-					}
-				}
-			});
-		}
-
-		$(".omni-extension #omni-results").html(
-			$("#omni-extension #omni-list .omni-item:visible").length + " results"
-		);
-		$(".omni-item-active").removeClass("omni-item-active");
-		$(".omni-extension #omni-list .omni-item:visible")
-			.first()
-			.addClass("omni-item-active");
-	}
-
 	function handleAction(e) {
 		var action = actions[$(".omni-item-active").attr("data-index")];
 		closeOmni(isOpen);
-		if ($(".omni-extension input").val().toLowerCase().startsWith("/remove")) {
+		if (
+			$(".omni-extension input")
+				.val()
+				.toString()
+				.toLowerCase()
+				.startsWith("/remove")
+		) {
 			chrome.runtime.sendMessage({
 				request: "remove",
 				type: action.type,
 				action: action,
 			});
 		} else if (
-			$(".omni-extension input").val().toLowerCase().startsWith("/history")
+			$(".omni-extension input")
+				.val()
+				.toString()
+				.toLowerCase()
+				.startsWith("/history")
 		) {
 			if (e.ctrlKey || e.metaKey) {
 				window.open($(".omni-item-active").attr("data-url"));
@@ -318,7 +86,11 @@ $(document).ready(() => {
 				window.open($(".omni-item-active").attr("data-url"), "_self");
 			}
 		} else if (
-			$(".omni-extension input").val().toLowerCase().startsWith("/bookmarks")
+			$(".omni-extension input")
+				.val()
+				.toString()
+				.toLowerCase()
+				.startsWith("/bookmarks")
 		) {
 			if (e.ctrlKey || e.metaKey) {
 				window.open($(".omni-item-active").attr("data-url"));
@@ -326,7 +98,11 @@ $(document).ready(() => {
 				window.open($(".omni-item-active").attr("data-url"), "_self");
 			}
 		} else if (
-			$(".omni-extension input").val().toLowerCase().startsWith("/interactive")
+			$(".omni-extension input")
+				.val()
+				.toString()
+				.toLowerCase()
+				.startsWith("/interactive")
 		) {
 			const query = $(".omni-item-active .omni-item-name").text();
 			console.log(query);
@@ -498,5 +274,6 @@ $(document).ready(() => {
 	);
 	$(document).on("keyup", ".omni-extension input", search);
 	$(document).on("click", ".omni-item-active", handleAction);
-	$(document).on("click", ".omni-extension #omni-overlay", closeOmni);
+	// TODO: look into this issue
+	//$(document).on("click", ".omni-extension #omni-overlay", closeOmni);
 });

@@ -193,7 +193,7 @@ export function populateOmniFilter(actions, isFiltered) {
 		}
 	};
 	actions.length &&
-		new VirtualizedList($("#omni-extension #omni-list")[0], {
+		new VirtualizedList.default($("#omni-extension #omni-list")[0], {
 			height: 400,
 			rowHeight: 60,
 			rowCount: actions.length,

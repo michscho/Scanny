@@ -1,7 +1,7 @@
 export type Action = {
 	title: string;
 	desc: string;
-	type: "action" | "bookmark" | "tab" | "history";
+	type: "action" | "bookmark" | "tab" | "history" | "interactive";
 	action: string;
 	emoji: boolean;
 	id?: string;
