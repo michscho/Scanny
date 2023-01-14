@@ -31,14 +31,14 @@
 
 @media (prefers-color-scheme: dark) {
 	.omni-extension {
-		--background: #1e2128;
+		--background: #281e1e71;
 		--border: #35373e;
 		--text: #f1f1f1;
 		--text-2: #c5c6ca;
 		--text-3: #a5a5ae;
-		--select: #17191e;
+		--select: #17191e84;
 		--accent: #6068d2;
-		--accent-hover: #484fac;
+		--accent-hover: #484fac96;
 		--shortcut: #383e4a;
 		--placeholder: #63687b;
 		--background-2: #292d36;
