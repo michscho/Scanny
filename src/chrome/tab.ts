@@ -25,12 +25,15 @@ export const switchTab = (tab) => {
 	});
 	chrome.windows.update(tab.windowId, { focused: true });
 };
+
 export const goBack = (tab) => {
 	chrome.tabs.goBack();
 };
+
 export const goForward = (tab) => {
 	chrome.tabs.goForward();
 };
+
 export const duplicateTab = (tab) => {
 	getCurrentTab().then((response) => {
 		chrome.tabs.duplicate(response.id);
@@ -42,16 +45,19 @@ export const muteTab = (mute) => {
 		chrome.tabs.update(response.id, { muted: mute });
 	});
 };
+
 export const reloadTab = () => {
 	chrome.tabs.reload();
 };
+
 export const pinTab = (pin) => {
 	getCurrentTab().then((response) => {
 		chrome.tabs.update(response.id, { pinned: pin });
 	});
 };
 
-export const getTabs = (actions: Action[]) => {
+export const getTabs = () => {
+	const actions: Action[] = [];
 	chrome.tabs.query({}, (tabs) => {
 		tabs.forEach((tab) => {
 			actions.push({
@@ -74,6 +80,7 @@ export const openChromeUrl = (url) => {
 export const closeTab = (tab) => {
 	chrome.tabs.remove(tab.id);
 };
+
 export const closeCurrentTab = () => {
 	getCurrentTab().then(closeTab);
 };

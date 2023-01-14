@@ -1,13 +1,5 @@
 import $ from "jquery";
 
-export function containsOnlyWhitespace(str) {
-	return /^\s*$/.test(str);
-}
-
-export function filterDuplicates(arr) {
-	return [...new Set(arr)];
-}
-
 export function createAction(title, desc, emojiChar) {
 	return {
 		title: title,
@@ -58,4 +50,12 @@ export function clickElement(query) {
 		cancelable: true,
 	});
 	$element[0].dispatchEvent(clickEvent);
+}
+
+function containsOnlyWhitespace(str) {
+	return /^\s*$/.test(str);
+}
+
+function filterDuplicates(arr) {
+	return [...new Set(arr)];
 }

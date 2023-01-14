@@ -4,6 +4,7 @@ export type Action = {
 	type: "action" | "bookmark" | "tab" | "history";
 	action: string;
 	emoji: boolean;
+	id?: string;
 	emojiChar?: string;
 	keycheck: boolean;
 	favIconUrl?: string;
@@ -575,3 +576,68 @@ export const actionData: Action[] = [
 		keys: ["⌘", "D"],
 	},
 ];
+
+export const searchActionData: Action[] = [
+	{
+		title: "Search",
+		desc: "Search for a query",
+		type: "action",
+		action: "search",
+		emoji: true,
+		emojiChar: "🔍",
+		keycheck: false,
+	},
+	{
+		title: "Search",
+		desc: "Go to website",
+		type: "action",
+		action: "goto",
+		emoji: true,
+		emojiChar: "🔍",
+		keycheck: false,
+	},
+];
+
+export const muteActionData: Action = {
+	title: "Mute tab",
+	desc: "Mute the current tab",
+	type: "action",
+	action: "mute",
+	emoji: true,
+	emojiChar: "🔇",
+	keycheck: true,
+	keys: ["⌥", "⇧", "M"],
+};
+
+export const unmuteActionData: Action = {
+	title: "Unmute tab",
+	desc: "Unmute the current tab",
+	type: "action",
+	action: "unmute",
+	emoji: true,
+	emojiChar: "🔈",
+	keycheck: true,
+	keys: ["⌥", "⇧", "M"],
+};
+
+export const pinActionData: Action = {
+	title: "Pin tab",
+	desc: "Pin the current tab",
+	type: "action",
+	action: "pin",
+	emoji: true,
+	emojiChar: "📌",
+	keycheck: true,
+	keys: ["⌥", "⇧", "P"],
+};
+
+export const unpinActionData: Action = {
+	title: "Unpin tab",
+	desc: "Unpin the current tab",
+	type: "action",
+	action: "unpin",
+	emoji: true,
+	emojiChar: "📌",
+	keycheck: true,
+	keys: ["⌥", "⇧", "P"],
+};

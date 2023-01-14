@@ -111,17 +111,20 @@ chrome.commands.onCommand.addListener((command) => {
 });
 
 // Check if tabs have changed and actions need to be fetched again
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
-	resetOmni(actions)
+chrome.tabs.onUpdated.addListener(
+	(tabId, changeInfo, tab) => (actions = resetOmni())
 );
-chrome.tabs.onCreated.addListener((tab) => resetOmni(actions));
-chrome.tabs.onRemoved.addListener((tabId, changeInfo) => resetOmni(actions));
+chrome.tabs.onCreated.addListener((tab) => (actions = resetOmni()));
+
+chrome.tabs.onRemoved.addListener(
+	(tabId, changeInfo) => (actions = resetOmni())
+);
 
 // Receive messages from any tab
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 	switch (message.request) {
 		case "get-actions":
-			resetOmni(actions);
+			actions = resetOmni();
 			sendResponse({ actions: actions });
 			break;
 		case "switch-tab":
@@ -269,5 +272,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	}
 });
 
-// Get actions
-resetOmni(actions);
+actions = resetOmni();

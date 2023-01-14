@@ -6,7 +6,7 @@ import {
 import {
 	closeOmni,
 	openOmni,
-	populateOmni,
+	populateOmni as populateActions,
 	populateOmniFilter,
 } from "./omni/omni";
 import {
@@ -18,6 +18,12 @@ import {
 } from "./omni/utils";
 
 var isOpen = false;
+
+document.onkeyup = (e) => {
+	if (e.key == "Escape" && isOpen) {
+		chrome.runtime.sendMessage({ request: "close-omni" });
+	}
+};
 
 $(document).ready(() => {
 	var actions = [];
@@ -33,12 +39,11 @@ $(document).ready(() => {
 			chrome.runtime.getURL("icons/check.svg")
 		);
 
-		// Request actions from the background
 		chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 			actions = response.actions;
 		});
 
-		// New tab page workaround
+		// TODO: Is this right?
 		if (
 			window.location.href ==
 			"chrome-extension://mpanekjjajcabgnlbabmopeenljeoggm/newtab.html"
@@ -127,7 +132,7 @@ $(document).ready(() => {
 			}
 		} else {
 			if (isFiltered) {
-				populateOmni(actions);
+				populateActions(actions);
 				isFiltered = false;
 			}
 			$(".omni-extension #omni-list .omni-item").filter(function () {
@@ -395,7 +400,7 @@ $(document).ready(() => {
 		// Fetch actions again
 		chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 			actions = response.actions;
-			populateOmni(actions);
+			populateActions(actions);
 		});
 	}
 
@@ -453,7 +458,7 @@ $(document).ready(() => {
 				}
 				chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 					actions = response.actions;
-					populateOmni(actions);
+					populateActions(actions);
 				});
 			} else if (down[18] && down[16] && down[77]) {
 				if (actions.find((x) => x.action == "mute") != undefined) {
@@ -463,7 +468,7 @@ $(document).ready(() => {
 				}
 				chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 					actions = response.actions;
-					populateOmni(actions);
+					populateActions(actions);
 				});
 			} else if (down[18] && down[16] && down[67]) {
 				window.open("mailto:");

@@ -1,7 +1,31 @@
 import { Action, actionData } from "./actions-data";
-import { getCurrentTab } from "../chrome/tab";
 
-export function remapKeys(actions: Action[]) {
+export function resetActions(): Action[] {
+	var actions = [];
+
+	// TODO: make currentTap working
+	// getCurrentTab().then((response) => {
+	// 	let muteaction: Action = muteActionData;
+	// 	let pinaction: Action = pinActionData;
+	// 	if (response.mutedInfo!.muted) {
+	// 		muteaction = unmuteActionData;
+	// 	}
+	// 	if (response.pinned) {
+	// 		pinaction = unpinActionData;
+	// 	}
+	// 	actions = [actionData, muteaction, pinaction];
+	// });
+
+	actions = actionData;
+
+	if (!isMac()) {
+		remapKeys(actions);
+	}
+
+	return actions;
+}
+
+function remapKeys(actions: Action[]) {
 	for (const action of actions) {
 		switch (action.action) {
 			case "reload":
@@ -42,58 +66,6 @@ export function remapKeys(actions: Action[]) {
 	}
 }
 
-export const resetActions = () => {
-	getCurrentTab().then((response) => {
-		var actions = [];
-		const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
-		let muteaction: Action = {
-			title: "Mute tab",
-			desc: "Mute the current tab",
-			type: "action",
-			action: "mute",
-			emoji: true,
-			emojiChar: "🔇",
-			keycheck: true,
-			keys: ["⌥", "⇧", "M"],
-		};
-		let pinaction: Action = {
-			title: "Pin tab",
-			desc: "Pin the current tab",
-			type: "action",
-			action: "pin",
-			emoji: true,
-			emojiChar: "📌",
-			keycheck: true,
-			keys: ["⌥", "⇧", "P"],
-		};
-		if (response.mutedInfo!.muted) {
-			muteaction = {
-				title: "Unmute tab",
-				desc: "Unmute the current tab",
-				type: "action",
-				action: "unmute",
-				emoji: true,
-				emojiChar: "🔈",
-				keycheck: true,
-				keys: ["⌥", "⇧", "M"],
-			};
-		}
-		if (response.pinned) {
-			pinaction = {
-				title: "Unpin tab",
-				desc: "Unpin the current tab",
-				type: "action",
-				action: "unpin",
-				emoji: true,
-				emojiChar: "📌",
-				keycheck: true,
-				keys: ["⌥", "⇧", "P"],
-			};
-		}
-		actions = actionData.concat([muteaction, pinaction]);
-
-		if (!isMac) {
-			remapKeys(actions);
-		}
-	});
-};
+function isMac() {
+	return navigator.platform.toUpperCase().indexOf("MAC") >= 0;
+}

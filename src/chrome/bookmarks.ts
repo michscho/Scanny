@@ -1,7 +1,8 @@
+import { Action } from "../actions/actions-data";
 import { getCurrentTab } from "./tab";
 
-// Get bookmarks to populate in the actions
-export const getBookmarks = (actions) => {
+export const getBookmarks = () => {
+	const actions: Action[] = [];
 	const process_bookmark = (bookmarks) => {
 		for (const bookmark of bookmarks) {
 			if (bookmark.url) {

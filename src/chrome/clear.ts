@@ -19,18 +19,23 @@ export const clearAllData = () => {
 		}
 	);
 };
+
 export const clearBrowsingData = () => {
 	chrome.browsingData.removeHistory({ since: 0 });
 };
+
 export const clearCookies = () => {
 	chrome.browsingData.removeCookies({ since: 0 });
 };
+
 export const clearCache = () => {
 	chrome.browsingData.removeCache({ since: 0 });
 };
+
 export const clearLocalStorage = () => {
 	chrome.browsingData.removeLocalStorage({ since: 0 });
 };
+
 export const clearPasswords = () => {
 	chrome.browsingData.removePasswords({ since: 0 });
 };

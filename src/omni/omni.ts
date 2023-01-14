@@ -1,39 +1,21 @@
 import { resetActions } from "../actions/action-utils";
-import { Action } from "../actions/actions-data";
+import { Action, searchActionData } from "../actions/actions-data";
 import { getBookmarks } from "../chrome/bookmarks";
 import { getTabs } from "../chrome/tab";
 import { VirtualizedList } from "virtualized-list";
 import $ from "jquery";
 import focusLock from "dom-focus-lock";
 
-export const resetOmni = (actions) => {
-	resetActions();
-	const tabsActions = getTabs(actions);
-	const bookmarkActions = getBookmarks(actions);
-	var search: Action[] = [
-		{
-			title: "Search",
-			desc: "Search for a query",
-			type: "action",
-			action: "search",
-			emoji: true,
-			emojiChar: "🔍",
-			keycheck: false,
-		},
-		{
-			title: "Search",
-			desc: "Go to website",
-			type: "action",
-			action: "goto",
-			emoji: true,
-			emojiChar: "🔍",
-			keycheck: false,
-		},
-	];
-	actions = search.concat(actions).concat(bookmarkActions).concat(tabsActions);
+export const resetOmni = () => {
+	const defaultActions = resetActions();
+	const tabsActions = getTabs();
+	const bookmarkActions = getBookmarks();
+	var search = searchActionData;
+	console.log([...search, ...tabsActions, ...bookmarkActions]);
+	return [...search, ...defaultActions, ...tabsActions, ...bookmarkActions];
 };
 
-function renderAction(action, index, keys, img) {
+function renderAction(action: Action, index: number, keys, img) {
 	var skip = "";
 	if (action.action == "search" || action.action == "goto") {
 		skip = "style='display:none'";
@@ -113,7 +95,6 @@ export function populateOmni(actions) {
 			keys += "</div>";
 		}
 
-		// Check if the action has an emoji or a favicon
 		if (!action.emoji) {
 			var onload =
 				'if ("naturalHeight" in this) {if (this.naturalHeight + this.naturalWidth === 0) {this.onerror();return;}} else if (this.width + this.height == 0) {this.onerror();return;}';
