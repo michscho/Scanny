@@ -1,4 +1,4 @@
-import { Action } from "./actions-data";
+import { Action } from "../actions/actions-data";
 
 export const getCurrentTab = async () => {
 	const queryOptions = { active: true, currentWindow: true };
@@ -65,4 +65,15 @@ export const getTabs = (actions: Action[]) => {
 		});
 	});
 	return actions;
+};
+
+export const openChromeUrl = (url) => {
+	chrome.tabs.create({ url: "chrome://" + url + "/" });
+};
+
+export const closeTab = (tab) => {
+	chrome.tabs.remove(tab.id);
+};
+export const closeCurrentTab = () => {
+	getCurrentTab().then(closeTab);
 };

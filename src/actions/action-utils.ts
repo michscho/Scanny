@@ -1,5 +1,5 @@
 import { Action, actionData } from "./actions-data";
-import { getCurrentTab } from "./tab";
+import { getCurrentTab } from "../chrome/tab";
 
 export function remapKeys(actions: Action[]) {
 	for (const action of actions) {

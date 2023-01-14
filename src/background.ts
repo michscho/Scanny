@@ -1,5 +1,4 @@
-import { Action } from "./actions-data";
-import { createBookmark, removeBookmark } from "./bookmarks";
+import { createBookmark, removeBookmark } from "./chrome/bookmarks";
 import {
 	clearAllData,
 	clearBrowsingData,
@@ -7,25 +6,29 @@ import {
 	clearCache,
 	clearLocalStorage,
 	clearPasswords,
-} from "./clear";
-import { resetOmni } from "./omni";
+} from "./chrome/clear";
+import { resetOmni } from "./omni/omni";
 import {
+	closeCurrentTab,
+	closeTab,
 	duplicateTab,
 	getCurrentTab,
 	goBack,
 	goForward,
 	muteTab,
+	openChromeUrl,
 	pinTab,
 	reloadTab,
 	restoreNewTab,
 	switchTab,
-} from "./tab";
+} from "./chrome/tab";
+import { openIncognito, closeWindow } from "./chrome/window";
+import { Action } from "./actions/actions-data";
 
 let actions: Action[] = [];
 let newtaburl = "";
 
 chrome.runtime.onInstalled.addListener((object) => {
-
 	const manifest = chrome.runtime.getManifest();
 
 	const injectIntoTab = (tab) => {
@@ -113,22 +116,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) =>
 );
 chrome.tabs.onCreated.addListener((tab) => resetOmni(actions));
 chrome.tabs.onRemoved.addListener((tabId, changeInfo) => resetOmni(actions));
-
-const openChromeUrl = (url) => {
-	chrome.tabs.create({ url: "chrome://" + url + "/" });
-};
-const openIncognito = () => {
-	chrome.windows.create({ incognito: true });
-};
-const closeWindow = (id) => {
-	chrome.windows.remove(id);
-};
-const closeTab = (tab) => {
-	chrome.tabs.remove(tab.id);
-};
-const closeCurrentTab = () => {
-	getCurrentTab().then(closeTab);
-};
 
 // Receive messages from any tab
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
