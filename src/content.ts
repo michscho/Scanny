@@ -2,13 +2,7 @@ import $ from "jquery";
 import focusLock from "dom-focus-lock";
 import VirtualizedList from "virtualized-list";
 
-// Workaround to capture Esc key on certain sites
 var isOpen = false;
-// document.onkeyup = (e) => {
-// 	if (e.key == "Escape" && isOpen) {
-// 		chrome.runtime.sendMessage({request:"close-omni"})
-// 	}
-// }
 
 $(document).ready(() => {
 	var actions = [];
@@ -604,7 +598,6 @@ $(document).ready(() => {
 			.addClass("omni-item-active");
 	}
 
-	// Handle actions from the omni
 	function handleAction(e) {
 		var action = actions[$(".omni-item-active").attr("data-index")];
 		closeOmni();
