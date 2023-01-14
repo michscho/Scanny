@@ -1,12 +1,25 @@
-let actions = [];
+type Action = {
+	title: string;
+	desc: string;
+	type: "action";
+	action: string;
+	emoji: boolean;
+	emojiChar?: string;
+	keycheck: boolean;
+	favIconUrl?: string;
+	keys?: string[];
+	url?: string;
+};
+
+let actions: Action[] = [];
 let newtaburl = "";
 
 // Clear actions and append default ones
-export const clearActions = () => {
+const clearActions = () => {
 	getCurrentTab().then((response) => {
 		actions = [];
 		const isMac = navigator.platform.toUpperCase().indexOf("MAC") >= 0;
-		let muteaction = {
+		let muteaction: Action = {
 			title: "Mute tab",
 			desc: "Mute the current tab",
 			type: "action",
@@ -16,7 +29,7 @@ export const clearActions = () => {
 			keycheck: true,
 			keys: ["⌥", "⇧", "M"],
 		};
-		let pinaction = {
+		let pinaction: Action = {
 			title: "Pin tab",
 			desc: "Pin the current tab",
 			type: "action",
@@ -26,7 +39,7 @@ export const clearActions = () => {
 			keycheck: true,
 			keys: ["⌥", "⇧", "P"],
 		};
-		if (response.mutedInfo.muted) {
+		if (response.mutedInfo!.muted) {
 			muteaction = {
 				title: "Unmute tab",
 				desc: "Unmute the current tab",
@@ -664,19 +677,19 @@ chrome.runtime.onInstalled.addListener((object) => {
 	const manifest = chrome.runtime.getManifest();
 
 	const injectIntoTab = (tab) => {
-		const scripts = manifest.content_scripts[0].js;
-		const s = scripts.length;
+		const scripts = manifest.content_scripts![0].js;
+		const s = scripts!.length;
 
 		for (let i = 0; i < s; i++) {
 			chrome.scripting.executeScript({
 				target: { tabId: tab.id },
-				files: [scripts[i]],
+				files: [scripts![i]],
 			});
 		}
 
 		chrome.scripting.insertCSS({
 			target: { tabId: tab.id },
-			files: [manifest.content_scripts[0].css[0]],
+			files: [manifest.content_scripts![0].css![0]],
 		});
 	};
 
@@ -716,7 +729,7 @@ chrome.runtime.onInstalled.addListener((object) => {
 
 // Check when the extension button is clicked
 chrome.action.onClicked.addListener((tab) => {
-	chrome.tabs.sendMessage(tab.id, { request: "open-omni" });
+	chrome.tabs.sendMessage(tab.id!, { request: "open-omni" });
 });
 
 // Listen for the open omni shortcut
@@ -724,18 +737,18 @@ chrome.commands.onCommand.addListener((command) => {
 	if (command === "open-omni") {
 		getCurrentTab().then((response) => {
 			if (
-				!response.url.includes("chrome://") &&
-				!response.url.includes("chrome.google.com")
+				!response.url!.includes("chrome://") &&
+				!response.url!.includes("chrome.google.com")
 			) {
-				chrome.tabs.sendMessage(response.id, { request: "open-omni" });
+				chrome.tabs.sendMessage(response.id!, { request: "open-omni" });
 			} else {
 				chrome.tabs
 					.create({
 						url: "./newtab.html",
 					})
 					.then(() => {
-						newtaburl = response.url;
-						chrome.tabs.remove(response.id);
+						newtaburl = response.url!;
+						chrome.tabs.remove(response.id!);
 					});
 			}
 		});
@@ -757,7 +770,7 @@ function restoreNewTab() {
 				url: newtaburl,
 			})
 			.then(() => {
-				chrome.tabs.remove(response.id);
+				chrome.tabs.remove(response.id!);
 			});
 	});
 }
