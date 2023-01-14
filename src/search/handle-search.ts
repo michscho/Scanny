@@ -1,8 +1,10 @@
 import { hideSearchAndGoToActions } from "../components/utils";
 import { findClickableElementsText } from "../interactive/interactive";
 import { populateOmniFilter } from "../omni/omni";
+import $ from "jquery";
+import { Action } from "../actions/actions-data";
 
-export function handleHistory(query, actions, isFiltered) {
+export function handleHistory(query: string, actions: Action[], isFiltered) {
 	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/history ", "");
 	if (tempvalue != "/history") {
@@ -16,7 +18,7 @@ export function handleHistory(query, actions, isFiltered) {
 	);
 }
 
-export function handleBookmarks(query, actions, isFiltered) {
+export function handleBookmarks(query: string, actions: Action[], isFiltered) {
 	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/bookmarks ", "");
 	if (tempvalue != "/bookmarks" && tempvalue != "") {
@@ -35,7 +37,11 @@ export function handleBookmarks(query, actions, isFiltered) {
 	}
 }
 
-export function handleInteractive(query, actions, isFiltered) {
+export function handleInteractive(
+	query: string,
+	actions: Action[],
+	isFiltered
+) {
 	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/interactive ", "");
 	if (tempvalue != "/interactive") {
@@ -52,7 +58,7 @@ export function handleInteractive(query, actions, isFiltered) {
 	}
 }
 
-export function handleTabs(query, actions) {
+export function handleTabs(query: string, actions: Action[]) {
 	$(
 		".omni-item[data-index='" +
 			actions.findIndex((x) => x.action == "search") +
@@ -81,7 +87,7 @@ export function handleTabs(query, actions) {
 	}
 }
 
-export function handleRemove(query, actions) {
+export function handleRemove(query: string, actions: Action[]) {
 	$(
 		".omni-item[data-index='" +
 			actions.findIndex((x) => x.action == "search") +
@@ -114,7 +120,7 @@ export function handleRemove(query, actions) {
 	}
 }
 
-export function handleAction(query, actions) {
+export function handleAction(query: string, actions: Action[]) {
 	$(
 		".omni-item[data-index='" +
 			actions.findIndex((x) => x.action == "search") +
@@ -143,7 +149,7 @@ export function handleAction(query, actions) {
 	}
 }
 
-export function handleEmptyQuery(actions) {
+export function handleEmptyQuery(actions: Action[]) {
 	$(
 		".omni-item[data-index='" +
 			actions.findIndex((x) => x.action == "search") +
@@ -156,7 +162,7 @@ export function handleEmptyQuery(actions) {
 	).hide();
 }
 
-export function handleInvalidURL(query, actions) {
+export function handleInvalidURL(query: string, actions: Action[]) {
 	$(
 		".omni-item[data-index='" +
 			actions.findIndex((x) => x.action == "search") +
@@ -174,7 +180,7 @@ export function handleInvalidURL(query, actions) {
 	).html('"' + query + '"');
 }
 
-export function handleValidURL(query, actions) {
+export function handleValidURL(query: string, actions: Action[]) {
 	{
 		$(
 			".omni-item[data-index='" +

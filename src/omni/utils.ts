@@ -45,7 +45,7 @@ export function showToast(action) {
 	}, 3000);
 }
 
-export function addhttp(url) {
+export function addhttp(url: string) {
 	if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
 		url = "http://" + url;
 	}

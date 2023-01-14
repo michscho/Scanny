@@ -1,8 +1,6 @@
-import { findClickableElementsText } from "../interactive/interactive";
-import { populateOmni, populateOmniFilter } from "../omni/omni";
+import { populateOmni } from "../omni/omni";
 import { checkShortHand, validURL } from "../omni/utils";
 import { Action } from "../actions/actions-data";
-import { hideSearchAndGoToActions } from "../components/utils";
 import $ from "jquery";
 import { keyMapings } from "./key-mappings";
 import {
@@ -17,11 +15,17 @@ import {
 	handleValidURL,
 } from "./handle-search";
 
-export function search(e, actions: Action[], isFiltered: boolean) {
+export function search(
+	e: JQuery.KeyUpEvent<Document, undefined, any, any>,
+	actions: Action[],
+	isFiltered: boolean
+) {
+	console.log(e);
+
 	if (isSpecialKeyEvent(e)) {
 		return;
 	}
-	var query = $(this).val().toString().toLowerCase();
+	var query = $(e.target).val().toString().toLowerCase();
 	checkShortHand(e, query);
 	query = $(this).val().toString().toLowerCase();
 
@@ -45,17 +49,20 @@ export function search(e, actions: Action[], isFiltered: boolean) {
 		isFiltered = false;
 	}
 
-	$(".omni-extension #omni-list .omni-item").map(function () {
+	$(".omni-extension #omni-list .omni-item").filter(function () {
 		if (query.startsWith("/tabs")) {
 			handleTabs(query, actions);
+			return;
 		}
 
 		if (query.startsWith("/remove")) {
 			handleRemove(query, actions);
+			return;
 		}
 
 		if (query.startsWith("/actions")) {
 			handleAction(query, actions);
+			return;
 		}
 
 		$(this).toggle(
@@ -69,12 +76,12 @@ export function search(e, actions: Action[], isFiltered: boolean) {
 			return;
 		}
 
-		if (!validURL(query)) {
-			handleInvalidURL(query, actions);
+		if (validURL(query)) {
+			handleValidURL(query, actions);
 			return;
 		}
 
-		handleValidURL(query, actions);
+		handleInvalidURL(query, actions);
 	});
 
 	$(".omni-extension #omni-results").html(

@@ -1,21 +1,12 @@
 import $ from "jquery";
-import {
-	clickElement,
-	findClickableElementsText,
-} from "./interactive/interactive";
+import { clickElement } from "./interactive/interactive";
 import {
 	closeOmni,
 	openOmni,
 	populateOmni as populateActions,
-	populateOmniFilter,
 } from "./omni/omni";
-import {
-	checkShortHand,
-	showToast,
-	hoverItem,
-	addhttp,
-	validURL,
-} from "./omni/utils";
+import { showToast, hoverItem, addhttp } from "./omni/utils";
+import { keyMapings } from "./search/key-mappings";
 import { search } from "./search/search";
 
 var isOpen = false;
@@ -154,9 +145,12 @@ $(document).ready(() => {
 					break;
 				case "goto":
 					if (e.ctrlKey || e.metaKey) {
-						window.open(addhttp($(".omni-extension input").val()));
+						window.open(addhttp($(".omni-extension input").val().toString()));
 					} else {
-						window.open(addhttp($(".omni-extension input").val()), "_self");
+						window.open(
+							addhttp($(".omni-extension input").val().toString()),
+							"_self"
+						);
 					}
 					break;
 				case "print":
@@ -191,8 +185,7 @@ $(document).ready(() => {
 	$(document)
 		.keydown((e) => {
 			down[e.keyCode] = true;
-			if (down[38]) {
-				// Up key
+			if (down[keyMapings.up]) {
 				if (
 					$(".omni-item-active").prevAll("div").not(":hidden").first().length
 				) {
@@ -204,8 +197,7 @@ $(document).ready(() => {
 					previous.addClass("omni-item-active");
 					previous[0].scrollIntoView({ block: "nearest", inline: "nearest" });
 				}
-			} else if (down[40]) {
-				// Down key
+			} else if (down[keyMapings.down]) {
 				if (
 					$(".omni-item-active").nextAll("div").not(":hidden").first().length
 				) {
@@ -217,10 +209,10 @@ $(document).ready(() => {
 					next.addClass("omni-item-active");
 					next[0].scrollIntoView({ block: "nearest", inline: "nearest" });
 				}
-			} else if (down[27] && isOpen) {
+			} else if (down[keyMapings.esc] && isOpen) {
 				// Esc key
 				closeOmni(isOpen);
-			} else if (down[13] && isOpen) {
+			} else if (down[keyMapings.enter] && isOpen) {
 				// Enter key
 				handleAction(e);
 			}
@@ -272,7 +264,9 @@ $(document).ready(() => {
 		".omni-extension .omni-item:not(.omni-item-active)",
 		hoverItem
 	);
-	$(document).on("keyup", ".omni-extension input", search);
+	$(document).on("keyup", ".omni-extension input", (e) =>
+		search(e, actions, isFiltered)
+	);
 	$(document).on("click", ".omni-item-active", handleAction);
 	// TODO: look into this issue
 	//$(document).on("click", ".omni-extension #omni-overlay", closeOmni);
