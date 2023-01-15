@@ -99,7 +99,11 @@ jQuery(function () {
 			}
 		})
 		.keyup((e) => {
-			if (down[18] && down[16] && down[80]) {
+			if (
+				down[keyMapings.alt] &&
+				down[keyMapings.shift] &&
+				down[keyMapings.x]
+			) {
 				if (actions.find((x) => x.action == "pin") != undefined) {
 					chrome.runtime.sendMessage({ request: "pin-tab" });
 				} else {
@@ -109,7 +113,11 @@ jQuery(function () {
 					actions = response.actions;
 					populateActions(actions);
 				});
-			} else if (down[18] && down[16] && down[77]) {
+			} else if (
+				down[keyMapings.alt] &&
+				down[keyMapings.shift] &&
+				down[keyMapings.m]
+			) {
 				if (actions.find((x) => x.action == "mute") != undefined) {
 					chrome.runtime.sendMessage({ request: "mute-tab" });
 				} else {
@@ -119,7 +127,11 @@ jQuery(function () {
 					actions = response.actions;
 					populateActions(actions);
 				});
-			} else if (down[18] && down[16] && down[67]) {
+			} else if (
+				down[keyMapings.alt] &&
+				down[keyMapings.shift] &&
+				down[keyMapings.c]
+			) {
 				window.open("mailto:");
 			}
 
