@@ -27,10 +27,12 @@
 		"webpack-merge": "^5.8.0"
 	},
 	"dependencies": {
+		"@enykeev/react-virtualized": "^9.22.4-mirror.1",
 		"dom-focus-lock": "1.1.0",
 		"jquery": "3.6.3",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-window": "^1.8.8",
 		"virtualized-list": "2.2.0"
 	}
 }

@@ -12,3 +12,4 @@ export const keyMapings: Record<string, number> = {
 	c: 67,
 	x: 88,
 };
+

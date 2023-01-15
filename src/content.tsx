@@ -9,9 +9,6 @@ import {
 import { hoverItem } from "./omni/utils";
 import { keyMapings } from "./search/key-mappings";
 import { search } from "./search/search";
-import * as ReactDOM from "react-dom/client";
-import React from "react";
-import { Search } from "./components/search";
 import { Action } from "./actions/actions-data";
 
 var isOpen = false;
@@ -25,12 +22,6 @@ document.onkeyup = (e) => {
 jQuery(function () {
 	var actions: Action[] = [];
 	var isFiltered = false;
-
-	// creating the extension root
-	const extensionRoot = document.createElement("div");
-	extensionRoot.id = "omni-extension";
-	extensionRoot.className = "omni-extension";
-	document.body.appendChild(extensionRoot);
 
 	// Get checkmark image for toast
 	$("#omni-extension-toast img").attr(
@@ -143,7 +134,11 @@ jQuery(function () {
 			if (isOpen) {
 				isOpen = closeOmni(isOpen);
 			} else {
-				isOpen = openOmni($("#omni-extension"), isOpen, actions);
+				const extensionRoot = document.createElement("div");
+				extensionRoot.id = "omni-extension";
+				extensionRoot.className = "omni-extension";
+				document.body.appendChild(extensionRoot);
+				isOpen = openOmni(extensionRoot, isOpen, actions);
 			}
 		} else if (message.request == "close-omni") {
 			isOpen = closeOmni(isOpen);
