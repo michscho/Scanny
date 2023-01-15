@@ -1,10 +1,13 @@
 import { createAction } from "../actions/action-utils";
 import { Action } from "../actions/actions-data";
+import $ from "jQuery";
+import { containsOnlyWhitespace, filterDuplicates } from "./utils";
 
 export function findClickableElements(query: string): Action[] {
 	const aActions = findClickableLinks(query);
 	const buttonActions = findClickableButtons(query);
-	return [...aActions, ...buttonActions];
+	const placeholderActions = findPlaceholderElements(query);
+	return [...aActions, ...buttonActions, ...placeholderActions];
 }
 
 function findClickableLinks(query: string): Action[] {
@@ -37,4 +40,20 @@ function findClickableButtons(query: string): Action[] {
 		return createAction(el, "Clickable button", "🔘");
 	});
 	return buttonActions;
+}
+
+function findPlaceholderElements(query: string): Action[] {
+	var placeholderElements = [];
+	$(`[placeholder]:contains('${query}')`).each(function () {
+		if (containsOnlyWhitespace($(this).attr("placeholder"))) {
+			return;
+		}
+		placeholderElements.push($(this).attr("placeholder"));
+	});
+	const placeholderActions: Action[] = filterDuplicates(
+		placeholderElements
+	).map((el) => {
+		return createAction(el, "Placeholder", "🔖");
+	});
+	return placeholderActions;
 }

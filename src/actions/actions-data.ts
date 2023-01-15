@@ -456,6 +456,15 @@ export const actionData: Action[] = [
 		keys: ["⌘", "↑"],
 	},
 	{
+		title: "Scroll by",
+		desc: "Scroll by a certain amount given",
+		type: "action",
+		action: "scroll-by",
+		emoji: true,
+		emojiChar: "📜",
+		keycheck: false,
+	},
+	{
 		title: "Go back",
 		desc: "Go back in history for the current tab",
 		type: "action",

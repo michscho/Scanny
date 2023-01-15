@@ -31,7 +31,7 @@ let newtaburl = "";
 chrome.runtime.onInstalled.addListener((object) => {
 	const manifest = chrome.runtime.getManifest();
 
-	const injectIntoTab = (tab) => {
+	const injectIntoTab = (tab: chrome.tabs.Tab) => {
 		const scripts = manifest.content_scripts![0].js;
 		const s = scripts!.length;
 
@@ -53,13 +53,13 @@ chrome.runtime.onInstalled.addListener((object) => {
 			populate: true,
 		},
 		(windows) => {
-			let currentWindow;
+			let currentWindow: chrome.windows.Window;
 			const w = windows.length;
 
 			for (let i = 0; i < w; i++) {
 				currentWindow = windows[i];
 
-				let currentTab;
+				let currentTab: chrome.tabs.Tab;
 				const t = currentWindow.tabs.length;
 
 				for (let j = 0; j < t; j++) {

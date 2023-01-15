@@ -25,7 +25,7 @@ function renderAction(
 	if (action.action == "search" || action.action == "goto") {
 		skip = "style='display:none'";
 	}
-	if (index != 0) {
+	if (index !== 0) {
 		$("#omni-extension #omni-list").append(
 			"<div class='omni-item' " +
 				skip +
@@ -142,7 +142,7 @@ export function openOmni(isOpen: boolean, actions: Action[]): boolean {
 export function populateOmniFilter(actions: Action[], isFiltered: boolean) {
 	isFiltered = true;
 	$("#omni-extension #omni-list").html("");
-	const renderRow = (index) => {
+	const renderRow = (index: number) => {
 		const action = actions[index];
 		var keys = "";
 		if (action.keycheck) {
@@ -209,4 +209,3 @@ export function populateOmniFilter(actions: Action[], isFiltered: boolean) {
 				$(".omni-extension #omni-results").html(actions.length + " results"),
 		});
 }
-
