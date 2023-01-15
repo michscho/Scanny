@@ -1,5 +1,4 @@
 import { hideSearchAndGoToActions } from "./utils";
-import { populateOmniFilter } from "../omni/omni";
 import $ from "jquery";
 import { Action } from "../actions/actions-data";
 import { findClickableElements } from "../interactive/search";
@@ -18,7 +17,7 @@ export function handleHistory(
 	chrome.runtime.sendMessage(
 		{ request: "search-history", query: query },
 		(response) => {
-			populateOmniFilter(response.history, isFiltered);
+			// populateOmniFilter(response.history, isFiltered);
 		}
 	);
 }
@@ -35,14 +34,13 @@ export function handleBookmarks(
 		chrome.runtime.sendMessage(
 			{ request: "search-bookmarks", query: query },
 			(response) => {
-				populateOmniFilter(response.bookmarks, isFiltered);
+				// populateOmniFilter(response.bookmarks, isFiltered);
 			}
 		);
 	} else {
-		populateOmniFilter(
-			actions.filter((x) => x.type == "bookmark"),
-			isFiltered
-		);
+		// populateOmniFilter(
+		actions.filter((x) => x.type == "bookmark"), isFiltered;
+		//);
 	}
 }
 
@@ -57,13 +55,12 @@ export function handleInteractive(
 		const newActions: Action[] = findClickableElements(
 			query.replace("/interactive ", "")
 		);
-		populateOmniFilter(newActions, isFiltered);
+		// populateOmniFilter(newActions, isFiltered);
 		isFiltered = false;
 	} else {
-		populateOmniFilter(
-			actions.filter((x) => x.type === "interactive"),
-			isFiltered
-		);
+		// populateOmniFilter(
+		actions.filter((x) => x.type === "interactive"), isFiltered;
+		//);
 	}
 }
 

@@ -1,4 +1,4 @@
-import { populateOmni } from "../omni/omni";
+import { rerenderActionsList } from "../omni/omni";
 import { checkShortHand, validURL } from "../omni/utils";
 import { Action } from "../actions/actions-data";
 import $ from "jquery";
@@ -47,7 +47,7 @@ export function search(
 	}
 
 	if (isFiltered) {
-		populateOmni(actions);
+		rerenderActionsList(actions);
 		isFiltered = false;
 	}
 
@@ -106,3 +106,4 @@ function isSpecialKeyEvent(
 		e.keyCode == keyMapings.up
 	);
 }
+

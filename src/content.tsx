@@ -4,7 +4,7 @@ import { handleAction } from "./actions/handle-action";
 import {
 	closeOmni,
 	openOmni,
-	populateOmni as populateActions,
+	rerenderActionsList as populateActions,
 } from "./omni/omni";
 import { hoverItem } from "./omni/utils";
 import { keyMapings } from "./search/key-mappings";

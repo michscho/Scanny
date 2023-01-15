@@ -1,5 +1,5 @@
 import { clickElement } from "../interactive/interactive";
-import { closeOmni, populateOmni } from "../omni/omni";
+import { closeOmni, rerenderActionsList } from "../omni/omni";
 import { addhttp, showToast } from "../omni/utils";
 import { Action } from "./actions-data";
 import $ from "jquery";
@@ -12,7 +12,7 @@ export function handleAction(e, actions: Action[], isOpen: boolean) {
 	// Fetch actions again
 	chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 		actions = response.actions;
-		populateOmni(actions);
+		rerenderActionsList(actions);
 	});
 
 	return isOpen;
@@ -137,3 +137,4 @@ function inputStartsWith(startingValue: string) {
 		.toLowerCase()
 		.startsWith(startingValue);
 }
+

@@ -2,7 +2,6 @@ import { resetActions } from "../actions/action-utils";
 import { Action, searchActionData } from "../actions/actions-data";
 import { getBookmarks } from "../chrome/bookmarks";
 import { getTabs } from "../chrome/tab";
-import VirtualizedList from "virtualized-list";
 import $ from "jquery";
 import focusLock from "dom-focus-lock";
 import { Search } from "../components/search";
@@ -92,7 +91,7 @@ export function closeOmni(isOpen: boolean): boolean {
 	return isOpen;
 }
 
-export function populateOmni(actions: Action[]) {
+export function rerenderActionsList(actions: Action[]) {
 	//$("#omni-extension #omni-list").html("");
 	actions.forEach((action, index) => {
 		var keys = "";
@@ -131,7 +130,6 @@ export function openOmni(root, isOpen: boolean, actions: Action[]): boolean {
 		actions = response.actions;
 		const reactRoot = ReactDOM.createRoot(root);
 		reactRoot.render(<Search actions={actions} />);
-		$("#omni-extension").removeClass("omni-closing");
 		window.setTimeout(() => {
 			$("#omni-extension input").focus();
 			focusLock.on($("#omni-extension input").get(0));
@@ -139,9 +137,4 @@ export function openOmni(root, isOpen: boolean, actions: Action[]): boolean {
 		}, 100);
 	});
 	return isOpen;
-}
-
-export function populateOmniFilter(actions: Action[], isFiltered: boolean) {
-	return;
-	isFiltered = true;
 }
