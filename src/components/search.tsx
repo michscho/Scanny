@@ -3,12 +3,21 @@ import "../../public/content.css";
 import { ActionComponent } from "./action-component";
 import { Toast } from "./toast";
 import { FixedSizeList as List } from "react-window";
+import $ from "jquery";
+import { search } from "../search/search";
+import { Action } from "../actions/actions-data";
 
 interface SearchProps {
-	actions: any[];
+	actions: Action[];
 }
 
-export function Search(search: SearchProps): JSX.Element {
+export function Search(searchProps: SearchProps): JSX.Element {
+	//const [action, setActions] = useState(searchProps.actions);
+
+	$(document).on("keyup", ".omni-extension input", (e) =>
+		search(e, searchProps.actions, true)
+	);
+
 	return (
 		<div>
 			<div id="omni-wrap">
@@ -17,11 +26,15 @@ export function Search(search: SearchProps): JSX.Element {
 						<input placeholder="Type a command or search" />
 					</div>
 					<div id="omni-list">
-						<List height={400} itemCount={search.actions.length} itemSize={50}>
+						<List
+							height={400}
+							itemCount={searchProps.actions.length}
+							itemSize={50}
+						>
 							{({ index, style }) => (
 								<div style={style}>
 									<ActionComponent
-										action={search.actions[index]}
+										action={searchProps.actions[index]}
 										skip=""
 										img=""
 										index={index}
@@ -44,4 +57,7 @@ export function Search(search: SearchProps): JSX.Element {
 			<Toast />
 		</div>
 	);
+}
+function useState(actions: any[]): [any, any] {
+	throw new Error("Function not implemented.");
 }

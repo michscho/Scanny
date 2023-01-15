@@ -20,8 +20,6 @@ export function search(
 	actions: Action[],
 	isFiltered: boolean
 ) {
-	console.log(e);
-
 	if (isSpecialKeyEvent(e)) {
 		return;
 	}
@@ -106,4 +104,3 @@ function isSpecialKeyEvent(
 		e.keyCode == keyMapings.up
 	);
 }
-

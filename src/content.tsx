@@ -1,15 +1,12 @@
 import $ from "jquery";
 import jQuery from "jquery";
 import { handleAction } from "./actions/handle-action";
-import {
-	closeOmni,
-	openOmni,
-	rerenderActionsList as populateActions,
-} from "./omni/omni";
+import { closeOmni, openOmni, rerenderActionsList } from "./omni/omni";
 import { hoverItem } from "./omni/utils";
 import { keyMapings } from "./search/key-mappings";
 import { search } from "./search/search";
 import { Action } from "./actions/actions-data";
+import { scrollDown, scrollUp } from "./omni/scrolling";
 
 var isOpen = false;
 
@@ -57,35 +54,20 @@ jQuery(function () {
 		.keydown((e) => {
 			down[e.keyCode] = true;
 			if (down[keyMapings.up]) {
-				if (
-					$(".omni-item-active").prevAll("div").not(":hidden").first().length
-				) {
-					var previous = $(".omni-item-active")
-						.prevAll("div")
-						.not(":hidden")
-						.first();
-					$(".omni-item-active").removeClass("omni-item-active");
-					previous.addClass("omni-item-active");
-					previous[0].scrollIntoView({ block: "nearest", inline: "nearest" });
-				}
-			} else if (down[keyMapings.down]) {
-				if (
-					$(".omni-item-active").nextAll("div").not(":hidden").first().length
-				) {
-					var next = $(".omni-item-active")
-						.nextAll("div")
-						.not(":hidden")
-						.first();
-					$(".omni-item-active").removeClass("omni-item-active");
-					next.addClass("omni-item-active");
-					next[0].scrollIntoView({ block: "nearest", inline: "nearest" });
-				}
-			} else if (down[keyMapings.esc] && isOpen) {
-				// Esc key
-				isOpen = closeOmni(isOpen);
-			} else if (down[keyMapings.enter] && isOpen) {
-				// Enter key
+				scrollUp();
+				return;
+			}
+			if (down[keyMapings.down]) {
+				scrollDown();
+				return;
+			}
+			if (down[keyMapings.enter] && isOpen) {
 				isOpen = handleAction(e, actions, isOpen);
+				return;
+			}
+			if (down[keyMapings.esc] && isOpen) {
+				isOpen = closeOmni(isOpen);
+				return;
 			}
 		})
 		.keyup((e) => {
@@ -101,7 +83,7 @@ jQuery(function () {
 				}
 				chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 					actions = response.actions;
-					populateActions(actions);
+					rerenderActionsList(actions);
 				});
 			} else if (
 				down[keyMapings.alt] &&
@@ -115,7 +97,7 @@ jQuery(function () {
 				}
 				chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 					actions = response.actions;
-					populateActions(actions);
+					rerenderActionsList(actions);
 				});
 			} else if (
 				down[keyMapings.alt] &&
@@ -128,7 +110,9 @@ jQuery(function () {
 			down = [];
 		});
 
-	// Recieve messages from background
+	// IDEE:
+	// REACT COMPONENTE HIER MIT USE STATE ÖFFNEN UND SCHLIEßEN
+
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		if (message.request == "open-omni") {
 			if (isOpen) {
@@ -151,10 +135,11 @@ jQuery(function () {
 		".omni-extension .omni-item:not(.omni-item-active)",
 		hoverItem
 	);
-	$(document).on("keyup", ".omni-extension input", (e) =>
-		search(e, actions, isFiltered)
-	);
+	// $(document).on("keyup", ".omni-extension input", (e) =>
+	// 	search(e, actions, isFiltered)
+	// );
 	$(document).on("click", ".omni-item-active", handleAction);
-	// TODO: look into this issue
-	//$(document).on("click", ".omni-extension #omni-overlay", closeOmni);
+	$(document).on("click", ".omni-extension #omni-overlay", () =>
+		closeOmni(isOpen)
+	);
 });

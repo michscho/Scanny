@@ -23,6 +23,7 @@ function renderAction(
 	keys: string,
 	img: string
 ) {
+	return;
 	var skip = "";
 	if (action.action == "search" || action.action == "goto") {
 		skip = "style='display:none'";
