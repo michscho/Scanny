@@ -2,6 +2,7 @@ import { clickElement } from "../interactive/interactive";
 import { closeOmni, populateOmni } from "../omni/omni";
 import { addhttp, showToast } from "../omni/utils";
 import { Action } from "./actions-data";
+import $ from "jquery";
 
 export function handleAction(e, actions: Action[], isOpen: boolean) {
 	var action = actions[$(".omni-item-active").attr("data-index")];

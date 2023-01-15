@@ -27,7 +27,7 @@ const common = {
 		excludeAssets: [IMAGE_TYPES],
 	},
 	resolve: {
-		extensions: [".ts", ".js"],
+		extensions: [".ts", ".tsx", ".js"],
 	},
 	module: {
 		rules: [
@@ -56,7 +56,6 @@ const common = {
 			},
 		],
 	},
-	
 
 	plugins: [
 		// Copy static assets from `public` folder to `build` folder

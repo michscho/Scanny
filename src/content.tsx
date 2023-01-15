@@ -1,16 +1,17 @@
 import $ from "jquery";
 import jQuery from "jquery";
-import { Action } from "./actions/actions-data";
 import { handleAction } from "./actions/handle-action";
-import { clickElement } from "./interactive/interactive";
 import {
 	closeOmni,
 	openOmni,
 	populateOmni as populateActions,
 } from "./omni/omni";
-import { showToast, hoverItem, addhttp } from "./omni/utils";
+import { hoverItem } from "./omni/utils";
 import { keyMapings } from "./search/key-mappings";
 import { search } from "./search/search";
+import * as ReactDOM from "react-dom/client";
+import React from "react";
+import { App } from "./app";
 
 var isOpen = false;
 
@@ -24,32 +25,34 @@ jQuery(function () {
 	var actions = [];
 	var isFiltered = false;
 
-	// Append the omni into the current page
-	$.get(chrome.runtime.getURL("/content.html"), (data) => {
-		$(data).appendTo("body");
+	const extensionRoot = document.createElement("div");
+	extensionRoot.id = "omni-extension";
+	extensionRoot.className = "omni-extension";
+	document.body.appendChild(extensionRoot);
+	const reactRoot = ReactDOM.createRoot(extensionRoot);
+	reactRoot.render(<App />);
 
-		// Get checkmark image for toast
-		$("#omni-extension-toast img").attr(
-			"src",
-			chrome.runtime.getURL("icons/check.svg")
-		);
+	// Get checkmark image for toast
+	$("#omni-extension-toast img").attr(
+		"src",
+		chrome.runtime.getURL("icons/check.svg")
+	);
 
-		chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
-			actions = response.actions;
-		});
-
-		// TODO: Is this right?
-		if (
-			window.location.href ==
-			"chrome-extension://mpanekjjajcabgnlbabmopeenljeoggm/newtab.html"
-		) {
-			isOpen = true;
-			$("#omni-extension").removeClass("omni-closing");
-			window.setTimeout(() => {
-				$("#omni-extension input").focus();
-			}, 100);
-		}
+	chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
+		actions = response.actions;
 	});
+
+	// TODO: Is this right?
+	if (
+		window.location.href ==
+		"chrome-extension://mpanekjjajcabgnlbabmopeenljeoggm/newtab.html"
+	) {
+		isOpen = true;
+		$("#omni-extension").removeClass("omni-closing");
+		window.setTimeout(() => {
+			$("#omni-extension input").focus();
+		}, 100);
+	}
 
 	// Customize the shortcut to open the Omni box
 	function openShortcuts() {

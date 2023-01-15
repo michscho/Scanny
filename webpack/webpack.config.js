@@ -11,7 +11,7 @@ const config = (env, argv) =>
 		devtool: "cheap-module-source-map",
 		entry: {
 			background: path.resolve(__dirname, "..", "src", "background.ts"),
-			content: path.resolve(__dirname, "..", "src", "content.ts"),
+			content: path.resolve(__dirname, "..", "src", "content.tsx"),
 		},
 		output: {
 			path: path.join(__dirname, "../build"),
