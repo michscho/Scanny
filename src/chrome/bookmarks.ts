@@ -1,9 +1,12 @@
 import { Action } from "../actions/actions-data";
 import { getCurrentTab } from "./tab";
 
+type Bookmark = chrome.bookmarks.BookmarkTreeNode;
+type Tab = chrome.tabs.Tab;
+
 export const getBookmarks = () => {
 	const actions: Action[] = [];
-	const process_bookmark = (bookmarks) => {
+	const process_bookmark = (bookmarks: Bookmark[]) => {
 		for (const bookmark of bookmarks) {
 			if (bookmark.url) {
 				actions.push({
@@ -28,7 +31,7 @@ export const getBookmarks = () => {
 	return actions;
 };
 
-export const createBookmark = (tab: chrome.tabs.Tab) => {
+export const createBookmark = (_tab: Tab) => {
 	getCurrentTab().then((response) => {
 		chrome.bookmarks.create({
 			title: response.title,
@@ -37,6 +40,6 @@ export const createBookmark = (tab: chrome.tabs.Tab) => {
 	});
 };
 
-export const removeBookmark = (bookmark) => {
+export const removeBookmark = (bookmark: Bookmark) => {
 	chrome.bookmarks.remove(bookmark.id);
 };

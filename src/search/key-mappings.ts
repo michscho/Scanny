@@ -5,4 +5,5 @@ export const keyMapings: Record<string, number> = {
 	down: 40,
 	enter: 13,
 	esc: 27,
+	backspace: 8,
 };

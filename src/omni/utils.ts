@@ -1,35 +1,37 @@
 import $ from "jquery";
+import { keyMapings } from "../search/key-mappings";
+
+const shortHandRecord: Record<string, string> = {
+	"/t": "/tabs ",
+	"/b": "/bookmarks ",
+	"/h": "/history ",
+	"/r": "/remove ",
+	"/a": "/actions ",
+	"/i": "/interactive ",
+};
+
+function getShortHandValues() {
+	return Object.keys(shortHandRecord).map((key) => {
+		return shortHandRecord[key];
+	});
+}
 
 export function checkShortHand(
 	keyEvent: JQuery.KeyUpEvent<Document, undefined, any, any>,
 	value: string
 ) {
 	var element = $(".omni-extension input");
-	if (keyEvent.keyCode != 8) {
-		if (value == "/t") {
-			element.val("/tabs ");
-		} else if (value == "/b") {
-			element.val("/bookmarks ");
-		} else if (value == "/h") {
-			element.val("/history ");
-		} else if (value == "/r") {
-			element.val("/remove ");
-		} else if (value == "/a") {
-			element.val("/actions ");
-		} else if (value == "/i") {
-			element.val("/interactive ");
+
+	if (keyEvent.keyCode !== keyMapings.backspace) {
+		const shortHand = shortHandRecord[value];
+		if (shortHand) {
+			element.val(shortHand);
 		}
-	} else {
-		if (
-			value == "/tabs" ||
-			value == "/bookmarks" ||
-			value == "/actions" ||
-			value == "/remove" ||
-			value == "/history" ||
-			value == "/interactive"
-		) {
-			element.val("");
-		}
+		return;
+	}
+
+	if (getShortHandValues().includes(value)) {
+		element.val("");
 	}
 }
 
@@ -55,15 +57,21 @@ export function addhttp(url: string) {
 	return url;
 }
 
+const protocol = "^(https?:\\/\\/)?";
+const domainName = "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|";
+const ipAdress = "((\\d{1,3}\\.){3}\\d{1,3}))";
+const portAndPath = "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*";
+const queryString = "(\\?[;&a-z\\d%_.~+=-]*)?";
+
 export function validURL(str: string) {
 	var pattern = new RegExp(
-		"^(https?:\\/\\/)?" + // protocol
-			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+		protocol +
+			domainName +
+			ipAdress +
+			portAndPath +
+			queryString +
 			"(\\#[-a-z\\d_]*)?$",
 		"i"
-	); // fragment locator
-	return !!pattern.test(str);
+	);
+	return Boolean(pattern.test(str));
 }

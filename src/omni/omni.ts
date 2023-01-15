@@ -2,7 +2,7 @@ import { resetActions } from "../actions/action-utils";
 import { Action, searchActionData } from "../actions/actions-data";
 import { getBookmarks } from "../chrome/bookmarks";
 import { getTabs } from "../chrome/tab";
-import { VirtualizedList } from "virtualized-list/es/VirtualList";
+import VirtualizedList from "virtualized-list";
 import $ from "jquery";
 import focusLock from "dom-focus-lock";
 
@@ -209,3 +209,4 @@ export function populateOmniFilter(actions: Action[], isFiltered: boolean) {
 				$(".omni-extension #omni-results").html(actions.length + " results"),
 		});
 }
+

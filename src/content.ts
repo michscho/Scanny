@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { clickElement } from "./interactive/interactive";
+import { clickLinkElement } from "./interactive/interactive";
 import {
 	closeOmni,
 	openOmni,
@@ -97,7 +97,7 @@ $(document).ready(() => {
 		) {
 			const query = $(".omni-item-active .omni-item-name").text();
 			console.log(query);
-			clickElement(query);
+			clickLinkElement(query);
 		} else {
 			chrome.runtime.sendMessage({
 				request: action.action,

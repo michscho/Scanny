@@ -1,8 +1,8 @@
 import { hideSearchAndGoToActions } from "../components/utils";
-import { findClickableElementsText } from "../interactive/interactive";
 import { populateOmniFilter } from "../omni/omni";
 import $ from "jquery";
 import { Action } from "../actions/actions-data";
+import { findClickableElements } from "../interactive/search";
 
 export function handleHistory(
 	query: string,
@@ -54,7 +54,7 @@ export function handleInteractive(
 	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/interactive ", "");
 	if (tempvalue != "/interactive") {
-		const newActions: Action[] = findClickableElementsText(
+		const newActions: Action[] = findClickableElements(
 			query.replace("/interactive ", "")
 		);
 		populateOmniFilter(newActions, isFiltered);
