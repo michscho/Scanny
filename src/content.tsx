@@ -11,7 +11,8 @@ import { keyMapings } from "./search/key-mappings";
 import { search } from "./search/search";
 import * as ReactDOM from "react-dom/client";
 import React from "react";
-import { App } from "./app";
+import { Search } from "./components/search";
+import { Action } from "./actions/actions-data";
 
 var isOpen = false;
 
@@ -22,7 +23,7 @@ document.onkeyup = (e) => {
 };
 
 jQuery(function () {
-	var actions = [];
+	var actions: Action[] = [];
 	var isFiltered = false;
 
 	const extensionRoot = document.createElement("div");
@@ -30,7 +31,7 @@ jQuery(function () {
 	extensionRoot.className = "omni-extension";
 	document.body.appendChild(extensionRoot);
 	const reactRoot = ReactDOM.createRoot(extensionRoot);
-	reactRoot.render(<App />);
+	reactRoot.render(<Search actions={actions} />);
 
 	// Get checkmark image for toast
 	$("#omni-extension-toast img").attr(

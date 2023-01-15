@@ -1,8 +1,13 @@
 import React from "react";
-
+import { Action } from "../actions/actions-data";
 import "./content.css";
+import { Toast } from "./toast";
 
-export function App() {
+interface SearchProps {
+	actions: Action[];
+}
+
+export function Search(search: SearchProps): JSX.Element {
 	return (
 		<div>
 			<div id="omni-wrap">
@@ -21,10 +26,7 @@ export function App() {
 				</div>
 			</div>
 			<div id="omni-overlay"></div>
+			<Toast />
 		</div>
-		// <div id="omni-extension-toast">
-		// 	<img src="" />
-		// 	<span>The action has been successful</span>
-		// </div>
 	);
 }

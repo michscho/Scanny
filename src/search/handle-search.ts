@@ -1,4 +1,4 @@
-import { hideSearchAndGoToActions } from "../components/utils";
+import { hideSearchAndGoToActions } from "./utils";
 import { populateOmniFilter } from "../omni/omni";
 import $ from "jquery";
 import { Action } from "../actions/actions-data";
