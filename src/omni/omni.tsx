@@ -5,6 +5,9 @@ import { getTabs } from "../chrome/tab";
 import VirtualizedList from "virtualized-list";
 import $ from "jquery";
 import focusLock from "dom-focus-lock";
+import { Search } from "../components/search";
+import React from "react";
+import * as ReactDOM from "react-dom/client";
 
 export const resetOmni = () => {
 	const defaultActions = resetActions();
@@ -122,7 +125,10 @@ export function populateOmni(actions: Action[]) {
 	$(".omni-extension #omni-results").html(actions.length + " results");
 }
 
-export function openOmni(isOpen: boolean, actions: Action[]): boolean {
+export function openOmni(root, isOpen: boolean, actions: Action[]): boolean {
+	const reactRoot = ReactDOM.createRoot(root);
+	reactRoot.render(<Search actions={actions} />);
+
 	isOpen = true;
 	chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 		actions = response.actions;

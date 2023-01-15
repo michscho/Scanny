@@ -26,12 +26,11 @@ jQuery(function () {
 	var actions: Action[] = [];
 	var isFiltered = false;
 
+	// creating the extension root
 	const extensionRoot = document.createElement("div");
 	extensionRoot.id = "omni-extension";
 	extensionRoot.className = "omni-extension";
 	document.body.appendChild(extensionRoot);
-	const reactRoot = ReactDOM.createRoot(extensionRoot);
-	reactRoot.render(<Search actions={actions} />);
 
 	// Get checkmark image for toast
 	$("#omni-extension-toast img").attr(
@@ -144,7 +143,7 @@ jQuery(function () {
 			if (isOpen) {
 				isOpen = closeOmni(isOpen);
 			} else {
-				isOpen = openOmni(isOpen, actions);
+				isOpen = openOmni($("#omni-extension"), isOpen, actions);
 			}
 		} else if (message.request == "close-omni") {
 			isOpen = closeOmni(isOpen);
