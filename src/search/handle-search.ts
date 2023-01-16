@@ -1,7 +1,7 @@
-import { hideSearchAndGoToActions } from "./utils";
 import $ from "jquery";
 import { Action } from "../actions/actions-data";
 import { findClickableElements } from "../interactive/search";
+import { hideSearchAndGoToActions } from "../utils/utils";
 
 export function handleHistory(
 	query: string,

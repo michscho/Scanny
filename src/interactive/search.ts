@@ -1,7 +1,7 @@
-import { createAction } from "../actions/action-utils";
+import { createAction } from "../actions/create-action";
 import { Action } from "../actions/actions-data";
 import $ from "jQuery";
-import { containsOnlyWhitespace, filterDuplicates } from "./utils";
+import { containsOnlyWhitespace, filterDuplicates } from "../utils/utils";
 
 export function findClickableElements(query: string): Action[] {
 	const aActions = findClickableLinks(query);

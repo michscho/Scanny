@@ -1,10 +1,10 @@
-import { resetActions } from "../actions/action-utils";
+import { resetActions } from "../actions/create-action";
 import { Action, searchActionData } from "../actions/actions-data";
 import { getBookmarks } from "../chrome/bookmarks";
 import { getTabs } from "../chrome/tab";
 import $ from "jquery";
 import focusLock from "dom-focus-lock";
-import { Search } from "../components/search";
+import { App } from "../components/app";
 import React from "react";
 import * as ReactDOM from "react-dom/client";
 
@@ -130,7 +130,7 @@ export function openOmni(root, isOpen: boolean, actions: Action[]): boolean {
 	chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 		actions = response.actions;
 		const reactRoot = ReactDOM.createRoot(root);
-		reactRoot.render(<Search actions={actions} />);
+		reactRoot.render(<App actions={actions} />);
 		window.setTimeout(() => {
 			$("#omni-extension input").focus();
 			focusLock.on($("#omni-extension input").get(0));

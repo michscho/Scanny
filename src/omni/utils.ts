@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { keyMapings } from "../search/key-mappings";
+import { keyMapings } from "../utils/key-mappings";
 
 const shortHandRecord: Record<string, string> = {
 	"/t": "/tabs ",

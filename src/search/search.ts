@@ -2,7 +2,7 @@ import { rerenderActionsList } from "../omni/omni";
 import { checkShortHand, validURL } from "../omni/utils";
 import { Action } from "../actions/actions-data";
 import $ from "jquery";
-import { keyMapings } from "./key-mappings";
+import { keyMapings } from "../utils/key-mappings";
 import {
 	handleAction,
 	handleBookmarks,

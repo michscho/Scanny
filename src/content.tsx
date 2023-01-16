@@ -2,11 +2,14 @@ import $ from "jquery";
 import jQuery from "jquery";
 import { handleAction } from "./actions/handle-action";
 import { closeOmni, openOmni, rerenderActionsList } from "./omni/omni";
-import { hoverItem } from "./omni/utils";
-import { keyMapings } from "./search/key-mappings";
-import { search } from "./search/search";
+import { keyMapings } from "./utils/key-mappings";
 import { Action } from "./actions/actions-data";
 import { scrollDown, scrollUp } from "./omni/scrolling";
+
+// A common need for extensions is to have a single long-running script to manage some task or
+// state. Background pages to the rescue.The background page is an HTML page that runs in the
+// extension process. It exists for the lifetime of your extension, and only one instance of it at a
+// time is active.
 
 var isOpen = false;
 
@@ -110,9 +113,6 @@ jQuery(function () {
 			down = [];
 		});
 
-	// IDEE:
-	// REACT COMPONENTE HIER MIT USE STATE ÖFFNEN UND SCHLIEßEN
-
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		if (message.request == "open-omni") {
 			if (isOpen) {
@@ -130,15 +130,7 @@ jQuery(function () {
 	});
 
 	$(document).on("click", "#open-page-omni-extension-thing", openShortcuts);
-	$(document).on(
-		"mouseover",
-		".omni-extension .omni-item:not(.omni-item-active)",
-		hoverItem
-	);
-	// $(document).on("keyup", ".omni-extension input", (e) =>
-	// 	search(e, actions, isFiltered)
-	// );
-	$(document).on("click", ".omni-item-active", handleAction);
+
 	$(document).on("click", ".omni-extension #omni-overlay", () =>
 		closeOmni(isOpen)
 	);
