@@ -1,3 +1,7 @@
+import {
+	createBookmarkAction,
+	createHistoryAction,
+} from "../actions/create-action";
 import { Action } from "../actions/data/types-data";
 import { createBookmark, removeBookmark } from "../chrome/bookmarks";
 import {
@@ -24,11 +28,11 @@ import {
 } from "../chrome/tab";
 import { openIncognito, closeWindow } from "../chrome/window";
 
-export function attachOnMessageListener(resetOmni: () => Action[]) {
+export function attachOnMessageListener(resetExtension: () => Action[]) {
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		switch (message.request) {
 			case "get-actions":
-				const actions = resetOmni();
+				const actions = resetExtension();
 				sendResponse({ actions: actions });
 				break;
 			case "switch-tab":
@@ -103,14 +107,7 @@ export function attachOnMessageListener(resetOmni: () => Action[]) {
 					.then((data) => {
 						var actions: Action[] = [];
 						data.forEach((ele, _index) => {
-							actions.push({
-								title: ele.title,
-								type: "history",
-								emojiChar: "🏛",
-								action: "history",
-								url: ele.url,
-								description: ele.url,
-							});
+							actions.push(createHistoryAction(ele));
 						});
 						sendResponse({ history: actions });
 					});
@@ -124,14 +121,7 @@ export function attachOnMessageListener(resetOmni: () => Action[]) {
 							if (!action.url) {
 								data.splice(index, 1);
 							}
-							actions.push({
-								title: action.title,
-								type: "bookmark",
-								emojiChar: "⭐️",
-								action: "bookmark",
-								url: action.url,
-								description: action.url,
-							});
+							actions.push(createBookmarkAction(action));
 						});
 					data.forEach((action, index) => {
 						if (!action.url) {

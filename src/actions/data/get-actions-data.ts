@@ -1,16 +1,18 @@
 import { basicData } from "./pure-data/basic-data";
+import { clearData } from "./pure-data/clear-data";
 import { scrollData } from "./pure-data/scroll-data";
 import { searchData } from "./pure-data/search-data";
 import { tabData } from "./pure-data/tab-data";
 import { urlData } from "./pure-data/url-data";
+import { Action } from "./types-data";
 
-export function getActionsData() {
+export function getActionsData(): Action[] {
 	return [
 		...basicData,
 		...searchData,
-		...clearData,
 		...tabData,
 		...scrollData,
 		...urlData,
+		...clearData,
 	];
 }

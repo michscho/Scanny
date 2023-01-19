@@ -2,8 +2,8 @@ import { getCurrentTab } from "./chrome/tab";
 import { attachOnInstallListener } from "./listener/on-install";
 import { attachChromeTabListener } from "./listener/tabs";
 import { attachOnMessageListener } from "./listener/on-message";
-import { resetAllActions } from "./actions/reset-actions";
 import { Action } from "./actions/data/types-data";
+import { resetAllActions } from "./actions/reset-actions";
 
 let actions: Action[] = [];
 let newtaburl = "";

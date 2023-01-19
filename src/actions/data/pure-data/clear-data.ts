@@ -1,7 +1,9 @@
-const clearData = [
+import { Action } from "../types-data";
+
+export const clearData: Action[] = [
 	{
 		title: "Clear browsing history",
-		desc: "Clear all of your browsing history",
+		description: "Clear all of your browsing history",
 		type: "action",
 		action: "remove-history",
 		emojiChar: "🗂",
@@ -9,7 +11,7 @@ const clearData = [
 	},
 	{
 		title: "Clear cookies",
-		desc: "Clear all cookies",
+		description: "Clear all cookies",
 		type: "action",
 		action: "remove-cookies",
 		emojiChar: "🍪",
@@ -17,7 +19,7 @@ const clearData = [
 	},
 	{
 		title: "Clear cache",
-		desc: "Clear the cache",
+		description: "Clear the cache",
 		type: "action",
 		action: "remove-cache",
 		emojiChar: "🗄",
@@ -25,7 +27,7 @@ const clearData = [
 	},
 	{
 		title: "Clear local storage",
-		desc: "Clear the local storage",
+		description: "Clear the local storage",
 		type: "action",
 		action: "remove-local-storage",
 		emojiChar: "📦",
@@ -33,7 +35,7 @@ const clearData = [
 	},
 	{
 		title: "Clear passwords",
-		desc: "Clear all saved passwords",
+		description: "Clear all saved passwords",
 		type: "action",
 		action: "remove-passwords",
 		emojiChar: "🔑",

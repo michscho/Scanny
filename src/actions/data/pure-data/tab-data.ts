@@ -1,7 +1,9 @@
-export const tabData = [
+import { Action } from "../types-data";
+
+export const tabData: Action[] = [
 	{
 		title: "Duplicate tab",
-		desc: "Make a copy of the current tab",
+		description: "Make a copy of the current tab",
 		type: "action",
 		action: "duplicate-tab",
 		emojiChar: "📋",
@@ -9,7 +11,7 @@ export const tabData = [
 	},
 	{
 		title: "Close tab",
-		desc: "Close the current tab",
+		description: "Close the current tab",
 		type: "action",
 		action: "close-tab",
 		emojiChar: "🗑",

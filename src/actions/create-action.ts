@@ -28,3 +28,25 @@ export function createBookmarkAction(
 		emojiChar: "⭐️",
 	};
 }
+
+export function createHistoryAction(history: chrome.history.HistoryItem): Action {
+	return {
+		title: history.title,
+		type: "history",
+		emojiChar: "🏛",
+		action: "history",
+		url: history.url,
+		description: history.url,
+	};
+}
+
+export function createTabAction(tab: chrome.tabs.Tab): Action {
+	return {
+		title: tab.title,
+		type: "tab",
+		emojiChar: "📑",
+		action: "switch-tab",
+		url: tab.url,
+		description: tab.url,
+	};
+}

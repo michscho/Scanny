@@ -1,7 +1,9 @@
-export const scrollData = [
+import { Action } from "../types-data";
+
+export const scrollData: Action[] = [
 	{
 		title: "Scroll to bottom",
-		desc: "Scroll to the bottom of the page",
+		description: "Scroll to the bottom of the page",
 		type: "action",
 		action: "scroll-bottom",
 		emojiChar: "👇",
@@ -9,7 +11,7 @@ export const scrollData = [
 	},
 	{
 		title: "Scroll to top",
-		desc: "Scroll to the top of the page",
+		description: "Scroll to the top of the page",
 		type: "action",
 		action: "scroll-top",
 		emojiChar: "👆",
@@ -17,7 +19,7 @@ export const scrollData = [
 	},
 	{
 		title: "Scroll by",
-		desc: "Scroll by a certain amount given",
+		description: "Scroll by a certain amount given",
 		type: "action",
 		action: "scroll-by",
 		emojiChar: "📜",
