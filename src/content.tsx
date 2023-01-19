@@ -1,7 +1,7 @@
 import $ from "jquery";
 import jQuery from "jquery";
 import { handleAction } from "./actions/handle-action";
-import { closeOmni, openOmni, rerenderActionsList } from "./omni/omni";
+import { closeOmni, openOmni } from "./omni/omni";
 import { keyMapings } from "./utils/key-mappings";
 import { Action } from "./actions/actions-data";
 import { scrollDown, scrollUp } from "./omni/scrolling";
@@ -23,7 +23,6 @@ jQuery(function () {
 	var actions: Action[] = [];
 	var isFiltered = false;
 
-	// Get checkmark image for toast
 	$("#omni-extension-toast img").attr(
 		"src",
 		chrome.runtime.getURL("icons/check.svg")
@@ -65,7 +64,8 @@ jQuery(function () {
 				return;
 			}
 			if (down[keyMapings.enter] && isOpen) {
-				isOpen = handleAction(e, actions, isOpen);
+				// TODO: 
+				//isOpen = handleAction(e, actions, isOpen);
 				return;
 			}
 			if (down[keyMapings.esc] && isOpen) {

@@ -16,6 +16,19 @@ export function ActionComponent({
 	index,
 	keys,
 }: ActionProps) {
+	if (!action.emoji) {
+		var loadimg = new Image();
+		loadimg.src = action.favIconUrl;
+
+		// Favicon doesn't load, use a fallback
+		loadimg.onerror = () => {
+			$(".omni-item[data-index='" + index + "'] img").attr(
+				"src",
+				chrome.runtime.getURL("/icons/globe.svg")
+			);
+		};
+	}
+
 	return (
 		<div
 			className={index === 0 ? "omni-item omni-item-active" : "omni-item"}

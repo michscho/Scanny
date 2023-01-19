@@ -1,4 +1,3 @@
-import { rerenderActionsList } from "../omni/omni";
 import { checkShortHand, validURL } from "../omni/utils";
 import { Action } from "../actions/actions-data";
 import $ from "jquery";
@@ -6,7 +5,6 @@ import { keyMapings } from "../utils/key-mappings";
 import {
 	handleAction,
 	handleBookmarks,
-	handleEmptyQuery,
 	handleHistory,
 	handleInteractive,
 	handleInvalidURL,
@@ -14,39 +12,38 @@ import {
 	handleTabs,
 	handleValidURL,
 } from "./handle-search";
+import { resetBasicActions } from "../actions/create-action";
+import { hideSearchAndGoToActions } from "../utils/utils";
 
 export function search(
 	e: JQuery.KeyUpEvent<Document, undefined, any, any>,
 	actions: Action[],
-	isFiltered: boolean
+	isFiltered: boolean,
+	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
 ) {
 	if (isSpecialKeyEvent(e)) {
 		return;
 	}
+
+	resetBasicActions();
+
 	var query = $(e.target).val().toString().toLowerCase();
 	checkShortHand(e, query);
 	query = $(e.target).val().toString().toLowerCase();
 
-	console.log(query);
-
 	if (query.startsWith("/history")) {
-		handleHistory(query, actions, isFiltered);
+		handleHistory(query, actions, setActionFunction);
 		return;
 	}
 
 	if (query.startsWith("/bookmarks")) {
-		handleBookmarks(query, actions, isFiltered);
+		handleBookmarks(query, actions, setActionFunction);
 		return;
 	}
 
 	if (query.startsWith("/interactive")) {
-		handleInteractive($(e.target).val().toString(), actions, isFiltered);
+		handleInteractive($(e.target).val().toString(), actions, setActionFunction);
 		return;
-	}
-
-	if (isFiltered) {
-		rerenderActionsList(actions);
-		isFiltered = false;
 	}
 
 	$(".omni-extension #omni-list .omni-item").map(function () {
@@ -65,16 +62,18 @@ export function search(
 			return;
 		}
 
-		$(this).toggle(
-			$(this).find(".omni-item-name").text().toLowerCase().indexOf(query) >
-				-1 ||
-				$(this).find(".omni-item-desc").text().toLowerCase().indexOf(query) > -1
-		);
-
 		if (query === "") {
-			handleEmptyQuery(actions);
+			hideSearchAndGoToActions(actions);
 			return;
 		}
+
+		setActionFunction(
+			actions.filter(
+				(x) =>
+					x.title.toLowerCase().indexOf(query) > -1 ||
+					x.desc.toLowerCase().indexOf(query) > -1
+			)
+		);
 
 		if (validURL(query)) {
 			handleValidURL(query, actions);

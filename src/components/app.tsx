@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../public/content.css";
 import { ActionComponent } from "./action-component";
 import { Toast } from "./toast";
@@ -8,24 +8,31 @@ import { search } from "../search/search";
 import { Action } from "../actions/actions-data";
 import { handleAction } from "../actions/handle-action";
 import { hoverItem } from "../omni/utils";
+import { Footer } from "./footer";
 
 interface AppProps {
 	actions: Action[];
 }
 
 export function App(searchProps: AppProps): JSX.Element {
-	//const [action, setActions] = useState(searchProps.actions);
+	const [action, setActions] = useState(searchProps.actions);
 
 	$(document).on("keyup", ".omni-extension input", (e) =>
-		search(e, searchProps.actions, false)
+		search(e, searchProps.actions, false, setActions)
 	);
-	$(document).on("click", ".omni-item-active", handleAction);
+	$(document).on("click", ".omni-item-active", (e) =>
+		handleAction(e, action, true, setActions)
+	);
 	$(document).on(
 		"mouseover",
 		".omni-extension .omni-item:not(.omni-item-active)",
 		hoverItem
 	);
 
+	return <SearchApp actions={action} />;
+}
+
+export function SearchApp(searchProps: AppProps): JSX.Element {
 	return (
 		<div>
 			<div id="omni-wrap">
@@ -52,13 +59,7 @@ export function App(searchProps: AppProps): JSX.Element {
 							)}
 						</List>
 					</div>
-					<div id="omni-footer">
-						<div id="omni-results">153 results</div>
-						<div id="omni-arrows">
-							Use arrow keys <span className="omni-shortcut">↑</span>
-							<span className="omni-shortcut">↓</span> to navigate
-						</div>
-					</div>
+					<Footer></Footer>
 				</div>
 			</div>
 			<div id="omni-overlay"></div>

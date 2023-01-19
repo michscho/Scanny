@@ -1,4 +1,5 @@
 import $ from "jquery";
+import isURL from "validator/lib/isURL";
 import { keyMapings } from "../utils/key-mappings";
 
 const shortHandRecord: Record<string, string> = {
@@ -11,26 +12,18 @@ const shortHandRecord: Record<string, string> = {
 };
 
 function getShortHandValues() {
-	return Object.keys(shortHandRecord).map((key) => {
-		return shortHandRecord[key];
-	});
+	return Object.values(shortHandRecord);
 }
 
 export function checkShortHand(
 	keyEvent: JQuery.KeyUpEvent<Document, undefined, any, any>,
 	value: string
 ) {
-	var element = $(".omni-extension input");
-
-	if (keyEvent.keyCode !== keyMapings.backspace) {
-		const shortHand = shortHandRecord[value];
-		if (shortHand) {
-			element.val(shortHand);
-		}
-		return;
-	}
-
-	if (getShortHandValues().includes(value)) {
+	const element = $(".omni-extension input");
+	const shortHand = shortHandRecord[value];
+	if (keyEvent.keyCode !== keyMapings.backspace && shortHand) {
+		element.val(shortHand);
+	} else if (getShortHandValues().includes(value)) {
 		element.val("");
 	}
 }
@@ -42,13 +35,14 @@ export function hoverItem() {
 
 export function showToast(action: { title: string }) {
 	$("#omni-extension-toast span").html(
-		'"' + action.title + '" has been successfully performed'
+		`"${action.title}" has been successfully performed`
 	);
 	$("#omni-extension-toast").addClass("omni-show-toast");
 	setTimeout(() => {
 		$(".omni-show-toast").removeClass("omni-show-toast");
 	}, 3000);
 }
+
 
 export function addhttp(url: string) {
 	if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
@@ -57,21 +51,6 @@ export function addhttp(url: string) {
 	return url;
 }
 
-const protocol = "^(https?:\\/\\/)?";
-const domainName = "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|";
-const ipAdress = "((\\d{1,3}\\.){3}\\d{1,3}))";
-const portAndPath = "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*";
-const queryString = "(\\?[;&a-z\\d%_.~+=-]*)?";
-
 export function validURL(str: string) {
-	var pattern = new RegExp(
-		protocol +
-			domainName +
-			ipAdress +
-			portAndPath +
-			queryString +
-			"(\\#[-a-z\\d_]*)?$",
-		"i"
-	);
-	return Boolean(pattern.test(str));
+	return isURL(str);
 }

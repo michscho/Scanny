@@ -1,18 +1,23 @@
 import { clickElement } from "../interactive/interactive";
-import { closeOmni, rerenderActionsList } from "../omni/omni";
+import { closeOmni } from "../omni/omni";
 import { addhttp, showToast } from "../omni/utils";
 import { Action } from "./actions-data";
 import $ from "jquery";
 
-export function handleAction(e, actions: Action[], isOpen: boolean) {
+export function handleAction(
+	e,
+	actions: Action[],
+	isOpen: boolean,
+	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
+) {
 	var action = actions[$(".omni-item-active").attr("data-index")];
-	isOpen = closeOmni(isOpen);
+	isOpen = closeOmni(true);
 
 	handleActionItems(action, e);
-	// Fetch actions again
+
 	chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 		actions = response.actions;
-		rerenderActionsList(actions);
+		setActionFunction(actions);
 	});
 
 	return isOpen;
@@ -137,4 +142,3 @@ function inputStartsWith(startingValue: string) {
 		.toLowerCase()
 		.startsWith(startingValue);
 }
-

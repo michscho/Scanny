@@ -1,6 +1,6 @@
 import { Action, actionData } from "./actions-data";
 
-export function resetActions(): Action[] {
+export function resetBasicActions(): Action[] {
 	var actions = [];
 
 	// TODO: make currentTap working
@@ -38,6 +38,22 @@ export function createAction(
 		emoji: true,
 		emojiChar: emojiChar,
 		url: desc,
+		keycheck: false,
+	};
+}
+
+export function createBookmarkAction(
+	bookmark: chrome.bookmarks.BookmarkTreeNode
+): Action {
+	return {
+		title: bookmark.title,
+		desc: "Bookmark",
+		id: bookmark.id,
+		url: bookmark.url,
+		type: "bookmark",
+		action: "bookmark",
+		emoji: true,
+		emojiChar: "⭐️",
 		keycheck: false,
 	};
 }

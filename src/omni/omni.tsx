@@ -1,4 +1,4 @@
-import { resetActions } from "../actions/create-action";
+import { resetBasicActions } from "../actions/create-action";
 import { Action, searchActionData } from "../actions/actions-data";
 import { getBookmarks } from "../chrome/bookmarks";
 import { getTabs } from "../chrome/tab";
@@ -8,121 +8,24 @@ import { App } from "../components/app";
 import React from "react";
 import * as ReactDOM from "react-dom/client";
 
-export const resetOmni = () => {
-	const defaultActions = resetActions();
-	const tabsActions = getTabs();
-	const bookmarkActions = getBookmarks();
-	var search = searchActionData;
-	console.log([...search, ...tabsActions, ...bookmarkActions]);
-	return [...search, ...defaultActions, ...tabsActions, ...bookmarkActions];
-};
-
-function renderAction(
-	action: Action,
-	index: number,
-	keys: string,
-	img: string
-) {
-	return;
-	var skip = "";
-	if (action.action == "search" || action.action == "goto") {
-		skip = "style='display:none'";
-	}
-	if (index !== 0) {
-		$("#omni-extension #omni-list").append(
-			"<div class='omni-item' " +
-				skip +
-				" data-index='" +
-				index +
-				"' data-type='" +
-				action.type +
-				"'>" +
-				img +
-				"<div class='omni-item-details'><div class='omni-item-name'>" +
-				action.title +
-				"</div><div class='omni-item-desc'>" +
-				action.desc +
-				"</div></div>" +
-				keys +
-				"<div class='omni-select'>Select <span class='omni-shortcut'>⏎</span></div></div>"
-		);
-	} else {
-		$("#omni-extension #omni-list").append(
-			"<div class='omni-item omni-item-active' " +
-				skip +
-				" data-index='" +
-				index +
-				"' data-type='" +
-				action.type +
-				"'>" +
-				img +
-				"<div class='omni-item-details'><div class='omni-item-name'>" +
-				action.title +
-				"</div><div class='omni-item-desc'>" +
-				action.desc +
-				"</div></div>" +
-				keys +
-				"<div class='omni-select'>Select <span class='omni-shortcut'>⏎</span></div></div>"
-		);
-	}
-	if (!action.emoji) {
-		var loadimg = new Image();
-		loadimg.src = action.favIconUrl;
-
-		// Favicon doesn't load, use a fallback
-		loadimg.onerror = () => {
-			$(".omni-item[data-index='" + index + "'] img").attr(
-				"src",
-				chrome.runtime.getURL("/icons/globe.svg")
-			);
-		};
-	}
-}
+export const resetAllActions = () => [
+	...searchActionData,
+	...resetBasicActions(),
+	...getTabs(),
+	...getBookmarks(),
+];
 
 export function closeOmni(isOpen: boolean): boolean {
 	if (
-		window.location.href ==
+		window.location.href ===
 		"chrome-extension://mpanekjjajcabgnlbabmopeenljeoggm/newtab.html"
 	) {
 		chrome.runtime.sendMessage({ request: "restore-new-tab" });
 	} else {
-		isOpen = false;
 		$("#omni-extension").addClass("omni-closing");
+		return false;
 	}
 	return isOpen;
-}
-
-export function rerenderActionsList(actions: Action[]) {
-	//$("#omni-extension #omni-list").html("");
-	actions.forEach((action, index) => {
-		var keys = "";
-		if (action.keycheck) {
-			keys = "<div class='omni-keys'>";
-			action.keys.forEach(function (key) {
-				keys += "<span class='omni-shortcut'>" + key + "</span>";
-			});
-			keys += "</div>";
-		}
-
-		if (!action.emoji) {
-			var onload =
-				'if ("naturalHeight" in this) {if (this.naturalHeight + this.naturalWidth === 0) {this.onerror();return;}} else if (this.width + this.height == 0) {this.onerror();return;}';
-			var img =
-				"<img src='" +
-				action.favIconUrl +
-				"' alt='favicon' onload='" +
-				onload +
-				"' onerror='this.src=&quot;" +
-				chrome.runtime.getURL("/icons/globe.svg") +
-				"&quot;' class='omni-icon'>";
-			renderAction(action, index, keys, img);
-		} else {
-			var img =
-				"<span class='omni-emoji-action'>" + action.emojiChar + "</span>";
-			renderAction(action, index, keys, img);
-		}
-	});
-	$(".omni-extension #omni-results").html(actions.length + " results");
 }
 
 export function openOmni(root, isOpen: boolean, actions: Action[]): boolean {

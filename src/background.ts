@@ -1,4 +1,4 @@
-import { resetOmni } from "./omni/omni";
+import { resetAllActions } from "./omni/omni";
 import { getCurrentTab } from "./chrome/tab";
 import { Action } from "./actions/actions-data";
 import { attachOnInstallListener } from "./listener/on-install";
@@ -41,7 +41,7 @@ chrome.commands.onCommand.addListener((command) => {
 });
 
 // TODO: DO IT RIGHT?
-attachChromeTabListener(resetOmni);
-attachOnMessageListener(resetOmni);
+attachChromeTabListener(resetAllActions);
+attachOnMessageListener(resetAllActions);
 
-actions = resetOmni();
+actions = resetAllActions();
