@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../../public/content.css";
 import { ActionComponent } from "./action-component";
 import { Toast } from "./toast";
@@ -7,7 +7,6 @@ import $ from "jquery";
 import { search } from "../search/search";
 import { Action } from "../actions/actions-data";
 import { handleAction } from "../actions/handle-action";
-import { hoverItem } from "../omni/utils";
 import { Footer } from "./footer";
 
 interface AppProps {
@@ -15,24 +14,74 @@ interface AppProps {
 }
 
 export function App(searchProps: AppProps): JSX.Element {
-	const [action, setActions] = useState(searchProps.actions);
+	const [actions, setActions] = useState(searchProps.actions);
 
-	$(document).on("keyup", ".omni-extension input", (e) =>
-		search(e, searchProps.actions, false, setActions)
-	);
-	$(document).on("click", ".omni-item-active", (e) =>
-		handleAction(e, action, true, setActions)
-	);
-	$(document).on(
-		"mouseover",
-		".omni-extension .omni-item:not(.omni-item-active)",
-		hoverItem
-	);
+	useEffect(() => {
+		$(document).on("keyup", ".omni-extension input", (e) =>
+			search(e, searchProps.actions, setActions)
+		);
+		$(document).on("click", ".omni-item-active", (e) =>
+			handleAction(e, actions)
+		);
+		$(document).on(
+			"mouseover",
+			".omni-extension .omni-item:not(.omni-item-active)",
+			hoverItem
+		);
+	}, []);
 
-	return <SearchApp actions={action} />;
+	return <SearchApp actions={actions} />;
 }
 
 export function SearchApp(searchProps: AppProps): JSX.Element {
+	const [activeIndex, setActiveIndex] = useState(0);
+	const listRef = useRef<HTMLDivElement>(null);
+
+	function scrollUp() {
+		if (activeIndex > 0) {
+			setActiveIndex(activeIndex - 1);
+			listRef.current?.children[activeIndex - 1].scrollIntoView({
+				block: "nearest",
+				inline: "nearest",
+			});
+		}
+	}
+
+	function scrollDown() {
+		if (activeIndex < searchProps.actions.length - 1) {
+			setActiveIndex(activeIndex + 1);
+			listRef.current?.children[activeIndex + 1].scrollIntoView({
+				block: "nearest",
+				inline: "nearest",
+			});
+		}
+	}
+
+	useEffect(() => {
+		function handleKeyUp(event: KeyboardEvent) {
+			if (event.key === "ArrowUp") {
+				scrollDown();
+			}
+		}
+		function handleKeyDown(event: KeyboardEvent) {
+			if (event.key === "ArrowDown") {
+				scrollDown();
+			}
+		}
+		function handleEnter(event: KeyboardEvent) {
+			if (event.key === "Enter") {
+				handleAction(event, searchProps.actions);
+			}
+		}
+		window.addEventListener("keyup", handleKeyUp);
+		window.addEventListener("keydown", handleKeyDown);
+		window.addEventListener("enter", handleEnter);
+		return () => {
+			window.removeEventListener("wheel", handleKeyUp);
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [activeIndex, scrollUp, scrollDown]);
+
 	return (
 		<div>
 			<div id="omni-wrap">
@@ -47,8 +96,14 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 							itemSize={60}
 						>
 							{({ index, style }) => (
-								<div style={style}>
+								<div
+									style={style}
+									className={`omni-item ${
+										index === activeIndex ? "omni-item-active" : ""
+									}`}
+								>
 									<ActionComponent
+										key={index}
 										action={searchProps.actions[index]}
 										skip=""
 										img=""
@@ -66,4 +121,19 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 			<Toast />
 		</div>
 	);
+}
+
+export function hoverItem() {
+	$(".omni-item-active").removeClass("omni-item-active");
+	$(this).addClass("omni-item-active");
+}
+
+export function showToast(action: { title: string }) {
+	$("#omni-extension-toast span").html(
+		`"${action.title}" has been successfully performed`
+	);
+	$("#omni-extension-toast").addClass("omni-show-toast");
+	setTimeout(() => {
+		$(".omni-show-toast").removeClass("omni-show-toast");
+	}, 3000);
 }

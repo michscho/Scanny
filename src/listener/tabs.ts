@@ -1,11 +1,13 @@
-export function attachChromeTabListener(functionToCall) {
-	chrome.tabs.onUpdated.addListener(
-		(_tabId, _changeInfo, _tab) => functionToCall()
+import { Action } from "../actions/actions-data";
+
+type ResetActionFN = () => Action[];
+
+export function attachChromeTabListener(resetAllActions: ResetActionFN) {
+	chrome.tabs.onUpdated.addListener((_tabId, _changeInfo, _tab) =>
+		resetAllActions()
 	);
 
-	chrome.tabs.onCreated.addListener((_tab) => functionToCall());
+	chrome.tabs.onCreated.addListener((_tab) => resetAllActions());
 
-	chrome.tabs.onRemoved.addListener(
-		(_tabId, _changeInfo) => functionToCall()
-	);
+	chrome.tabs.onRemoved.addListener((_tabId, _changeInfo) => resetAllActions());
 }

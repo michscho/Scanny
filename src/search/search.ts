@@ -1,4 +1,4 @@
-import { checkShortHand, validURL } from "../omni/utils";
+import { checkShortHand, validURL } from "../extension/utils";
 import { Action } from "../actions/actions-data";
 import $ from "jquery";
 import { keyMapings } from "../utils/key-mappings";
@@ -12,13 +12,12 @@ import {
 	handleTabs,
 	handleValidURL,
 } from "./handle-search";
-import { resetBasicActions } from "../actions/create-action";
 import { hideSearchAndGoToActions } from "../utils/utils";
+import { resetBasicActions } from "../actions/reset-actions";
 
 export function search(
 	e: JQuery.KeyUpEvent<Document, undefined, any, any>,
 	actions: Action[],
-	isFiltered: boolean,
 	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
 ) {
 	if (isSpecialKeyEvent(e)) {
@@ -63,17 +62,18 @@ export function search(
 		}
 
 		if (query === "") {
+			setActionFunction(actions);
 			hideSearchAndGoToActions(actions);
 			return;
 		}
 
-		setActionFunction(
-			actions.filter(
-				(x) =>
-					x.title.toLowerCase().indexOf(query) > -1 ||
-					x.desc.toLowerCase().indexOf(query) > -1
-			)
+		const filteredActions = actions.filter(
+			(x) =>
+				x.title.toLowerCase().indexOf(query) > -1 ||
+				x.desc.toLowerCase().indexOf(query) > -1
 		);
+
+		setActionFunction(filteredActions);
 
 		if (validURL(query)) {
 			handleValidURL(query, actions);
@@ -83,6 +83,10 @@ export function search(
 		handleInvalidURL(query, actions);
 	});
 
+	showNumberOfResults();
+}
+
+function showNumberOfResults() {
 	$(".omni-extension #omni-results").html(
 		$("#omni-extension #omni-list .omni-item:visible").length + " results"
 	);

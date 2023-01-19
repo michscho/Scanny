@@ -1,5 +1,4 @@
 import { Action } from "../actions/actions-data";
-import { useEffect } from "react";
 
 export function containsOnlyWhitespace(str: string) {
 	return /^\s*$/.test(str);

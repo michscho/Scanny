@@ -1,9 +1,9 @@
-import { resetAllActions } from "./omni/omni";
 import { getCurrentTab } from "./chrome/tab";
 import { Action } from "./actions/actions-data";
 import { attachOnInstallListener } from "./listener/on-install";
 import { attachChromeTabListener } from "./listener/tabs";
 import { attachOnMessageListener } from "./listener/on-message";
+import { resetAllActions } from "./actions/reset-actions";
 
 // Actually, Content scripts are JavaScript files that run in the context of web pages. By using the
 // standard Document Object Model (DOM), they can read details of the web pages the browser
@@ -40,7 +40,6 @@ chrome.commands.onCommand.addListener((command) => {
 	}
 });
 
-// TODO: DO IT RIGHT?
 attachChromeTabListener(resetAllActions);
 attachOnMessageListener(resetAllActions);
 

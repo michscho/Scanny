@@ -11,7 +11,6 @@ export interface ActionProps {
 
 export function ActionComponent({
 	action,
-	skip,
 	img,
 	index,
 	keys,
@@ -32,7 +31,6 @@ export function ActionComponent({
 	return (
 		<div
 			className={index === 0 ? "omni-item omni-item-active" : "omni-item"}
-			//{...skip}
 			data-index={index}
 			data-type={action.type}
 		>

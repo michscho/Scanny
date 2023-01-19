@@ -28,22 +28,6 @@ export function checkShortHand(
 	}
 }
 
-export function hoverItem() {
-	$(".omni-item-active").removeClass("omni-item-active");
-	$(this).addClass("omni-item-active");
-}
-
-export function showToast(action: { title: string }) {
-	$("#omni-extension-toast span").html(
-		`"${action.title}" has been successfully performed`
-	);
-	$("#omni-extension-toast").addClass("omni-show-toast");
-	setTimeout(() => {
-		$(".omni-show-toast").removeClass("omni-show-toast");
-	}, 3000);
-}
-
-
 export function addhttp(url: string) {
 	if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
 		url = "http://" + url;
