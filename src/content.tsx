@@ -1,8 +1,8 @@
 import $ from "jquery";
 import jQuery from "jquery";
 import { keyMapings } from "./utils/key-mappings";
-import { Action } from "./actions/actions-data";
 import { closeExtension, openExtension } from "./extension/extension";
+import { Action } from "./actions/data/types-data";
 
 document.onkeyup = (e) => {
 	if (e.key == "Escape") {

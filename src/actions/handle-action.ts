@@ -1,9 +1,9 @@
 import { clickElement } from "../interactive/interactive";
 import { addhttp } from "../extension/utils";
-import { Action } from "./actions-data";
 import $ from "jquery";
 import { showToast } from "../components/app";
 import { closeExtension } from "../extension/extension";
+import { Action } from "./data/types-data";
 
 type ActionHandler = React.Dispatch<React.SetStateAction<Action[]>>;
 
@@ -14,7 +14,7 @@ export function handleAction(event, actions: Action[]) {
 	handleActionItems(action, event);
 }
 
-function handleActionItems(action: Action, event: any) {
+function handleActionItems(action: Action, event: KeyboardEvent) {
 	if (inputStartsWith("/remove")) {
 		chrome.runtime.sendMessage({
 			request: "remove",
@@ -44,7 +44,6 @@ function handleActionItems(action: Action, event: any) {
 	if (inputStartsWith("/interactive")) {
 		const query = $(".omni-item-active .omni-item-name").text();
 		const action = $(".omni-item-active .omni-item-desc").text();
-		console.log(query, "QUERY");
 		clickElement(query, action);
 		return;
 	}

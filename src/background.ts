@@ -1,13 +1,9 @@
 import { getCurrentTab } from "./chrome/tab";
-import { Action } from "./actions/actions-data";
 import { attachOnInstallListener } from "./listener/on-install";
 import { attachChromeTabListener } from "./listener/tabs";
 import { attachOnMessageListener } from "./listener/on-message";
 import { resetAllActions } from "./actions/reset-actions";
-
-// Actually, Content scripts are JavaScript files that run in the context of web pages. By using the
-// standard Document Object Model (DOM), they can read details of the web pages the browser
-// visits, or make changes to them.
+import { Action } from "./actions/data/types-data";
 
 let actions: Action[] = [];
 let newtaburl = "";

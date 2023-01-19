@@ -1,7 +1,7 @@
-import { createAction } from "../actions/create-action";
-import { Action } from "../actions/actions-data";
+import { createInteractiveAction } from "../actions/create-action";
 import $ from "jQuery";
 import { containsOnlyWhitespace, filterDuplicates } from "../utils/utils";
+import { Action } from "../actions/data/types-data";
 
 export function findClickableElements(query: string): Action[] {
 	const aActions = findClickableLinks(query);
@@ -21,7 +21,7 @@ function findClickableLinks(query: string): Action[] {
 			aElements.push($(this).text());
 		});
 	const aActions: Action[] = filterDuplicates(aElements).map((el) => {
-		return createAction(el, "Clickable link", "🔗");
+		return createInteractiveAction(el, "Clickable link", "🔗");
 	});
 	return aActions;
 }
@@ -37,7 +37,7 @@ function findClickableButtons(query: string): Action[] {
 			buttonElements.push($(this).text());
 		});
 	const buttonActions: Action[] = filterDuplicates(buttonElements).map((el) => {
-		return createAction(el, "Clickable button", "🔘");
+		return createInteractiveAction(el, "Clickable button", "🔘");
 	});
 	return buttonActions;
 }
@@ -53,7 +53,7 @@ function findPlaceholderElements(query: string): Action[] {
 	const placeholderActions: Action[] = filterDuplicates(
 		placeholderElements
 	).map((el) => {
-		return createAction(el, "Placeholder", "🔖");
+		return createInteractiveAction(el, "Placeholder", "🔖");
 	});
 	return placeholderActions;
 }

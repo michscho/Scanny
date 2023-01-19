@@ -1,4 +1,4 @@
-import { Action } from "../actions/actions-data";
+import { Action } from "../actions/data/types-data";
 import { createBookmark, removeBookmark } from "../chrome/bookmarks";
 import {
 	clearAllData,
@@ -106,12 +106,10 @@ export function attachOnMessageListener(resetOmni: () => Action[]) {
 							actions.push({
 								title: ele.title,
 								type: "history",
-								emoji: true,
 								emojiChar: "🏛",
 								action: "history",
 								url: ele.url,
-								desc: ele.url,
-								keycheck: false,
+								description: ele.url,
 							});
 						});
 						sendResponse({ history: actions });
@@ -129,12 +127,10 @@ export function attachOnMessageListener(resetOmni: () => Action[]) {
 							actions.push({
 								title: action.title,
 								type: "bookmark",
-								emoji: true,
 								emojiChar: "⭐️",
 								action: "bookmark",
 								url: action.url,
-								desc: action.url,
-								keycheck: false,
+								description: action.url,
 							});
 						});
 					data.forEach((action, index) => {
@@ -144,12 +140,10 @@ export function attachOnMessageListener(resetOmni: () => Action[]) {
 						actions.push({
 							title: action.title,
 							type: "bookmark",
-							emoji: true,
 							emojiChar: "⭐️",
 							action: "bookmark",
 							url: action.url,
-							desc: action.url,
-							keycheck: false,
+							description: action.url,
 						});
 					});
 					sendResponse({ bookmarks: actions });

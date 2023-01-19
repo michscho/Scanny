@@ -1,5 +1,5 @@
-import { Action } from "../actions/actions-data";
 import { createBookmarkAction } from "../actions/create-action";
+import { Action } from "../actions/data/types-data";
 import { getCurrentTab } from "./tab";
 
 type Bookmark = chrome.bookmarks.BookmarkTreeNode;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Action } from "../actions/actions-data";
+import { Action } from "../actions/data/types-data";
 
 export interface ActionProps {
 	action: Action;
@@ -9,13 +9,8 @@ export interface ActionProps {
 	keys: string;
 }
 
-export function ActionComponent({
-	action,
-	img,
-	index,
-	keys,
-}: ActionProps) {
-	if (!action.emoji) {
+export function ActionComponent({ action, img, index, keys }: ActionProps) {
+	if (!action.emojiChar) {
 		var loadimg = new Image();
 		loadimg.src = action.favIconUrl;
 
@@ -37,9 +32,9 @@ export function ActionComponent({
 			<Img action={action} />
 			<div className="omni-item-details">
 				<div className="omni-item-name">{action.title}</div>
-				<div className="omni-item-desc">{action.desc}</div>
+				<div className="omni-item-desc">{action.description}</div>
 			</div>
-			{action.keycheck ? <Keys action={action} /> : ""}
+			{action.keys ? <Keys action={action} /> : ""}
 			<div className="omni-select">
 				Select <span className="omni-shortcut">⏎</span>
 			</div>

@@ -1,4 +1,4 @@
-import { Action } from "../actions/actions-data";
+import { Action } from "../actions/data/types-data";
 
 type ResetActionFN = () => Action[];
 

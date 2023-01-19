@@ -5,9 +5,9 @@ import { Toast } from "./toast";
 import { FixedSizeList as List } from "react-window";
 import $ from "jquery";
 import { search } from "../search/search";
-import { Action } from "../actions/actions-data";
 import { handleAction } from "../actions/handle-action";
 import { Footer } from "./footer";
+import { Action } from "../actions/data/types-data";
 
 interface AppProps {
 	actions: Action[];
@@ -36,48 +36,41 @@ export function App(searchProps: AppProps): JSX.Element {
 export function SearchApp(searchProps: AppProps): JSX.Element {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const listRef = useRef<HTMLDivElement>(null);
+	const reactLegacyRef = useRef<List<any>>(null);
 
 	function scrollUp() {
 		if (activeIndex > 0) {
 			setActiveIndex(activeIndex - 1);
-			listRef.current?.children[activeIndex - 1].scrollIntoView({
-				block: "nearest",
-				inline: "nearest",
-			});
+			reactLegacyRef.current.scrollToItem(activeIndex, "start");
 		}
 	}
 
 	function scrollDown() {
 		if (activeIndex < searchProps.actions.length - 1) {
 			setActiveIndex(activeIndex + 1);
-			listRef.current?.children[activeIndex + 1].scrollIntoView({
-				block: "nearest",
-				inline: "nearest",
-			});
+			reactLegacyRef.current.scrollToItem(activeIndex, "start");
 		}
 	}
 
 	useEffect(() => {
 		function handleKeyUp(event: KeyboardEvent) {
 			if (event.key === "ArrowUp") {
-				scrollDown();
+				scrollUp();
 			}
 		}
 		function handleKeyDown(event: KeyboardEvent) {
 			if (event.key === "ArrowDown") {
 				scrollDown();
 			}
-		}
-		function handleEnter(event: KeyboardEvent) {
+
 			if (event.key === "Enter") {
 				handleAction(event, searchProps.actions);
 			}
 		}
 		window.addEventListener("keyup", handleKeyUp);
 		window.addEventListener("keydown", handleKeyDown);
-		window.addEventListener("enter", handleEnter);
 		return () => {
-			window.removeEventListener("wheel", handleKeyUp);
+			window.removeEventListener("keyup", handleKeyUp);
 			window.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [activeIndex, scrollUp, scrollDown]);
@@ -89,21 +82,23 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 					<div id="omni-search">
 						<input placeholder="Type a command or search" />
 					</div>
-					<div id="omni-list">
+					<div ref={listRef} id="omni-list">
 						<List
 							height={400}
 							itemCount={searchProps.actions.length}
 							itemSize={60}
+							width={696}
+							ref={reactLegacyRef}
 						>
 							{({ index, style }) => (
 								<div
+									key={index}
 									style={style}
 									className={`omni-item ${
 										index === activeIndex ? "omni-item-active" : ""
 									}`}
 								>
 									<ActionComponent
-										key={index}
 										action={searchProps.actions[index]}
 										skip=""
 										img=""

@@ -1,19 +1,17 @@
-import { Action } from "./actions-data";
+import { Action } from "./data/types-data";
 
-export function createAction(
+export function createInteractiveAction(
 	title: string,
 	desc: string,
 	emojiChar: string
 ): Action {
 	return {
 		title: title,
-		desc: desc,
+		description: desc,
 		type: "interactive",
 		action: "web-element",
-		emoji: true,
 		emojiChar: emojiChar,
 		url: desc,
-		keycheck: false,
 	};
 }
 
@@ -22,13 +20,11 @@ export function createBookmarkAction(
 ): Action {
 	return {
 		title: bookmark.title,
-		desc: "Bookmark",
+		description: "Bookmark",
 		id: bookmark.id,
 		url: bookmark.url,
 		type: "bookmark",
 		action: "bookmark",
-		emoji: true,
 		emojiChar: "⭐️",
-		keycheck: false,
 	};
 }

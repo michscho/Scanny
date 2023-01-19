@@ -1,4 +1,4 @@
-import { Action } from "../actions/actions-data";
+import { Action } from "../actions/data/pure-data/basic-data";
 
 export const getCurrentTab = async () => {
 	const queryOptions = { active: true, currentWindow: true };

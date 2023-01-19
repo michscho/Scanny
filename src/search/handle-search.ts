@@ -1,14 +1,12 @@
 import $ from "jquery";
-import { Action } from "../actions/actions-data";
+import { Action } from "../actions/data/types-data";
 import { findClickableElements } from "../interactive/search";
-import { hideSearchAndGoToActions } from "../utils/utils";
 
 export function handleHistory(
 	query: string,
 	actions: Action[],
 	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
 ) {
-	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/history ", "");
 	if (tempvalue != "/history") {
 		query = query.replace("/history ", "");
@@ -26,7 +24,6 @@ export function handleBookmarks(
 	actions: Action[],
 	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
 ) {
-	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/bookmarks ", "");
 	if (tempvalue != "/bookmarks" && tempvalue != "") {
 		var query = query.replace("/bookmarks ", "");
@@ -46,7 +43,6 @@ export function handleInteractive(
 	actions: Action[],
 	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
 ) {
-	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/interactive ", "");
 	if (tempvalue != "/interactive") {
 		const newActions: Action[] = findClickableElements(
@@ -59,7 +55,6 @@ export function handleInteractive(
 }
 
 export function handleTabs(query: string, actions: Action[]) {
-	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/tabs ", "");
 	if (tempvalue == "/tabs") {
 		$(this).toggle($(this).attr("data-type") == "tab");
@@ -79,7 +74,6 @@ export function handleTabs(query: string, actions: Action[]) {
 }
 
 export function handleRemove(query: string, actions: Action[]) {
-	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/remove ", "");
 	if (tempvalue == "/remove") {
 		$(this).toggle(
@@ -103,7 +97,6 @@ export function handleRemove(query: string, actions: Action[]) {
 }
 
 export function handleAction(query: string, actions: Action[]) {
-	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/actions ", "");
 	if (tempvalue == "/actions") {
 		$(this).toggle($(this).attr("data-type") == "action");
@@ -119,43 +112,5 @@ export function handleAction(query: string, actions: Action[]) {
 					.indexOf(tempvalue) > -1) &&
 				$(this).attr("data-type") == "action"
 		);
-	}
-}
-
-export function handleInvalidURL(query: string, actions: Action[]) {
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "search") +
-			"']"
-	).hide();
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "goto") +
-			"']"
-	).show();
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "goto") +
-			"'] .omni-item-name"
-	).html('"' + query + '"');
-}
-
-export function handleValidURL(query: string, actions: Action[]) {
-	{
-		$(
-			".omni-item[data-index='" +
-				actions.findIndex((x) => x.action == "search") +
-				"']"
-		).hide();
-		$(
-			".omni-item[data-index='" +
-				actions.findIndex((x) => x.action == "goto") +
-				"']"
-		).show();
-		$(
-			".omni-item[data-index='" +
-				actions.findIndex((x) => x.action == "goto") +
-				"'] .omni-item-name"
-		).html(query);
 	}
 }
