@@ -4,6 +4,7 @@ import { getActionsData } from "./data/get-actions-data";
 
 export const resetAllActions = () => [
 	...getActionsData(),
-	...getTabs(),
-	...getBookmarks(),
+	// ...getTabs(),
+	// ...getBookmarks(),
 ];
+

@@ -1,14 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../../public/content.css";
 import { ActionComponent } from "./action-component";
-import { Toast } from "./toast";
 import { FixedSizeList as List } from "react-window";
 import $ from "jquery";
 import { search } from "../search/search";
 import { handleAction } from "../actions/handle-action";
 import { Footer } from "./footer";
 import { Action } from "../actions/data/types-data";
-
+import { css } from "@emotion/react";
 interface AppProps {
 	actions: Action[];
 }
@@ -39,7 +38,9 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 	const reactLegacyRef = useRef<List<any>>(null);
 
 	function scrollUp() {
-		if (activeIndex > 0) {
+		if (activeIndex >= 0) {
+			console.log(activeIndex);
+
 			setActiveIndex(activeIndex - 1);
 			reactLegacyRef.current.scrollToItem(activeIndex, "start");
 		}
@@ -77,14 +78,14 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 
 	return (
 		<div>
-			<div id="omni-wrap">
+			<div css={styles.omniWrap}>
 				<div id="omni">
 					<div id="omni-search">
-						<input placeholder="Type a command or search" />
+						<input css={styles.input} placeholder="Type a command or search" />
 					</div>
 					<div ref={listRef} id="omni-list">
 						<List
-							height={400}
+							height={60 * 6}
 							itemCount={searchProps.actions.length}
 							itemSize={60}
 							width={696}
@@ -112,8 +113,8 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 					<Footer></Footer>
 				</div>
 			</div>
-			<div id="omni-overlay"></div>
-			<Toast />
+			<div css={styles.omniOverlay}></div>
+			<Toast title="Test" />
 		</div>
 	);
 }
@@ -123,12 +124,104 @@ export function hoverItem() {
 	$(this).addClass("omni-item-active");
 }
 
-export function showToast(action: { title: string }) {
-	$("#omni-extension-toast span").html(
-		`"${action.title}" has been successfully performed`
-	);
-	$("#omni-extension-toast").addClass("omni-show-toast");
+export function Toast(action: { title: string }) {
+	const [show, setShow] = useState(true);
+
 	setTimeout(() => {
-		$(".omni-show-toast").removeClass("omni-show-toast");
+		setShow(false);
 	}, 3000);
+
+	return (
+		<div css={toastStyles.toast && show ? toastStyles.show : ""}>
+			<span>{`${action.title} has been successfully performed`}</span>
+		</div>
+	);
 }
+
+const styles = {
+	omniWrap: css`
+		position: fixed;
+		width: 700px;
+		border: 1px solid transparent;
+		border-radius: 5px;
+		margin: auto;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+		z-index: 9999999999;
+		height: 540px;
+		transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
+		pointer-events: all;
+	`,
+	omniOverlay: css`
+		height: 100%;
+		width: 100%;
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		background-color: #000;
+		z-index: 9999;
+		opacity: 0.2;
+		transition: all 0.1s cubic-bezier(0.05, 0.03, 0.35, 1);
+	`,
+	input: css`
+		background: transparent;
+		border: 0px;
+		outline: none;
+		font-size: 20px;
+		font-weight: 400;
+		height: 50px;
+		width: 92%;
+		margin-left: auto;
+		margin-right: auto;
+		display: block;
+		color: var(--text);
+		caret-color: var(--text);
+		font-family: Inter !important;
+		margin-top: 5px;
+		margin-bottom: 5px;
+		box-sizing: border-box;
+		outline: none;
+		border: 0px;
+		box-shadow: none;
+	`,
+};
+
+const toastStyles = {
+	toast: css`
+		text-align: center;
+		font-family: Inter;
+		font-weight: 500;
+		font-size: 14px;
+		position: fixed;
+		width: fit-content;
+		color: var(--text);
+		bottom: 10px;
+		left: 0px;
+		right: 0px;
+		margin: auto;
+		background: var(--background);
+		border-radius: 5px;
+		height: 40px;
+		line-height: 40px;
+		display: block;
+		padding-left: 10px;
+		padding-right: 10px;
+		visibility: hidden;
+		opacity: 0;
+		transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
+		z-index: 99999999;
+	`,
+	img: css`
+		display: inline-block;
+		margin-right: 5px;
+		vertical-align: middle;
+		margin-bottom: 2px;
+	`,
+	show: css`
+		bottom: 20px !important;
+		opacity: 1 !important;
+		visibility: visible !important;
+	`,
+};

@@ -1,11 +1,14 @@
 {
 	"compilerOptions": {
-		"jsx": "react",
 		"module": "commonjs",
 		"target": "es6",
 		"esModuleInterop": true,
 		"rootDir": "src",
 		"outDir": "build",
+		"jsx": "react-jsx",
+		"jsxImportSource": "@emotion/react",
+		"sourceMap": true,
+		"allowJs": true,
 		"typeRoots": ["node_modules/@types"]
 	},
 	"include": ["**/*.ts", "**/*.tsx", "./webpack.config.ts"],
