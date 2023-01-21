@@ -22,11 +22,6 @@ export function App(searchProps: AppProps): JSX.Element {
 		$(document).on("click", ".omni-item-active", (e) =>
 			handleAction(e, actions)
 		);
-		$(document).on(
-			"mouseover",
-			".omni-extension .omni-item:not(.omni-item-active)",
-			hoverItem
-		);
 	}, []);
 
 	return <SearchApp actions={actions} />;
@@ -40,7 +35,6 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 	function scrollUp() {
 		if (activeIndex >= 0) {
 			console.log(activeIndex);
-
 			setActiveIndex(activeIndex - 1);
 			reactLegacyRef.current.scrollToItem(activeIndex, "start");
 		}
@@ -53,25 +47,30 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 		}
 	}
 
-	useEffect(() => {
-		function handleKeyUp(event: KeyboardEvent) {
-			if (event.key === "ArrowUp") {
-				scrollUp();
-			}
-		}
-		function handleKeyDown(event: KeyboardEvent) {
+	function handleKeyDown(
+		event: KeyboardEvent | React.MouseEvent<HTMLDivElement, MouseEvent>,
+		index?: number
+	) {
+		if (event instanceof KeyboardEvent) {
 			if (event.key === "ArrowDown") {
 				scrollDown();
+			}
+
+			if (event.key === "ArrowUp") {
+				scrollUp();
 			}
 
 			if (event.key === "Enter") {
 				handleAction(event, searchProps.actions);
 			}
 		}
-		window.addEventListener("keyup", handleKeyUp);
+		console.log(index);
+		setActiveIndex(index);
+	}
+
+	useEffect(() => {
 		window.addEventListener("keydown", handleKeyDown);
 		return () => {
-			window.removeEventListener("keyup", handleKeyUp);
 			window.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [activeIndex, scrollUp, scrollDown]);
@@ -98,6 +97,7 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 									className={`omni-item ${
 										index === activeIndex ? "omni-item-active" : ""
 									}`}
+									onMouseEnter={(e) => handleKeyDown(e, index)}
 								>
 									<ActionComponent
 										action={searchProps.actions[index]}
@@ -110,7 +110,7 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 							)}
 						</List>
 					</div>
-					<Footer></Footer>
+					<Footer result={searchProps.actions.length} />
 				</div>
 			</div>
 			<div css={styles.omniOverlay}></div>

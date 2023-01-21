@@ -29,7 +29,9 @@ export function createBookmarkAction(
 	};
 }
 
-export function createHistoryAction(history: chrome.history.HistoryItem): Action {
+export function createHistoryAction(
+	history: chrome.history.HistoryItem
+): Action {
 	return {
 		title: history.title,
 		type: "history",

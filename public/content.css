@@ -258,20 +258,6 @@
 	text-overflow: ellipsis;
 	width: 460px;
 }
-.omni-extension #omni-footer {
-	height: 45px;
-	line-height: 45px;
-	border-top: 1px solid var(--border);
-	width: 92%;
-	margin-left: auto;
-	margin-right: auto;
-}
-.omni-extension #omni-results {
-	color: var(--text-3);
-	font-size: 12px;
-	font-weight: 500;
-	float: left;
-}
 .omni-extension #omni-arrows {
 	color: var(--text-3);
 	font-size: 12px;
