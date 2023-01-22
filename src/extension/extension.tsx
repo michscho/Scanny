@@ -5,10 +5,6 @@ import React from "react";
 import * as ReactDOM from "react-dom/client";
 import { Action } from "../actions/data/types-data";
 
-export function closeExtension() {
-	$("#omni-extension").addClass("omni-closing");
-}
-
 export function openExtension(root: HTMLDivElement, actions: Action[]) {
 	chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
 		actions = response.actions;

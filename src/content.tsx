@@ -1,7 +1,7 @@
 import $ from "jquery";
 import jQuery from "jquery";
 import { keyMapings } from "./utils/key-mappings";
-import { closeExtension, openExtension } from "./extension/extension";
+import { openExtension } from "./extension/extension";
 import { Action } from "./actions/data/types-data";
 
 document.onkeyup = (e) => {
@@ -9,6 +9,10 @@ document.onkeyup = (e) => {
 		chrome.runtime.sendMessage({ request: "close-omni" });
 	}
 };
+
+export function closeExtension() {
+	$("#omni-extension").addClass("omni-closing");
+}
 
 jQuery(function () {
 	var actions: Action[] = [];
@@ -33,8 +37,6 @@ jQuery(function () {
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 		if (message.request === "open-omni") {
 			const extensionRoot = document.createElement("div");
-			extensionRoot.id = "omni-extension";
-			extensionRoot.className = "omni-extension";
 			document.body.appendChild(extensionRoot);
 			openExtension(extensionRoot, actions);
 		}

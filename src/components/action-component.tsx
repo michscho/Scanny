@@ -1,5 +1,7 @@
+import { css } from "@emotion/react";
 import React from "react";
 import { Action } from "../actions/data/types-data";
+import { handleAction } from "../search/handle-search";
 
 export interface ActionProps {
 	action: Action;
@@ -10,6 +12,25 @@ export interface ActionProps {
 }
 
 export function ActionComponent({ action, img, index, keys }: ActionProps) {
+	// TODO: add on click on this item
+
+	addGlobeIcon(action, index);
+	return (
+		<div data-index={index} data-type={action.type}>
+			<Img action={action} />
+			<div className="omni-item-details">
+				<div className="omni-item-name">{action.title}</div>
+				<div className="omni-item-desc">{action.description}</div>
+			</div>
+			{action.keys ? <Keys action={action} /> : ""}
+			<div className="omni-select">
+				Select <span css={shortcut}>⏎</span>
+			</div>
+		</div>
+	);
+}
+
+function addGlobeIcon(action: Action, index: number) {
 	if (!action.emojiChar) {
 		var loadimg = new Image();
 		loadimg.src = action.favIconUrl;
@@ -22,24 +43,6 @@ export function ActionComponent({ action, img, index, keys }: ActionProps) {
 			);
 		};
 	}
-
-	return (
-		<div
-			className={index === 0 ? "omni-item omni-item-active" : "omni-item"}
-			data-index={index}
-			data-type={action.type}
-		>
-			<Img action={action} />
-			<div className="omni-item-details">
-				<div className="omni-item-name">{action.title}</div>
-				<div className="omni-item-desc">{action.description}</div>
-			</div>
-			{action.keys ? <Keys action={action} /> : ""}
-			<div className="omni-select">
-				Select <span className="omni-shortcut">⏎</span>
-			</div>
-		</div>
-	);
 }
 
 interface KeysProps {
@@ -50,11 +53,25 @@ function Keys(action: KeysProps) {
 	return (
 		<div className="omni-keys">
 			{action.action.keys.map((key: any) => (
-				<span className="omni-shortcut">{key}</span>
+				<span css={shortcut}>{key}</span>
 			))}
 		</div>
 	);
 }
+
+const shortcut = css`
+	display: inline-block !important;
+	font-size: 13px;
+	border-radius: 5px;
+	background-color: #383e4a;
+	color: #f1f1f1;
+	text-align: center;
+	height: 20px;
+	line-height: 20px;
+	min-width: 20px;
+	padding-left: 3px;
+	padding-right: 3px;
+`;
 
 interface ImgProps {
 	action: Action;

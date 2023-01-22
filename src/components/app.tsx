@@ -7,7 +7,7 @@ import { search } from "../search/search";
 import { handleAction } from "../actions/handle-action";
 import { Footer } from "./footer";
 import { Action } from "../actions/data/types-data";
-import { css } from "@emotion/react";
+import { css, Global } from "@emotion/react";
 interface AppProps {
 	actions: Action[];
 }
@@ -24,8 +24,45 @@ export function App(searchProps: AppProps): JSX.Element {
 		);
 	}, []);
 
-	return <SearchApp actions={actions} />;
+	return (
+		<div id="omni-extension" className="omni-extension">
+			<SearchApp actions={actions} />
+			<Global styles={globalStyle}></Global>
+		</div>
+	);
 }
+
+const globalStyle = css`
+	::-webkit-scrollbar {
+		width: 300px;
+		height: 10px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background-color: rgba(127, 127, 127, 0.6);
+		background-clip: padding-box;
+		border: 1000px solid transparent;
+		border-radius: 5px;
+	}
+
+	::-webkit-scrollbar-thumb:vertical:hover,
+	::-webkit-scrollbar-thumb:horizontal:hover {
+		background-color: rgb(110, 110, 110);
+	}
+
+	::-webkit-scrollbar-track {
+		background-color: transparent;
+	}
+
+	::-webkit-scrollbar-thumb:vertical:active,
+	::-webkit-scrollbar-thumb:horizontal:active {
+		background-color: rgba(95, 91, 91, 1);
+	}
+
+	::-webkit-scrollbar-corner {
+		background: none;
+	}
+`;
 
 export function SearchApp(searchProps: AppProps): JSX.Element {
 	const [activeIndex, setActiveIndex] = useState(0);
@@ -47,24 +84,21 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 		}
 	}
 
-	function handleKeyDown(
-		event: KeyboardEvent | React.MouseEvent<HTMLDivElement, MouseEvent>,
-		index?: number
-	) {
-		if (event instanceof KeyboardEvent) {
-			if (event.key === "ArrowDown") {
-				scrollDown();
-			}
-
-			if (event.key === "ArrowUp") {
-				scrollUp();
-			}
-
-			if (event.key === "Enter") {
-				handleAction(event, searchProps.actions);
-			}
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.key === "ArrowDown") {
+			scrollDown();
 		}
-		console.log(index);
+
+		if (event.key === "ArrowUp") {
+			scrollUp();
+		}
+
+		if (event.key === "Enter") {
+			handleAction(event, searchProps.actions);
+		}
+	}
+
+	function handleMouseEnter(event, index: number) {
 		setActiveIndex(index);
 	}
 
@@ -97,7 +131,7 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 									className={`omni-item ${
 										index === activeIndex ? "omni-item-active" : ""
 									}`}
-									onMouseEnter={(e) => handleKeyDown(e, index)}
+									onMouseEnter={(e) => handleMouseEnter(e, index)}
 								>
 									<ActionComponent
 										action={searchProps.actions[index]}

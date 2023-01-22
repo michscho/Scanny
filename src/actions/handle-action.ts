@@ -1,9 +1,8 @@
 import { clickElement } from "../interactive/interactive";
 import { addhttp } from "../extension/utils";
 import $ from "jquery";
-import { showToast } from "../components/app";
-import { closeExtension } from "../extension/extension";
 import { Action } from "./data/types-data";
+import { closeExtension } from "../content";
 
 type ActionHandler = React.Dispatch<React.SetStateAction<Action[]>>;
 
@@ -63,19 +62,9 @@ function handleActionItems(action: Action, event: KeyboardEvent) {
 			break;
 		case "scroll-bottom":
 			window.scrollTo(0, document.body.scrollHeight);
-			showToast(action);
 			break;
 		case "scroll-top":
 			window.scrollTo(0, 0);
-			break;
-		case "scroll-by":
-			const query = $(".omni-item-active .omni-item-name")
-				.val()
-				.toString()
-				.replace("scroll by", "");
-			if (typeof query === "number") {
-				window.scrollBy(0, query);
-			}
 			break;
 		case "navigation":
 			if (event.ctrlKey || event.metaKey) {
@@ -120,7 +109,7 @@ function handleActionItems(action: Action, event: KeyboardEvent) {
 		case "remove-cache":
 		case "remove-local-storage":
 		case "remove-passwords":
-			showToast(action);
+			// TODO: add toaster again
 			break;
 	}
 }

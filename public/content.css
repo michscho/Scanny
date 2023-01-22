@@ -1,34 +1,3 @@
-/* Scrollbar size */
-.omni-extension ::-webkit-scrollbar {
-	width: 10px;
-	height: 10px;
-}
-
-.omni-extension ::-webkit-scrollbar-thumb {
-	background-color: rgba(127, 127, 127, 0.6);
-	background-clip: padding-box;
-	border: 2px solid transparent;
-	border-radius: 5px;
-}
-
-.omni-extension ::-webkit-scrollbar-thumb:vertical:hover,
-.omni-extension ::-webkit-scrollbar-thumb:horizontal:hover {
-	background-color: rgb(110, 110, 110);
-}
-
-.omni-extension ::-webkit-scrollbar-track {
-	background-color: transparent;
-}
-
-.omni-extension ::-webkit-scrollbar-thumb:vertical:active,
-.omni-extension ::-webkit-scrollbar-thumb:horizontal:active {
-	background: rgba(95, 91, 91, 1);
-}
-
-.omni-extension ::-webkit-scrollbar-corner {
-	background: none;
-}
-
 @media (prefers-color-scheme: dark) {
 	.omni-extension {
 		--background: #281e1e9e;
@@ -39,7 +8,6 @@
 		--select: #17191e84;
 		--accent: #6068d2;
 		--accent-hover: #484fac96;
-		--shortcut: #383e4a;
 		--placeholder: #63687b;
 		--background-2: #292d36;
 	}
@@ -54,7 +22,6 @@
 		--select: #eff3f9;
 		--accent: #6068d2;
 		--accent-hover: #484fac;
-		--shortcut: #dadeea;
 		--placeholder: #bac2d1;
 		--background-2: #292d36;
 	}
@@ -146,19 +113,6 @@
 }
 .omni-extension #omni-close span {
 	margin-left: 3px;
-}
-.omni-extension .omni-shortcut {
-	display: inline-block !important;
-	font-size: 13px;
-	border-radius: 5px;
-	background-color: var(--shortcut);
-	color: var(--text);
-	text-align: center;
-	height: 20px;
-	line-height: 20px;
-	min-width: 20px;
-	padding-left: 3px;
-	padding-right: 3px;
 }
 .omni-extension ::placeholder {
 	color: var(--text-2);
