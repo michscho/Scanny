@@ -1,4 +1,5 @@
-import { Action } from "../actions/actions-data";
+import { createTabAction } from "../actions/create-action";
+import { Action } from "../actions/data/types-data";
 
 export const getCurrentTab = async () => {
 	const queryOptions = { active: true, currentWindow: true };
@@ -60,14 +61,7 @@ export const getTabs = () => {
 	const actions: Action[] = [];
 	chrome.tabs.query({}, (tabs) => {
 		tabs.forEach((tab) => {
-			actions.push({
-				title: tab.title,
-				desc: "Chrome tab",
-				keycheck: false,
-				action: "switch-tab",
-				type: "tab",
-				emoji: false,
-			});
+			actions.push(createTabAction(tab));
 		});
 	});
 	return actions;

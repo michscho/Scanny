@@ -1,16 +1,12 @@
-import { hideSearchAndGoToActions } from "../components/utils";
-import { populateOmniFilter } from "../omni/omni";
 import $ from "jquery";
-import { Action } from "../actions/actions-data";
+import { Action } from "../actions/data/types-data";
 import { findClickableElements } from "../interactive/search";
 
 export function handleHistory(
 	query: string,
 	actions: Action[],
-	isFiltered: boolean
+	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
 ) {
-	console.log("handleHistory");
-	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/history ", "");
 	if (tempvalue != "/history") {
 		query = query.replace("/history ", "");
@@ -18,7 +14,7 @@ export function handleHistory(
 	chrome.runtime.sendMessage(
 		{ request: "search-history", query: query },
 		(response) => {
-			populateOmniFilter(response.history, isFiltered);
+			setActionFunction(response.history);
 		}
 	);
 }
@@ -26,58 +22,39 @@ export function handleHistory(
 export function handleBookmarks(
 	query: string,
 	actions: Action[],
-	isFiltered: boolean
+	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
 ) {
-	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/bookmarks ", "");
 	if (tempvalue != "/bookmarks" && tempvalue != "") {
 		var query = query.replace("/bookmarks ", "");
 		chrome.runtime.sendMessage(
 			{ request: "search-bookmarks", query: query },
 			(response) => {
-				populateOmniFilter(response.bookmarks, isFiltered);
+				setActionFunction(response.bookmarkAction);
 			}
 		);
 	} else {
-		populateOmniFilter(
-			actions.filter((x) => x.type == "bookmark"),
-			isFiltered
-		);
+		setActionFunction(actions.filter((x) => x.type == "bookmark"));
 	}
 }
 
 export function handleInteractive(
 	query: string,
 	actions: Action[],
-	isFiltered: boolean
+	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
 ) {
-	hideSearchAndGoToActions(actions);
 	var tempvalue = query.replace("/interactive ", "");
 	if (tempvalue != "/interactive") {
 		const newActions: Action[] = findClickableElements(
 			query.replace("/interactive ", "")
 		);
-		populateOmniFilter(newActions, isFiltered);
-		isFiltered = false;
+		setActionFunction(newActions);
 	} else {
-		populateOmniFilter(
-			actions.filter((x) => x.type === "interactive"),
-			isFiltered
-		);
+		setActionFunction(actions.filter((x) => x.type === "interactive"));
 	}
 }
 
 export function handleTabs(query: string, actions: Action[]) {
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "search") +
-			"']"
-	).hide();
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "goto") +
-			"']"
-	).hide();
 	var tempvalue = query.replace("/tabs ", "");
 	if (tempvalue == "/tabs") {
 		$(this).toggle($(this).attr("data-type") == "tab");
@@ -97,16 +74,6 @@ export function handleTabs(query: string, actions: Action[]) {
 }
 
 export function handleRemove(query: string, actions: Action[]) {
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "search") +
-			"']"
-	).hide();
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "goto") +
-			"']"
-	).hide();
 	var tempvalue = query.replace("/remove ", "");
 	if (tempvalue == "/remove") {
 		$(this).toggle(
@@ -130,16 +97,6 @@ export function handleRemove(query: string, actions: Action[]) {
 }
 
 export function handleAction(query: string, actions: Action[]) {
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "search") +
-			"']"
-	).hide();
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "goto") +
-			"']"
-	).hide();
 	var tempvalue = query.replace("/actions ", "");
 	if (tempvalue == "/actions") {
 		$(this).toggle($(this).attr("data-type") == "action");
@@ -155,56 +112,5 @@ export function handleAction(query: string, actions: Action[]) {
 					.indexOf(tempvalue) > -1) &&
 				$(this).attr("data-type") == "action"
 		);
-	}
-}
-
-export function handleEmptyQuery(actions: Action[]) {
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "search") +
-			"']"
-	).hide();
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "goto") +
-			"']"
-	).hide();
-}
-
-export function handleInvalidURL(query: string, actions: Action[]) {
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "search") +
-			"']"
-	).hide();
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "goto") +
-			"']"
-	).show();
-	$(
-		".omni-item[data-index='" +
-			actions.findIndex((x) => x.action == "goto") +
-			"'] .omni-item-name"
-	).html('"' + query + '"');
-}
-
-export function handleValidURL(query: string, actions: Action[]) {
-	{
-		$(
-			".omni-item[data-index='" +
-				actions.findIndex((x) => x.action == "search") +
-				"']"
-		).hide();
-		$(
-			".omni-item[data-index='" +
-				actions.findIndex((x) => x.action == "goto") +
-				"']"
-		).show();
-		$(
-			".omni-item[data-index='" +
-				actions.findIndex((x) => x.action == "goto") +
-				"'] .omni-item-name"
-		).html(query);
 	}
 }

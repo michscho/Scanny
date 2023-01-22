@@ -1,4 +1,5 @@
-import { Action } from "../actions/actions-data";
+import { createBookmarkAction } from "../actions/create-action";
+import { Action } from "../actions/data/types-data";
 import { getCurrentTab } from "./tab";
 
 type Bookmark = chrome.bookmarks.BookmarkTreeNode;
@@ -9,17 +10,8 @@ export const getBookmarks = () => {
 	const process_bookmark = (bookmarks: Bookmark[]) => {
 		for (const bookmark of bookmarks) {
 			if (bookmark.url) {
-				actions.push({
-					title: bookmark.title,
-					desc: "Bookmark",
-					id: bookmark.id,
-					url: bookmark.url,
-					type: "bookmark",
-					action: "bookmark",
-					emoji: true,
-					emojiChar: "⭐️",
-					keycheck: false,
-				});
+				const bookmarkAction = createBookmarkAction(bookmark);
+				actions.push(bookmarkAction);
 			}
 			if (bookmark.children) {
 				process_bookmark(bookmark.children);

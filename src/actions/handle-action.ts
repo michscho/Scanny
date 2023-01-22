@@ -1,23 +1,20 @@
 import { clickElement } from "../interactive/interactive";
-import { closeOmni, populateOmni } from "../omni/omni";
-import { addhttp, showToast } from "../omni/utils";
-import { Action } from "./actions-data";
+import { addhttp } from "../extension/utils";
+import $ from "jquery";
+import { showToast } from "../components/app";
+import { closeExtension } from "../extension/extension";
+import { Action } from "./data/types-data";
 
-export function handleAction(e, actions: Action[], isOpen: boolean) {
-	var action = actions[$(".omni-item-active").attr("data-index")];
-	isOpen = closeOmni(isOpen);
+type ActionHandler = React.Dispatch<React.SetStateAction<Action[]>>;
 
-	handleActionItems(action, e);
-	// Fetch actions again
-	chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
-		actions = response.actions;
-		populateOmni(actions);
-	});
-
-	return isOpen;
+export function handleAction(event, actions: Action[]) {
+	const selectedAction = $(".omni-item-active").attr("data-index");
+	var action = actions[selectedAction];
+	closeExtension();
+	handleActionItems(action, event);
 }
 
-function handleActionItems(action: Action, e) {
+function handleActionItems(action: Action, event: KeyboardEvent) {
 	if (inputStartsWith("/remove")) {
 		chrome.runtime.sendMessage({
 			request: "remove",
@@ -28,7 +25,7 @@ function handleActionItems(action: Action, e) {
 	}
 
 	if (inputStartsWith("/history")) {
-		if (e.ctrlKey || e.metaKey) {
+		if (event.ctrlKey || event.metaKey) {
 			window.open($(".omni-item-active").attr("data-url"));
 			return;
 		}
@@ -37,7 +34,7 @@ function handleActionItems(action: Action, e) {
 	}
 
 	if (inputStartsWith("/bookmarks")) {
-		if (e.ctrlKey || e.metaKey) {
+		if (event.ctrlKey || event.metaKey) {
 			window.open($(".omni-item-active").attr("data-url"));
 		}
 		window.open($(".omni-item-active").attr("data-url"), "_self");
@@ -47,7 +44,6 @@ function handleActionItems(action: Action, e) {
 	if (inputStartsWith("/interactive")) {
 		const query = $(".omni-item-active .omni-item-name").text();
 		const action = $(".omni-item-active .omni-item-desc").text();
-		console.log(query, "QUERY");
 		clickElement(query, action);
 		return;
 	}
@@ -59,7 +55,7 @@ function handleActionItems(action: Action, e) {
 	});
 	switch (action.action) {
 		case "bookmark":
-			if (e.ctrlKey || e.metaKey) {
+			if (event.ctrlKey || event.metaKey) {
 				window.open(action.url);
 			} else {
 				window.open(action.url, "_self");
@@ -82,7 +78,7 @@ function handleActionItems(action: Action, e) {
 			}
 			break;
 		case "navigation":
-			if (e.ctrlKey || e.metaKey) {
+			if (event.ctrlKey || event.metaKey) {
 				window.open(action.url);
 			} else {
 				window.open(action.url, "_self");
@@ -99,14 +95,14 @@ function handleActionItems(action: Action, e) {
 			window.open("mailto:");
 			break;
 		case "url":
-			if (e.ctrlKey || e.metaKey) {
+			if (event.ctrlKey || event.metaKey) {
 				window.open(action.url);
 			} else {
 				window.open(action.url, "_self");
 			}
 			break;
 		case "goto":
-			if (e.ctrlKey || e.metaKey) {
+			if (event.ctrlKey || event.metaKey) {
 				window.open(addhttp($(".omni-extension input").val().toString()));
 			} else {
 				window.open(
