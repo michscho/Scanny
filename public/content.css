@@ -67,19 +67,6 @@
 	font-family: Inter !important;
 	z-index: 99999999999;
 }
-.omni-extension #omni {
-	position: absolute;
-	width: 100%;
-	background: var(--background);
-	border: 1px solid var(--border);
-	border-radius: 5px;
-	top: 0px;
-	left: 0px;
-	z-index: 9999999998;
-	height: fit-content;
-	transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
-	display: block;
-}
 .omni-closing #omni {
 	transform: scale(0.9);
 	opacity: 0;
@@ -235,3 +222,4 @@
 .omni-extension .omni-keys span {
 	margin-left: 3px;
 }
+

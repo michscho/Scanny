@@ -4,7 +4,7 @@ import { keyMapings } from "./utils/key-mappings";
 import { openExtension } from "./extension/extension";
 import { Action } from "./actions/data/types-data";
 
-document.onkeyup = (e) => {
+document.onkeyup = (e: KeyboardEvent) => {
 	if (e.key == "Escape") {
 		chrome.runtime.sendMessage({ request: "close-omni" });
 	}

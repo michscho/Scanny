@@ -25,23 +25,39 @@ export function App(searchProps: AppProps): JSX.Element {
 	}, []);
 
 	return (
-		<div id="omni-extension" className="omni-extension">
-			<SearchApp actions={actions} />
-			<Global styles={globalStyle}></Global>
+		<div>
+			<div id="omni-extension" className="omni-extension" css={extension}>
+				<SearchApp actions={actions} />
+			</div>
+			<Global styles={globalStyle} />
 		</div>
 	);
 }
 
+const extension = css`
+	position: absolute;
+	width: 100%;
+	background: #281e1e9e;
+	border: 1px solid #35373e;
+	border-radius: 5px;
+	top: 0px;
+	left: 0px;
+	z-index: 9999999998;
+	height: fit-content;
+	transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
+	display: block;
+`;
+
 const globalStyle = css`
 	::-webkit-scrollbar {
-		width: 300px;
+		width: 10px;
 		height: 10px;
 	}
 
 	::-webkit-scrollbar-thumb {
 		background-color: rgba(127, 127, 127, 0.6);
 		background-clip: padding-box;
-		border: 1000px solid transparent;
+		border: 2px solid transparent;
 		border-radius: 5px;
 	}
 

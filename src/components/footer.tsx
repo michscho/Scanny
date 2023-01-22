@@ -1,10 +1,11 @@
 import { css } from "@emotion/react";
+import React from "react";
 
 export interface FooterProps {
 	result: number;
 }
 
-export function Footer(resultProps: FooterProps): JSX.Element {
+export function Footer(resultProps: FooterProps) {
 	return (
 		<div css={style}>
 			<div css={resultStyle}>{resultProps.result} results</div>
