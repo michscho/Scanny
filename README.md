@@ -24,4 +24,3 @@ If you have any issues with the extension or have any suggestions for improvemen
 ## Credits
 
 https://github.com/alyssaxuu/omni
-
