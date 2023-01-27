@@ -1,54 +1,58 @@
-import React, { useEffect, useRef, useState } from "react";
 import "../../public/content.css";
-import { ActionComponent } from "./action-component";
-import { FixedSizeList as List } from "react-window";
-import $ from "jquery";
-import { search } from "../search/search";
-import { handleAction } from "../actions/handle-action";
-import { Footer } from "./footer";
 import { Action } from "../actions/data/types-data";
 import { css, Global } from "@emotion/react";
-interface AppProps {
+import { SearchApp } from "./search-app";
+
+export interface AppProps {
 	actions: Action[];
 }
 
 export function App(searchProps: AppProps): JSX.Element {
-	const [actions, setActions] = useState(searchProps.actions);
-
-	useEffect(() => {
-		$(document).on("keyup", ".omni-extension input", (e) =>
-			search(e, searchProps.actions, setActions)
-		);
-		$(document).on("click", ".omni-item-active", (e) =>
-			handleAction(e, actions)
-		);
-	}, []);
-
 	return (
 		<div>
-			<div id="omni-extension" className="omni-extension" css={extension}>
-				<SearchApp actions={actions} />
+			<div id="omni-extension" className="omni-extension">
+				<SearchApp actions={searchProps.actions} />
 			</div>
 			<Global styles={globalStyle} />
 		</div>
 	);
 }
 
-const extension = css`
-	position: absolute;
-	width: 100%;
-	background: #281e1e9e;
-	border: 1px solid #35373e;
-	border-radius: 5px;
-	top: 0px;
-	left: 0px;
-	z-index: 9999999998;
-	height: fit-content;
-	transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
-	display: block;
-`;
-
 const globalStyle = css`
+	@media (prefers-color-scheme: dark) {
+		.omni-extension {
+			--background: #281e1e9e;
+			--border: #35373e;
+			--text: #f1f1f1;
+			--text-2: #c5c6ca;
+			--text-3: #a5a5ae;
+			--select: #17191e84;
+			--accent: #6068d2;
+			--accent-hover: #484fac96;
+			--placeholder: #63687b;
+			--background-2: #292d36;
+		}
+	}
+	@media (prefers-color-scheme: light) {
+		.omni-extension {
+			--background: #fafcff;
+			--border: #f2f3fb;
+			--text: #2b2d41;
+			--text-2: #2b2d41;
+			--text-3: #929db2;
+			--select: #eff3f9;
+			--accent: #6068d2;
+			--accent-hover: #484fac;
+			--placeholder: #bac2d1;
+			--background-2: #292d36;
+		}
+	}
+
+	.omni-extension {
+		font-family: Inter !important;
+		z-index: 99999999999;
+	}
+
 	::-webkit-scrollbar {
 		width: 10px;
 		height: 10px;
@@ -79,199 +83,3 @@ const globalStyle = css`
 		background: none;
 	}
 `;
-
-export function SearchApp(searchProps: AppProps): JSX.Element {
-	const [activeIndex, setActiveIndex] = useState(0);
-	const listRef = useRef<HTMLDivElement>(null);
-	const reactLegacyRef = useRef<List<any>>(null);
-
-	function scrollUp() {
-		if (activeIndex >= 0) {
-			console.log(activeIndex);
-			setActiveIndex(activeIndex - 1);
-			reactLegacyRef.current.scrollToItem(activeIndex, "start");
-		}
-	}
-
-	function scrollDown() {
-		if (activeIndex < searchProps.actions.length - 1) {
-			setActiveIndex(activeIndex + 1);
-			reactLegacyRef.current.scrollToItem(activeIndex, "start");
-		}
-	}
-
-	function handleKeyDown(event: KeyboardEvent) {
-		if (event.key === "ArrowDown") {
-			scrollDown();
-		}
-
-		if (event.key === "ArrowUp") {
-			scrollUp();
-		}
-
-		if (event.key === "Enter") {
-			handleAction(event, searchProps.actions);
-		}
-	}
-
-	function handleMouseEnter(event, index: number) {
-		setActiveIndex(index);
-	}
-
-	useEffect(() => {
-		window.addEventListener("keydown", handleKeyDown);
-		return () => {
-			window.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [activeIndex, scrollUp, scrollDown]);
-
-	return (
-		<div>
-			<div css={styles.omniWrap}>
-				<div id="omni">
-					<div id="omni-search">
-						<input css={styles.input} placeholder="Type a command or search" />
-					</div>
-					<div ref={listRef} id="omni-list">
-						<List
-							height={60 * 6}
-							itemCount={searchProps.actions.length}
-							itemSize={60}
-							width={696}
-							ref={reactLegacyRef}
-						>
-							{({ index, style }) => (
-								<div
-									key={index}
-									style={style}
-									className={`omni-item ${
-										index === activeIndex ? "omni-item-active" : ""
-									}`}
-									onMouseEnter={(e) => handleMouseEnter(e, index)}
-								>
-									<ActionComponent
-										action={searchProps.actions[index]}
-										skip=""
-										img=""
-										index={index}
-										keys=""
-									/>
-								</div>
-							)}
-						</List>
-					</div>
-					<Footer result={searchProps.actions.length} />
-				</div>
-			</div>
-			<div css={styles.omniOverlay}></div>
-			<Toast title="Test" />
-		</div>
-	);
-}
-
-export function hoverItem() {
-	$(".omni-item-active").removeClass("omni-item-active");
-	$(this).addClass("omni-item-active");
-}
-
-export function Toast(action: { title: string }) {
-	const [show, setShow] = useState(true);
-
-	setTimeout(() => {
-		setShow(false);
-	}, 3000);
-
-	return (
-		<div css={toastStyles.toast && show ? toastStyles.show : ""}>
-			<span>{`${action.title} has been successfully performed`}</span>
-		</div>
-	);
-}
-
-const styles = {
-	omniWrap: css`
-		position: fixed;
-		width: 700px;
-		border: 1px solid transparent;
-		border-radius: 5px;
-		margin: auto;
-		top: 0px;
-		right: 0px;
-		bottom: 0px;
-		left: 0px;
-		z-index: 9999999999;
-		height: 540px;
-		transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
-		pointer-events: all;
-	`,
-	omniOverlay: css`
-		height: 100%;
-		width: 100%;
-		position: fixed;
-		top: 0px;
-		left: 0px;
-		background-color: #000;
-		z-index: 9999;
-		opacity: 0.2;
-		transition: all 0.1s cubic-bezier(0.05, 0.03, 0.35, 1);
-	`,
-	input: css`
-		background: transparent;
-		border: 0px;
-		outline: none;
-		font-size: 20px;
-		font-weight: 400;
-		height: 50px;
-		width: 92%;
-		margin-left: auto;
-		margin-right: auto;
-		display: block;
-		color: var(--text);
-		caret-color: var(--text);
-		font-family: Inter !important;
-		margin-top: 5px;
-		margin-bottom: 5px;
-		box-sizing: border-box;
-		outline: none;
-		border: 0px;
-		box-shadow: none;
-	`,
-};
-
-const toastStyles = {
-	toast: css`
-		text-align: center;
-		font-family: Inter;
-		font-weight: 500;
-		font-size: 14px;
-		position: fixed;
-		width: fit-content;
-		color: var(--text);
-		bottom: 10px;
-		left: 0px;
-		right: 0px;
-		margin: auto;
-		background: var(--background);
-		border-radius: 5px;
-		height: 40px;
-		line-height: 40px;
-		display: block;
-		padding-left: 10px;
-		padding-right: 10px;
-		visibility: hidden;
-		opacity: 0;
-		transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
-		z-index: 99999999;
-	`,
-	img: css`
-		display: inline-block;
-		margin-right: 5px;
-		vertical-align: middle;
-		margin-bottom: 2px;
-	`,
-	show: css`
-		bottom: 20px !important;
-		opacity: 1 !important;
-		visibility: visible !important;
-	`,
-};

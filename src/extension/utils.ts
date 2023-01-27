@@ -16,10 +16,12 @@ function getShortHandValues() {
 }
 
 export function checkShortHand(
-	keyEvent: JQuery.KeyUpEvent<Document, undefined, any, any>,
+	keyEvent: React.KeyboardEvent<HTMLInputElement>,
 	value: string
 ) {
+	console.log("checkShortHand", keyEvent, value);
 	const element = $(".omni-extension input");
+	console.log("element", element);
 	const shortHand = shortHandRecord[value];
 	if (keyEvent.keyCode !== keyMapings.backspace && shortHand) {
 		element.val(shortHand);

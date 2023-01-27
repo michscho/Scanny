@@ -2,57 +2,53 @@ import $ from "jquery";
 import { Action } from "../actions/data/types-data";
 import { findClickableElements } from "../interactive/search";
 
-export function handleHistory(
-	query: string,
-	actions: Action[],
-	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
-) {
-	var tempvalue = query.replace("/history ", "");
-	if (tempvalue != "/history") {
-		query = query.replace("/history ", "");
-	}
-	chrome.runtime.sendMessage(
-		{ request: "search-history", query: query },
-		(response) => {
-			setActionFunction(response.history);
-		}
-	);
-}
+// export function handleHistory(query: string, actions: Action[]) {
+// 	var tempvalue = query.replace("/history ", "");
+// 	if (tempvalue != "/history") {
+// 		query = query.replace("/history ", "");
+// 	}
+// 	chrome.runtime.sendMessage(
+// 		{ request: "search-history", query: query },
+// 		(response) => {
+// 			setActions(response.historyAction);
+// 		}
+// 	);
+// }
 
-export function handleBookmarks(
-	query: string,
-	actions: Action[],
-	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
-) {
-	var tempvalue = query.replace("/bookmarks ", "");
-	if (tempvalue != "/bookmarks" && tempvalue != "") {
-		var query = query.replace("/bookmarks ", "");
-		chrome.runtime.sendMessage(
-			{ request: "search-bookmarks", query: query },
-			(response) => {
-				setActionFunction(response.bookmarkAction);
-			}
-		);
-	} else {
-		setActionFunction(actions.filter((x) => x.type == "bookmark"));
-	}
-}
+// export function handleBookmarks(
+// 	query: string,
+// 	actions: Action[],
+// 	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
+// ) {
+// 	var tempvalue = query.replace("/bookmarks ", "");
+// 	if (tempvalue != "/bookmarks" && tempvalue != "") {
+// 		var query = query.replace("/bookmarks ", "");
+// 		chrome.runtime.sendMessage(
+// 			{ request: "search-bookmarks", query: query },
+// 			(response) => {
+// 				setActionFunction(response.bookmarkAction);
+// 			}
+// 		);
+// 	} else {
+// 		setActionFunction(actions.filter((x) => x.type == "bookmark"));
+// 	}
+// }
 
-export function handleInteractive(
-	query: string,
-	actions: Action[],
-	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
-) {
-	var tempvalue = query.replace("/interactive ", "");
-	if (tempvalue != "/interactive") {
-		const newActions: Action[] = findClickableElements(
-			query.replace("/interactive ", "")
-		);
-		setActionFunction(newActions);
-	} else {
-		setActionFunction(actions.filter((x) => x.type === "interactive"));
-	}
-}
+// export function handleInteractive(
+// 	query: string,
+// 	actions: Action[],
+// 	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
+// ) {
+// 	var tempvalue = query.replace("/interactive ", "");
+// 	if (tempvalue != "/interactive") {
+// 		const newActions: Action[] = findClickableElements(
+// 			query.replace("/interactive ", "")
+// 		);
+// 		setActionFunction(newActions);
+// 	} else {
+// 		setActionFunction(actions.filter((x) => x.type === "interactive"));
+// 	}
+// }
 
 export function handleTabs(query: string, actions: Action[]) {
 	var tempvalue = query.replace("/tabs ", "");

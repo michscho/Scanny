@@ -3,7 +3,7 @@ import { attachOnInstallListener } from "./listener/on-install";
 import { attachChromeTabListener } from "./listener/tabs";
 import { attachOnMessageListener } from "./listener/on-message";
 import { Action } from "./actions/data/types-data";
-import { resetAllActions } from "./actions/reset-actions";
+import { resetActions } from "./actions/reset-actions";
 
 let actions: Action[] = [];
 let newtaburl = "";
@@ -36,7 +36,8 @@ chrome.commands.onCommand.addListener((command) => {
 	}
 });
 
-attachChromeTabListener(resetAllActions);
-attachOnMessageListener(resetAllActions);
+attachChromeTabListener(resetActions);
+attachOnMessageListener(resetActions);
 
-actions = resetAllActions();
+actions = resetActions();
+

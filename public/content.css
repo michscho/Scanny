@@ -1,72 +1,3 @@
-@media (prefers-color-scheme: dark) {
-	.omni-extension {
-		--background: #281e1e9e;
-		--border: #35373e;
-		--text: #f1f1f1;
-		--text-2: #c5c6ca;
-		--text-3: #a5a5ae;
-		--select: #17191e84;
-		--accent: #6068d2;
-		--accent-hover: #484fac96;
-		--placeholder: #63687b;
-		--background-2: #292d36;
-	}
-}
-@media (prefers-color-scheme: light) {
-	.omni-extension {
-		--background: #fafcff;
-		--border: #f2f3fb;
-		--text: #2b2d41;
-		--text-2: #2b2d41;
-		--text-3: #929db2;
-		--select: #eff3f9;
-		--accent: #6068d2;
-		--accent-hover: #484fac;
-		--placeholder: #bac2d1;
-		--background-2: #292d36;
-	}
-}
-
-@font-face {
-	font-family: "Inter";
-	font-style: normal;
-	font-weight: 400;
-	src: url("chrome-extension://__MSG_@@extension_id__/icons/Inter-Regular.ttf");
-}
-@font-face {
-	font-family: "Inter";
-	font-style: normal;
-	font-weight: 500;
-	src: url("chrome-extension://__MSG_@@extension_id__/icons/Inter-Medium.ttf");
-}
-@font-face {
-	font-family: "Inter";
-	font-style: normal;
-	font-weight: 600;
-	src: url("chrome-extension://__MSG_@@extension_id__/icons/Inter-SemiBold.ttf");
-}
-@font-face {
-	font-family: "Inter";
-	font-style: normal;
-	font-weight: 700;
-	src: url("chrome-extension://__MSG_@@extension_id__/icons/Inter-Bold.ttf");
-}
-.omni-extension * {
-	display: block;
-	width: unset;
-	box-shadow: unset;
-	padding: unset;
-	margin: unset;
-	background-color: unset;
-	border-radius: unset;
-}
-.omni-extension .omni-item-details * {
-	line-height: normal;
-}
-.omni-extension {
-	font-family: Inter !important;
-	z-index: 99999999999;
-}
 .omni-closing #omni {
 	transform: scale(0.9);
 	opacity: 0;
@@ -125,18 +56,6 @@
 }
 .omni-extension .omni-item:hover {
 	cursor: pointer;
-}
-.omni-extension .omni-item-active {
-	background-color: var(--select);
-	position: relative;
-}
-.omni-extension .omni-item-active:before {
-	height: 100%;
-	position: absolute;
-	display: block;
-	content: "";
-	width: 2px;
-	background-color: var(--accent);
 }
 .omni-extension .omni-select {
 	float: right;

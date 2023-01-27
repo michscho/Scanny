@@ -4,11 +4,7 @@ import $ from "jquery";
 import { Action } from "./data/types-data";
 import { closeExtension } from "../content";
 
-type ActionHandler = React.Dispatch<React.SetStateAction<Action[]>>;
-
-export function handleAction(event, actions: Action[]) {
-	const selectedAction = $(".omni-item-active").attr("data-index");
-	var action = actions[selectedAction];
+export function handleAction(event, action: Action) {
 	closeExtension();
 	handleActionItems(action, event);
 }
