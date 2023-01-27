@@ -18,12 +18,12 @@ export function ActionComponent({ action, img, index, keys }: ActionProps) {
 	return (
 		<div data-index={index} data-type={action.type}>
 			<Img action={action} />
-			<div className="omni-item-details">
-				<div className="omni-item-name">{action.title}</div>
-				<div className="omni-item-desc">{action.description}</div>
+			<div className="scanny-item-details">
+				<div className="scanny-item-name">{action.title}</div>
+				<div className="scanny-item-desc">{action.description}</div>
 			</div>
 			{action.keys ? <Keys action={action} /> : ""}
-			<div className="omni-select">
+			<div className="scanny-select">
 				Select <span css={shortcut}>⏎</span>
 			</div>
 		</div>
@@ -37,7 +37,7 @@ function addGlobeIcon(action: Action, index: number) {
 
 		// Favicon doesn't load, use a fallback
 		loadimg.onerror = () => {
-			$(".omni-item[data-index='" + index + "'] img").attr(
+			$(".scanny-item[data-index='" + index + "'] img").attr(
 				"src",
 				chrome.runtime.getURL("/icons/globe.svg")
 			);
@@ -51,7 +51,7 @@ interface KeysProps {
 
 function Keys(action: KeysProps) {
 	return (
-		<div className="omni-keys">
+		<div className="scanny-keys">
 			{action.action.keys.map((key: any) => (
 				<span css={shortcut}>{key}</span>
 			))}
@@ -86,7 +86,8 @@ function Img(action: ImgProps) {
 					: chrome.runtime.getURL("/icons/globe.svg")
 			}
 			alt="favicon"
-			className="omni-icon"
+			className="scanny-icon"
 		/>
 	);
 }
+

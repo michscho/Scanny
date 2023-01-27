@@ -2,7 +2,7 @@
 	"name": "Scanny - your command palette for each website",
 	"description": "Supercharge each website with a command palette, search for elements on the page, use tabs and more.",
 	"offline_enabled": true,
-	"version": "1.4.7",
+	"version": "1.0.0",
 	"manifest_version": 3,
 	"action": {
 		"icons": {
@@ -17,7 +17,7 @@
 		"128": "icons/logo-128.png"
 	},
 	"commands": {
-		"open-omni": {
+		"open-scanny": {
 			"suggested_key": {
 				"default": "Ctrl+Shift+K",
 				"mac": "Command+Shift+K"

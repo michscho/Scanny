@@ -11,9 +11,10 @@ export function openExtension(root: HTMLDivElement, actions: Action[]) {
 		const reactRoot = ReactDOM.createRoot(root);
 		reactRoot.render(<App actions={actions} />);
 		window.setTimeout(() => {
-			$("#omni-extension input").trigger("focus");
-			focusLock.on($("#omni-extension input").get(0));
-			$("#omni-extension input").trigger("focus");
+			$("#scanny-extension input").trigger("focus");
+			focusLock.on($("#scanny-extension input").get(0));
+			$("#scanny-extension input").trigger("focus");
 		}, 100);
 	});
 }
+

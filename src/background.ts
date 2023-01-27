@@ -11,17 +11,17 @@ let newtaburl = "";
 attachOnInstallListener();
 
 chrome.action.onClicked.addListener((tab) => {
-	chrome.tabs.sendMessage(tab.id!, { request: "open-omni" });
+	chrome.tabs.sendMessage(tab.id!, { request: "open-scanny" });
 });
 
 chrome.commands.onCommand.addListener((command) => {
-	if (command === "open-omni") {
+	if (command === "open-scanny") {
 		getCurrentTab().then((response) => {
 			if (
 				!response.url!.includes("chrome://") &&
 				!response.url!.includes("chrome.google.com")
 			) {
-				chrome.tabs.sendMessage(response.id!, { request: "open-omni" });
+				chrome.tabs.sendMessage(response.id!, { request: "open-scanny" });
 			} else {
 				chrome.tabs
 					.create({
@@ -40,4 +40,3 @@ attachChromeTabListener(resetActions);
 attachOnMessageListener(resetActions);
 
 actions = resetActions();
-

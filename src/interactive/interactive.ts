@@ -1,9 +1,7 @@
 import $ from "jquery";
 
-export function clickElement(query: string, actionType: string) {
-	console.info("clickElement", query, actionType);
-	console.log(actionType);
-	switch (actionType) {
+export function clickElement(query: string, description: string) {
+	switch (description) {
 		case "Clickable button":
 			clickButtonElement(query);
 			break;

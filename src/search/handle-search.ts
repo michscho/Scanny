@@ -34,21 +34,9 @@ import { findClickableElements } from "../interactive/search";
 // 	}
 // }
 
-// export function handleInteractive(
-// 	query: string,
-// 	actions: Action[],
-// 	setActionFunction: React.Dispatch<React.SetStateAction<Action[]>>
-// ) {
-// 	var tempvalue = query.replace("/interactive ", "");
-// 	if (tempvalue != "/interactive") {
-// 		const newActions: Action[] = findClickableElements(
-// 			query.replace("/interactive ", "")
-// 		);
-// 		setActionFunction(newActions);
-// 	} else {
-// 		setActionFunction(actions.filter((x) => x.type === "interactive"));
-// 	}
-// }
+export function handleInteractive(query: string) {
+	return findClickableElements(query.replace(">", ""));
+}
 
 export function handleTabs(query: string, actions: Action[]) {
 	var tempvalue = query.replace("/tabs ", "");
@@ -57,10 +45,13 @@ export function handleTabs(query: string, actions: Action[]) {
 	} else {
 		tempvalue = query.replace("/tabs ", "");
 		$(this).toggle(
-			($(this).find(".omni-item-name").text().toLowerCase().indexOf(tempvalue) >
-				-1 ||
+			($(this)
+				.find(".scanny-item-name")
+				.text()
+				.toLowerCase()
+				.indexOf(tempvalue) > -1 ||
 				$(this)
-					.find(".omni-item-desc")
+					.find(".scanny-item-desc")
 					.text()
 					.toLowerCase()
 					.indexOf(tempvalue) > -1) &&
@@ -79,10 +70,13 @@ export function handleRemove(query: string, actions: Action[]) {
 	} else {
 		tempvalue = query.replace("/remove ", "");
 		$(this).toggle(
-			($(this).find(".omni-item-name").text().toLowerCase().indexOf(tempvalue) >
-				-1 ||
+			($(this)
+				.find(".scanny-item-name")
+				.text()
+				.toLowerCase()
+				.indexOf(tempvalue) > -1 ||
 				$(this)
-					.find(".omni-item-desc")
+					.find(".scanny-item-desc")
 					.text()
 					.toLowerCase()
 					.indexOf(tempvalue) > -1) &&
@@ -99,10 +93,13 @@ export function handleAction(query: string, actions: Action[]) {
 	} else {
 		tempvalue = query.replace("/actions ", "");
 		$(this).toggle(
-			($(this).find(".omni-item-name").text().toLowerCase().indexOf(tempvalue) >
-				-1 ||
+			($(this)
+				.find(".scanny-item-name")
+				.text()
+				.toLowerCase()
+				.indexOf(tempvalue) > -1 ||
 				$(this)
-					.find(".omni-item-desc")
+					.find(".scanny-item-desc")
 					.text()
 					.toLowerCase()
 					.indexOf(tempvalue) > -1) &&

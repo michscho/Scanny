@@ -9,7 +9,7 @@ export function Footer(resultProps: FooterProps) {
 	return (
 		<div css={style}>
 			<div css={resultStyle}>{resultProps.result} results</div>
-			<div id="omni-arrows">
+			<div id="scanny-arrows">
 				Use arrow keys <span css={shortcut}>↑</span>
 				<span css={shortcut}>↓</span> to navigate
 			</div>

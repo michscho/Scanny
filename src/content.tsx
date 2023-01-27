@@ -6,12 +6,12 @@ import { Action } from "./actions/data/types-data";
 
 document.onkeyup = (e: KeyboardEvent) => {
 	if (e.key == "Escape") {
-		chrome.runtime.sendMessage({ request: "close-omni" });
+		chrome.runtime.sendMessage({ request: "close-scanny" });
 	}
 };
 
 export function closeExtension() {
-	$("#omni-extension").addClass("omni-closing");
+	$("#scanny-extension").addClass("scanny-closing");
 }
 
 jQuery(function () {
@@ -35,14 +35,15 @@ jQuery(function () {
 	});
 
 	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-		if (message.request === "open-omni") {
+		console.log(message);
+		if (message.request === "open-scanny") {
 			const extensionRoot = document.createElement("div");
 			document.body.appendChild(extensionRoot);
 			openExtension(extensionRoot, actions);
 		}
 	});
 
-	$(document).on("click", ".omni-extension #omni-overlay", () =>
+	$(document).on("click", ".scanny-extension #scanny-overlay", () =>
 		closeExtension()
 	);
 });

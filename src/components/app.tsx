@@ -2,15 +2,21 @@ import "../../public/content.css";
 import { Action } from "../actions/data/types-data";
 import { css, Global } from "@emotion/react";
 import { SearchApp } from "./search-app";
+import { closeExtension } from "../content";
 
 export interface AppProps {
 	actions: Action[];
 }
 
 export function App(searchProps: AppProps): JSX.Element {
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape") {
+			closeExtension();
+		}
+	});
 	return (
 		<div>
-			<div id="omni-extension" className="omni-extension">
+			<div id="scanny-extension" className="scanny-extension">
 				<SearchApp actions={searchProps.actions} />
 			</div>
 			<Global styles={globalStyle} />
@@ -20,7 +26,7 @@ export function App(searchProps: AppProps): JSX.Element {
 
 const globalStyle = css`
 	@media (prefers-color-scheme: dark) {
-		.omni-extension {
+		.scanny-extension {
 			--background: #281e1e9e;
 			--border: #35373e;
 			--text: #f1f1f1;
@@ -34,7 +40,7 @@ const globalStyle = css`
 		}
 	}
 	@media (prefers-color-scheme: light) {
-		.omni-extension {
+		.scanny-extension {
 			--background: #fafcff;
 			--border: #f2f3fb;
 			--text: #2b2d41;
@@ -48,7 +54,7 @@ const globalStyle = css`
 		}
 	}
 
-	.omni-extension {
+	.scanny-extension {
 		font-family: Inter !important;
 		z-index: 99999999999;
 	}

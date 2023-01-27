@@ -1,7 +1,11 @@
-import { checkShortHand, validURL } from "../extension/utils";
-import $ from "jquery";
+import { checkShortHand } from "../extension/utils";
 import { keyMapings } from "../utils/key-mappings";
-import { handleAction, handleRemove, handleTabs } from "./handle-search";
+import {
+	handleAction,
+	handleInteractive,
+	handleRemove,
+	handleTabs,
+} from "./handle-search";
 import { filterSearchAndGoItems } from "../utils/utils";
 import { resetActions } from "../actions/reset-actions";
 import { Action } from "../actions/data/types-data";
@@ -16,9 +20,8 @@ export function search(
 
 	actions = resetActions();
 
-	var query = event.currentTarget.value.toString().toLowerCase();
+	const query = event.currentTarget.value.toString().toLowerCase();
 	checkShortHand(event, query);
-	query = event.currentTarget.value.toString().toLowerCase();
 
 	// if (query.startsWith("/history")) {
 	// 	return handleHistory(query, actions);
@@ -28,9 +31,9 @@ export function search(
 	// 	return handleBookmarks(query, actions);
 	// }
 
-	// if (query.startsWith("/interactive")) {
-	// 	return handleInteractive($(event.target).val().toString(), actions);
-	// }
+	if (query.startsWith(">")) {
+		return handleInteractive(event.currentTarget.value);
+	}
 
 	if (query.startsWith("/tabs")) {
 		handleTabs(query, actions);
@@ -60,7 +63,6 @@ export function search(
 
 	return filteredActions;
 }
-
 
 function isSpecialKeyEvent(e: React.KeyboardEvent<HTMLInputElement>) {
 	return (

@@ -11,6 +11,7 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [actions, setActions] = useState(searchProps.actions);
 	const listRef = useRef<HTMLDivElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
 	const reactLegacyRef = useRef<List<any>>(null);
 
 	function scrollUp() {
@@ -40,7 +41,9 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 		}
 
 		if (event.key === "Enter") {
-			handleAction(event, actions[activeIndex]);
+			const query = inputRef.current?.value;
+			console.log(query);
+			handleAction(event, query, actions[activeIndex]);
 			return;
 		}
 
@@ -53,16 +56,17 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 
 	return (
 		<div>
-			<div css={styles.omniWrap}>
-				<div id="omni" css={extension}>
-					<div id="omni-search">
+			<div css={styles.scannyWrap}>
+				<div id="scanny" css={extension}>
+					<div id="scanny-search">
 						<input
+							ref={inputRef}
 							css={styles.input}
 							placeholder="Type a command or search"
 							onKeyDown={(e) => handleKeyDown(e)}
 						/>
 					</div>
-					<div ref={listRef} id="omni-list">
+					<div ref={listRef} id="scanny-list">
 						<FixedSizeList
 							height={59 * 6}
 							itemCount={actions.length}
@@ -77,8 +81,7 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 									css={index === activeIndex && styles.active}
 									onMouseEnter={(e) => handleMouseEnter(e, index)}
 									onMouseDown={(e) => {
-										console.log(e);
-										handleAction(e, actions[index]);
+										//handleAction(e, inputRef.current?.value, actions[index]);
 									}}
 								>
 									<ActionComponent
@@ -95,30 +98,11 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 					<Footer result={actions.length} />
 				</div>
 			</div>
-			<div css={styles.omniOverlay}></div>
-			<Toast title="Test" />
+			<div css={styles.scannyOverlay}></div>
 		</div>
 	);
 }
 
-export function hoverItem() {
-	$(".omni-item-active").removeClass("omni-item-active");
-	$(this).addClass("omni-item-active");
-}
-
-export function Toast(action: { title: string }) {
-	const [show, setShow] = useState(true);
-
-	setTimeout(() => {
-		setShow(false);
-	}, 3000);
-
-	return (
-		<div css={toastStyles.toast && show ? toastStyles.show : ""}>
-			<span>{`${action.title} has been successfully performed`}</span>
-		</div>
-	);
-}
 
 const extension = css`
 	position: absolute;
@@ -147,7 +131,7 @@ const styles = {
 			background-color: var(--accent);
 		}
 	`,
-	omniWrap: css`
+	scannyWrap: css`
 		position: fixed;
 		width: 700px;
 		border: 1px solid transparent;
@@ -162,7 +146,7 @@ const styles = {
 		transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
 		pointer-events: all;
 	`,
-	omniOverlay: css`
+	scannyOverlay: css`
 		height: 100%;
 		width: 100%;
 		position: fixed;
