@@ -13,7 +13,7 @@
 		"@types/react": "^18.0.27",
 		"@types/react-dom": "^18.0.10",
 		"@types/react-window": "^1.8.5",
-		"@types/validator": "^13.7.10",
+		"@types/validator": "^13.7.11",
 		"copy-webpack-plugin": "^11.0.0",
 		"css-loader": "^6.7.3",
 		"dom-focus-lock": "1.1.0",
