@@ -1,21 +1,25 @@
 import { clickElement } from "../interactive/interactive";
 import { addhttp } from "../extension/utils";
 import $ from "jquery";
-import { showToast } from "../components/app";
-import { closeExtension } from "../extension/extension";
 import { Action } from "./data/types-data";
+import { closeExtension } from "../content";
 
-type ActionHandler = React.Dispatch<React.SetStateAction<Action[]>>;
-
-export function handleAction(event, actions: Action[]) {
-	const selectedAction = $(".omni-item-active").attr("data-index");
-	var action = actions[selectedAction];
+export function handleAction(
+	event: React.KeyboardEvent<HTMLInputElement>,
+	query: string,
+	action: Action
+) {
 	closeExtension();
-	handleActionItems(action, event);
+	handleActionItems(query, action, event);
 }
 
-function handleActionItems(action: Action, event: KeyboardEvent) {
-	if (inputStartsWith("/remove")) {
+function handleActionItems(
+	query: string,
+	action: Action,
+	event: React.KeyboardEvent<HTMLInputElement>
+) {
+	console.log(query, action, event);
+	if (query.startsWith("/remove")) {
 		chrome.runtime.sendMessage({
 			request: "remove",
 			type: action.type,
@@ -24,34 +28,32 @@ function handleActionItems(action: Action, event: KeyboardEvent) {
 		return;
 	}
 
-	if (inputStartsWith("/history")) {
+	if (query.startsWith("/history")) {
 		if (event.ctrlKey || event.metaKey) {
-			window.open($(".omni-item-active").attr("data-url"));
+			window.open($(".scanny-item-active").attr("data-url"));
 			return;
 		}
-		window.open($(".omni-item-active").attr("data-url"), "_self");
+		window.open($(".scanny-item-active").attr("data-url"), "_self");
 		return;
 	}
 
-	if (inputStartsWith("/bookmarks")) {
+	if (query.startsWith("/bookmarks")) {
 		if (event.ctrlKey || event.metaKey) {
-			window.open($(".omni-item-active").attr("data-url"));
+			window.open($(".scanny-item-active").attr("data-url"));
 		}
-		window.open($(".omni-item-active").attr("data-url"), "_self");
+		window.open($(".scanny-item-active").attr("data-url"), "_self");
 		return;
 	}
 
-	if (inputStartsWith("/interactive")) {
-		const query = $(".omni-item-active .omni-item-name").text();
-		const action = $(".omni-item-active .omni-item-desc").text();
-		clickElement(query, action);
+	if (query.startsWith(">")) {
+		clickElement(query.replace(">", ""), action.description);
 		return;
 	}
 
 	chrome.runtime.sendMessage({
 		request: action.action,
 		tab: action,
-		query: $(".omni-extension input").val(),
+		query: $(".scanny-extension input").val(),
 	});
 	switch (action.action) {
 		case "bookmark":
@@ -63,19 +65,9 @@ function handleActionItems(action: Action, event: KeyboardEvent) {
 			break;
 		case "scroll-bottom":
 			window.scrollTo(0, document.body.scrollHeight);
-			showToast(action);
 			break;
 		case "scroll-top":
 			window.scrollTo(0, 0);
-			break;
-		case "scroll-by":
-			const query = $(".omni-item-active .omni-item-name")
-				.val()
-				.toString()
-				.replace("scroll by", "");
-			if (typeof query === "number") {
-				window.scrollBy(0, query);
-			}
 			break;
 		case "navigation":
 			if (event.ctrlKey || event.metaKey) {
@@ -103,10 +95,10 @@ function handleActionItems(action: Action, event: KeyboardEvent) {
 			break;
 		case "goto":
 			if (event.ctrlKey || event.metaKey) {
-				window.open(addhttp($(".omni-extension input").val().toString()));
+				window.open(addhttp($(".scanny-extension input").val().toString()));
 			} else {
 				window.open(
-					addhttp($(".omni-extension input").val().toString()),
+					addhttp($(".scanny-extension input").val().toString()),
 					"_self"
 				);
 			}
@@ -120,15 +112,7 @@ function handleActionItems(action: Action, event: KeyboardEvent) {
 		case "remove-cache":
 		case "remove-local-storage":
 		case "remove-passwords":
-			showToast(action);
+			// TODO: add toaster again
 			break;
 	}
-}
-
-function inputStartsWith(startingValue: string) {
-	return $(".omni-extension input")
-		.val()
-		.toString()
-		.toLowerCase()
-		.startsWith(startingValue);
 }

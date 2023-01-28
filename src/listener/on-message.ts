@@ -152,11 +152,12 @@ export function attachOnMessageListener(resetExtension: () => Action[]) {
 			case "restore-new-tab":
 				restoreNewTab("");
 				break;
-			case "close-omni":
+			case "close-scanny":
 				getCurrentTab().then((response) => {
-					chrome.tabs.sendMessage(response.id, { request: "close-omni" });
+					chrome.tabs.sendMessage(response.id, { request: "close-scanny" });
 				});
 				break;
 		}
 	});
 }
+

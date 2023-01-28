@@ -8,7 +8,6 @@ const shortHandRecord: Record<string, string> = {
 	"/h": "/history ",
 	"/r": "/remove ",
 	"/a": "/actions ",
-	"/i": "/interactive ",
 };
 
 function getShortHandValues() {
@@ -16,15 +15,14 @@ function getShortHandValues() {
 }
 
 export function checkShortHand(
-	keyEvent: JQuery.KeyUpEvent<Document, undefined, any, any>,
+	keyEvent: React.KeyboardEvent<HTMLInputElement>,
 	value: string
 ) {
-	const element = $(".omni-extension input");
 	const shortHand = shortHandRecord[value];
 	if (keyEvent.keyCode !== keyMapings.backspace && shortHand) {
-		element.val(shortHand);
+		keyEvent.currentTarget.value = shortHand;
 	} else if (getShortHandValues().includes(value)) {
-		element.val("");
+		keyEvent.currentTarget.value = "";
 	}
 }
 

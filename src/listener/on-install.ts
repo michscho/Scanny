@@ -48,7 +48,7 @@ export function attachOnInstallListener() {
 		);
 
 		if (object.reason === "install") {
-			chrome.tabs.create({ url: "https://alyssax.com/omni/" });
+			chrome.tabs.create({ url: "mischo.github.com" });
 		}
 	});
 }

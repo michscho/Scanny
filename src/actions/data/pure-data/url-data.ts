@@ -3,10 +3,10 @@ import { UrlAction } from "../types-data";
 export const urlData: UrlAction[] = [
 	{
 		title: "Help",
-		description: "Get help with Omni on GitHub",
+		description: "Get help with scanny on GitHub",
 		type: "action",
 		action: "url",
-		url: "https://github.com/alyssaxuu/omni",
+		url: "https://github.com/alyssaxuu/scanny",
 		emojiChar: "🤔",
 	},
 	{
@@ -250,3 +250,4 @@ export const urlData: UrlAction[] = [
 		favIconUrl: chrome.runtime.getURL("icons/logo-linear.png"),
 	},
 ];
+

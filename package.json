@@ -1,5 +1,5 @@
 {
-	"name": "omni_search",
+	"name": "web-scanny",
 	"version": "1.0.0",
 	"description": "Interactive search for the web",
 	"private": true,
@@ -17,7 +17,7 @@
 		"copy-webpack-plugin": "^11.0.0",
 		"css-loader": "^6.7.3",
 		"dom-focus-lock": "1.1.0",
-		"file-loader": "^6.2.0",
+		"file-loader": "6.2.0",
 		"jquery": "3.6.3",
 		"mini-css-extract-plugin": "^2.7.2",
 		"prettier": "^2.8.2",
@@ -29,16 +29,12 @@
 		"webpack-merge": "^5.8.0"
 	},
 	"dependencies": {
-		"@emotion/css": "^11.10.5",
-		"@emotion/react": "^11.10.5",
-		"@enykeev/react-virtualized": "^9.22.4-mirror.1",
+		"@emotion/react": "11.10.5",
 		"dom-focus-lock": "1.1.0",
-		"emotion": "^11.0.0",
 		"jquery": "3.6.3",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-window": "^1.8.8",
-		"validator": "^13.7.0",
-		"virtualized-list": "2.2.0"
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"react-window": "1.8.8",
+		"validator": "13.7.0"
 	}
 }
