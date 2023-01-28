@@ -57,22 +57,6 @@
 .scanny-extension .scanny-item:hover {
 	cursor: pointer;
 }
-.scanny-extension .scanny-select {
-	float: right;
-	vertical-align: middle;
-	color: var(--text-3);
-	font-size: 12px;
-	font-weight: 500;
-	display: none;
-	margin-top: 20px;
-	margin-right: 5%;
-}
-.scanny-extension .scanny-select span {
-	margin-left: 3px;
-}
-.scanny-extension .scanny-item-active .scanny-select {
-	display: block !important;
-}
 .scanny-extension .scanny-icon {
 	width: 20px;
 	height: 20px;

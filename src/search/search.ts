@@ -2,8 +2,9 @@ import { checkShortHand } from "../extension/utils";
 import { keyMapings } from "../utils/key-mappings";
 import {
 	handleAction,
+	handleBookmarks,
+	handleHistory,
 	handleInteractive,
-	handleRemove,
 	handleTabs,
 } from "./handle-search";
 import { filterSearchAndGoItems } from "../utils/utils";
@@ -23,31 +24,24 @@ export function search(
 	const query = event.currentTarget.value.toString().toLowerCase();
 	checkShortHand(event, query);
 
-	// if (query.startsWith("/history")) {
-	// 	return handleHistory(query, actions);
-	// }
+	if (query.startsWith("/history")) {
+		return handleHistory(query);
+	}
 
-	// if (query.startsWith("/bookmarks")) {
-	// 	return handleBookmarks(query, actions);
-	// }
+	if (query.startsWith("/bookmarks")) {
+		return handleBookmarks(query);
+	}
 
 	if (query.startsWith(">")) {
 		return handleInteractive(event.currentTarget.value);
 	}
 
 	if (query.startsWith("/tabs")) {
-		handleTabs(query, actions);
-		return;
-	}
-
-	if (query.startsWith("/remove")) {
-		handleRemove(query, actions);
-		return;
+		return handleTabs(query, actions);
 	}
 
 	if (query.startsWith("/actions")) {
-		handleAction(query, actions);
-		return;
+		return handleAction(query, actions);
 	}
 
 	if (query === "") {

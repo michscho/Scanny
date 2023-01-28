@@ -84,6 +84,7 @@ export function SearchApp(searchProps: AppProps & {setStatus: any}): JSX.Element
 									}}
 								>
 									<ActionComponent
+									isSelected={index === activeIndex}
 										action={actions[index]}
 										skip=""
 										img=""

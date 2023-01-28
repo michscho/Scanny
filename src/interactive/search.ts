@@ -7,7 +7,8 @@ export function findClickableElements(query: string): Action[] {
 	const aActions = findClickableLinks(query);
 	const buttonActions = findClickableButtons(query);
 	const placeholderActions = findPlaceholderElements(query);
-	return [...aActions, ...buttonActions, ...placeholderActions];
+	const spanActions = findSpanElements(query);
+	return [...aActions, ...buttonActions, ...placeholderActions, ...spanActions];
 }
 
 function findClickableLinks(query: string): Action[] {
@@ -56,4 +57,20 @@ function findPlaceholderElements(query: string): Action[] {
 		return createInteractiveAction(el, "Placeholder", "🔖");
 	});
 	return placeholderActions;
+}
+
+function findSpanElements(query: string): Action[] {
+	var spanElements: string[] = [];
+	$("span")
+		.filter(":contains(" + query + ")")
+		.each(function () {
+			if (containsOnlyWhitespace($(this).text())) {
+				return;
+			}
+			spanElements.push($(this).text());
+		});
+	const spanActions: Action[] = filterDuplicates(spanElements).map((el) => {
+		return createInteractiveAction(el, "Clickable span", "🔗");
+	});
+	return spanActions;
 }

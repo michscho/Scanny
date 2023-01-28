@@ -1,7 +1,5 @@
 import { css } from "@emotion/react";
-import React from "react";
 import { Action } from "../actions/data/types-data";
-import { handleAction } from "../search/handle-search";
 
 export interface ActionProps {
 	action: Action;
@@ -9,9 +7,10 @@ export interface ActionProps {
 	img: string;
 	index: number;
 	keys: string;
+	isSelected: boolean;
 }
 
-export function ActionComponent({ action, img, index, keys }: ActionProps) {
+export function ActionComponent({ action, img, index, keys, isSelected }: ActionProps) {
 	// TODO: add on click on this item
 
 	addGlobeIcon(action, index);
@@ -22,13 +21,27 @@ export function ActionComponent({ action, img, index, keys }: ActionProps) {
 				<div className="scanny-item-name">{action.title}</div>
 				<div className="scanny-item-desc">{action.description}</div>
 			</div>
-			{action.keys ? <Keys action={action} /> : ""}
-			<div className="scanny-select">
+			{action.keys && !isSelected ? <Keys action={action} /> : ""}
+			{isSelected && <div css={select}>
 				Select <span css={shortcut}>⏎</span>
-			</div>
+			</div>}
 		</div>
 	);
 }
+
+const select = css`
+	float: right;
+	vertical-align: middle;
+	color: var(--text-3);
+	font-size: 12px;
+	font-weight: 500;
+	display: none;
+	margin-top: 20px;
+	margin-right: 5%;
+	margin-left: 3px;
+	display: block !important;
+
+`
 
 function addGlobeIcon(action: Action, index: number) {
 	if (!action.emojiChar) {

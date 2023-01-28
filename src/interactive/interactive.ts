@@ -6,11 +6,13 @@ export function clickElement(query: string, description: string) {
 			clickButtonElement(query);
 			break;
 		case "Clickable link":
-			console.log("Inside");
 			clickLinkElement(query);
 			break;
 		case "Placeholder":
 			clickPlaceholderElement(query);
+			break;
+		case "Clickable span":
+			clickSpanElement(query);
 			break;
 		default:
 			console.error("Invalid action type");
@@ -45,6 +47,18 @@ function clickButtonElement(query: string) {
 function clickPlaceholderElement(query: string) {
 	var $element = $("[placeholder='" + query + "']").focus();
 	var clickEvent = new MouseEvent("focus", {
+		view: window,
+		bubbles: true,
+		cancelable: true,
+	});
+	$element[0].dispatchEvent(clickEvent);
+}
+
+function clickSpanElement(query: string) {
+	var $element = $("span")
+		.filter(":contains(" + query + ")")
+		.first();
+	var clickEvent = new MouseEvent("click", {
 		view: window,
 		bubbles: true,
 		cancelable: true,
