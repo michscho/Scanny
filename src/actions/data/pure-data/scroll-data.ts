@@ -16,12 +16,5 @@ export const scrollData: Action[] = [
 		action: "scroll-top",
 		emojiChar: "👆",
 		keys: ["⌘", "↑"],
-	},
-	{
-		title: "Scroll by",
-		description: "Scroll by a certain amount given",
-		type: "action",
-		action: "scroll-by",
-		emojiChar: "📜",
-	},
+	}
 ];

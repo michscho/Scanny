@@ -2,18 +2,22 @@ import "../../public/content.css";
 import { Action } from "../actions/data/types-data";
 import { css, Global } from "@emotion/react";
 import { SearchApp } from "./search-app";
-import { closeExtension } from "../content";
+import React from "react";
 
 export interface AppProps {
 	actions: Action[];
 }
 
 export function App(searchProps: AppProps): JSX.Element {
+	const [status, setStatus] = React.useState("open");
 	document.addEventListener("keydown", (event) => {
 		if (event.key === "Escape") {
-			closeExtension();
+			setStatus("closed");
 		}
 	});
+	if (status === "closed") {
+		return <div></div>;
+	}
 	return (
 		<div>
 			<div id="scanny-extension" className="scanny-extension">
