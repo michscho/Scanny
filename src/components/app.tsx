@@ -65,33 +65,33 @@ const globalStyle = css`
 		z-index: 99999999999;
 	}
 
-	::-webkit-scrollbar {
+	.scanny-extension ::-webkit-scrollbar {
 		width: 10px;
 		height: 10px;
 	}
 
-	::-webkit-scrollbar-thumb {
+	.scanny-extension ::-webkit-scrollbar-thumb {
 		background-color: rgba(127, 127, 127, 0.6);
 		background-clip: padding-box;
 		border: 2px solid transparent;
 		border-radius: 5px;
 	}
 
-	::-webkit-scrollbar-thumb:vertical:hover,
-	::-webkit-scrollbar-thumb:horizontal:hover {
+	.scanny-extension ::-webkit-scrollbar-thumb:vertical:hover,
+	.scanny-extension::-webkit-scrollbar-thumb:horizontal:hover {
 		background-color: rgb(110, 110, 110);
 	}
 
-	::-webkit-scrollbar-track {
+	.scanny-extension ::-webkit-scrollbar-track {
 		background-color: transparent;
 	}
 
-	::-webkit-scrollbar-thumb:vertical:active,
+	.scanny-extension ::-webkit-scrollbar-thumb:vertical:active,
 	::-webkit-scrollbar-thumb:horizontal:active {
 		background-color: rgba(95, 91, 91, 1);
 	}
 
-	::-webkit-scrollbar-corner {
+	.scanny-extension ::-webkit-scrollbar-corner {
 		background: none;
 	}
 `;

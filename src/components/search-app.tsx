@@ -1,18 +1,29 @@
 import { css } from "@emotion/react";
-import { useState, useRef, useEffect, MouseEvent } from "react";
+import { useState, useRef, MouseEvent } from "react";
 import { ActionComponent } from "./action-component";
 import { AppProps } from "./app";
 import { Footer } from "./footer";
 import { FixedSizeList, FixedSizeList as List } from "react-window";
 import { search } from "../search/search";
 import { handleActionItem } from "../actions/handle-action";
+import { focusOnElement } from "../interactive/focus";
 
-export function SearchApp(searchProps: AppProps & {setStatus: any}): JSX.Element {
+export function SearchApp(
+	searchProps: AppProps & { setStatus: any }
+): JSX.Element {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [actions, setActions] = useState(searchProps.actions);
 	const listRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const reactLegacyRef = useRef<List<any>>(null);
+
+	if (inputRef.current?.value.startsWith(">")) {
+		try {
+			focusOnElement(actions[activeIndex]);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
 	function scrollUp() {
 		if (activeIndex > 0) {
@@ -41,7 +52,7 @@ export function SearchApp(searchProps: AppProps & {setStatus: any}): JSX.Element
 
 		if (event.key === "Enter") {
 			const query = inputRef.current?.value || "";
-			searchProps.setStatus("closed")
+			searchProps.setStatus("closed");
 			handleActionItem(query, actions[activeIndex], event);
 			return;
 		}
@@ -84,7 +95,7 @@ export function SearchApp(searchProps: AppProps & {setStatus: any}): JSX.Element
 									}}
 								>
 									<ActionComponent
-									isSelected={index === activeIndex}
+										isSelected={index === activeIndex}
 										action={actions[index]}
 										skip=""
 										img=""
@@ -98,11 +109,67 @@ export function SearchApp(searchProps: AppProps & {setStatus: any}): JSX.Element
 					<Footer result={actions.length} />
 				</div>
 			</div>
-			<div css={styles.scannyOverlay}></div>
+			<div
+				onClick={() => searchProps.setStatus("closed")}
+				css={styles.scannyOverlay}
+			></div>
 		</div>
 	);
 }
 
+export function Toast(action: { title: string }) {
+	const [show, setShow] = useState(true);
+
+	console.log("toast", show);
+
+	setTimeout(() => {
+		setShow(false);
+	}, 3000);
+
+	return (
+		<div css={[toastStyles.toast, toastStyles.show]}>
+			<span>{`${action.title} has been successfully performed`}</span>
+		</div>
+	);
+}
+
+const toastStyles = {
+	toast: css`
+		text-align: center;
+		font-family: Inter;
+		font-weight: 500;
+		font-size: 14px;
+		position: fixed;
+		width: fit-content;
+		color: var(--text);
+		bottom: 10px;
+		left: 0px;
+		right: 0px;
+		margin: auto;
+		background: var(--background);
+		border-radius: 5px;
+		height: 40px;
+		line-height: 40px;
+		display: block;
+		padding-left: 10px;
+		padding-right: 10px;
+		visibility: hidden;
+		opacity: 0;
+		transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
+		z-index: 99999999;
+	`,
+	img: css`
+		display: inline-block;
+		margin-right: 5px;
+		vertical-align: middle;
+		margin-bottom: 2px;
+	`,
+	show: css`
+		bottom: 20px !important;
+		opacity: 1 !important;
+		visibility: visible !important;
+	`,
+};
 
 const extension = css`
 	position: absolute;
@@ -177,43 +244,5 @@ const styles = {
 		outline: none;
 		border: 0px;
 		box-shadow: none;
-	`,
-};
-
-const toastStyles = {
-	toast: css`
-		text-align: center;
-		font-family: Inter;
-		font-weight: 500;
-		font-size: 14px;
-		position: fixed;
-		width: fit-content;
-		color: var(--text);
-		bottom: 10px;
-		left: 0px;
-		right: 0px;
-		margin: auto;
-		background: var(--background);
-		border-radius: 5px;
-		height: 40px;
-		line-height: 40px;
-		display: block;
-		padding-left: 10px;
-		padding-right: 10px;
-		visibility: hidden;
-		opacity: 0;
-		transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
-		z-index: 99999999;
-	`,
-	img: css`
-		display: inline-block;
-		margin-right: 5px;
-		vertical-align: middle;
-		margin-bottom: 2px;
-	`,
-	show: css`
-		bottom: 20px !important;
-		opacity: 1 !important;
-		visibility: visible !important;
 	`,
 };

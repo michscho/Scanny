@@ -1,55 +1,54 @@
-import { clickElement } from "../interactive/interactive";
+import { clickElement } from "../interactive/click-element";
 import { addhttp } from "../extension/utils";
 import { Action } from "./data/types-data";
 
 export function handleActionItem(
 	query: string,
-	action: Action,
+	selectedAction: Action,
 	event: React.KeyboardEvent<HTMLInputElement>
 ) {
-	console.log(query, action, event);
 	if (query.startsWith("/remove")) {
 		chrome.runtime.sendMessage({
 			request: "remove",
-			type: action.type,
-			action: action,
+			type: selectedAction.type,
+			action: selectedAction,
 		});
 		return;
 	}
 
 	if (query.startsWith("/history")) {
 		if (event.ctrlKey || event.metaKey) {
-			window.open(action.url);
+			window.open(selectedAction.url);
 			return;
 		}
-		window.open(action.url, "_self");
+		window.open(selectedAction.url, "_self");
 		return;
 	}
 
 	if (query.startsWith("/bookmarks")) {
 		if (event.ctrlKey || event.metaKey) {
-			window.open(action.url);
+			window.open(selectedAction.url);
 		}
-		window.open(action.url, "_self");
+		window.open(selectedAction.url, "_self");
 		return;
 	}
 
 	if (query.startsWith(">")) {
-		clickElement(query.replace(">", ""), action.description);
+		clickElement(selectedAction.title, selectedAction.description);
 		return;
 	}
 
 	chrome.runtime.sendMessage({
-		request: action.action,
-		tab: action,
+		request: selectedAction.action,
+		tab: selectedAction,
 		query: event.currentTarget.value,
 	});
-	switch (action.action) {
+	switch (selectedAction.action) {
 		case "bookmark":
 			if (event.ctrlKey || event.metaKey) {
-				window.open(action.url);
+				window.open(selectedAction.url);
 			} else {
-				window.open(action.url, "_self");
+				window.open(selectedAction.url, "_self");
 			}
 			break;
 		case "scroll-bottom":
@@ -60,9 +59,9 @@ export function handleActionItem(
 			break;
 		case "navigation":
 			if (event.ctrlKey || event.metaKey) {
-				window.open(action.url);
+				window.open(selectedAction.url);
 			} else {
-				window.open(action.url, "_self");
+				window.open(selectedAction.url, "_self");
 			}
 			break;
 		case "fullscreen":
@@ -77,9 +76,9 @@ export function handleActionItem(
 			break;
 		case "url":
 			if (event.ctrlKey || event.metaKey) {
-				window.open(action.url);
+				window.open(selectedAction.url);
 			} else {
-				window.open(action.url, "_self");
+				window.open(selectedAction.url, "_self");
 			}
 			break;
 		case "goto":

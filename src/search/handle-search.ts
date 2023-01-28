@@ -1,6 +1,6 @@
 import $ from "jquery";
 import { Action } from "../actions/data/types-data";
-import { findClickableElements } from "../interactive/search";
+import { findClickableElements } from "../interactive/search-element";
 
 export function handleHistory(query: string) {
 	var tempvalue = query.replace("/history ", "");
