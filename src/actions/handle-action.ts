@@ -1,19 +1,8 @@
 import { clickElement } from "../interactive/interactive";
 import { addhttp } from "../extension/utils";
-import $ from "jquery";
 import { Action } from "./data/types-data";
-import { closeExtension } from "../content";
 
-export function handleAction(
-	event: React.KeyboardEvent<HTMLInputElement>,
-	query: string,
-	action: Action
-) {
-	closeExtension();
-	handleActionItems(query, action, event);
-}
-
-function handleActionItems(
+export function handleActionItem(
 	query: string,
 	action: Action,
 	event: React.KeyboardEvent<HTMLInputElement>
@@ -30,18 +19,18 @@ function handleActionItems(
 
 	if (query.startsWith("/history")) {
 		if (event.ctrlKey || event.metaKey) {
-			window.open($(".scanny-item-active").attr("data-url"));
+			window.open(action.url);
 			return;
 		}
-		window.open($(".scanny-item-active").attr("data-url"), "_self");
+		window.open(action.url, "_self");
 		return;
 	}
 
 	if (query.startsWith("/bookmarks")) {
 		if (event.ctrlKey || event.metaKey) {
-			window.open($(".scanny-item-active").attr("data-url"));
+			window.open(action.url);
 		}
-		window.open($(".scanny-item-active").attr("data-url"), "_self");
+		window.open(action.url, "_self");
 		return;
 	}
 
@@ -53,7 +42,7 @@ function handleActionItems(
 	chrome.runtime.sendMessage({
 		request: action.action,
 		tab: action,
-		query: $(".scanny-extension input").val(),
+		query: event.currentTarget.value,
 	});
 	switch (action.action) {
 		case "bookmark":
@@ -94,11 +83,12 @@ function handleActionItems(
 			}
 			break;
 		case "goto":
+			const query = event.currentTarget.value 
 			if (event.ctrlKey || event.metaKey) {
-				window.open(addhttp($(".scanny-extension input").val().toString()));
+				window.open(addhttp(query));
 			} else {
 				window.open(
-					addhttp($(".scanny-extension input").val().toString()),
+					addhttp(query),
 					"_self"
 				);
 			}

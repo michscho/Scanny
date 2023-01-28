@@ -1,7 +1,6 @@
 import $ from "jquery";
 import focusLock from "dom-focus-lock";
 import { App } from "../components/app";
-import React from "react";
 import * as ReactDOM from "react-dom/client";
 import { Action } from "../actions/data/types-data";
 

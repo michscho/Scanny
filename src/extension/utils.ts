@@ -1,4 +1,3 @@
-import $ from "jquery";
 import isURL from "validator/lib/isURL";
 import { keyMapings } from "../utils/key-mappings";
 

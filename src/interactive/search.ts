@@ -11,7 +11,7 @@ export function findClickableElements(query: string): Action[] {
 }
 
 function findClickableLinks(query: string): Action[] {
-	var aElements = [];
+	var aElements: string[] = [];
 	$("a")
 		.filter(":contains(" + query + ")")
 		.each(function () {
@@ -27,7 +27,7 @@ function findClickableLinks(query: string): Action[] {
 }
 
 function findClickableButtons(query: string): Action[] {
-	var buttonElements = [];
+	var buttonElements: string[] = [];
 	$("button")
 		.filter(":contains(" + query + ")")
 		.each(function () {
@@ -43,7 +43,7 @@ function findClickableButtons(query: string): Action[] {
 }
 
 function findPlaceholderElements(query: string): Action[] {
-	var placeholderElements = [];
+	var placeholderElements: string[] = [];
 	$(`[placeholder]:contains('${query}')`).each(function () {
 		if (containsOnlyWhitespace($(this).attr("placeholder"))) {
 			return;

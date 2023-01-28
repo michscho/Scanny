@@ -4,10 +4,10 @@ import { ActionComponent } from "./action-component";
 import { AppProps } from "./app";
 import { Footer } from "./footer";
 import { FixedSizeList, FixedSizeList as List } from "react-window";
-import { handleAction } from "../actions/handle-action";
 import { search } from "../search/search";
+import { handleActionItem } from "../actions/handle-action";
 
-export function SearchApp(searchProps: AppProps): JSX.Element {
+export function SearchApp(searchProps: AppProps & {setStatus: any}): JSX.Element {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [actions, setActions] = useState(searchProps.actions);
 	const listRef = useRef<HTMLDivElement>(null);
@@ -16,16 +16,15 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 
 	function scrollUp() {
 		if (activeIndex > 0) {
-			console.log(activeIndex);
 			setActiveIndex(activeIndex - 1);
-			reactLegacyRef.current.scrollToItem(activeIndex - 1, "auto");
+			reactLegacyRef.current?.scrollToItem(activeIndex - 1, "auto");
 		}
 	}
 
 	function scrollDown() {
 		if (activeIndex < actions.length - 1) {
 			setActiveIndex(activeIndex + 1);
-			reactLegacyRef.current.scrollToItem(activeIndex + 1, "auto");
+			reactLegacyRef.current?.scrollToItem(activeIndex + 1, "auto");
 		}
 	}
 
@@ -41,9 +40,9 @@ export function SearchApp(searchProps: AppProps): JSX.Element {
 		}
 
 		if (event.key === "Enter") {
-			const query = inputRef.current?.value;
-			console.log(query);
-			handleAction(event, query, actions[activeIndex]);
+			const query = inputRef.current?.value || "";
+			searchProps.setStatus("closed")
+			handleActionItem(query, actions[activeIndex], event);
 			return;
 		}
 

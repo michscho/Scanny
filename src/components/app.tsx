@@ -8,8 +8,10 @@ export interface AppProps {
 	actions: Action[];
 }
 
+type Status = "open" | "closed";
+
 export function App(searchProps: AppProps): JSX.Element {
-	const [status, setStatus] = React.useState("open");
+	const [status, setStatus] = React.useState<Status>("open");
 	document.addEventListener("keydown", (event) => {
 		if (event.key === "Escape") {
 			setStatus("closed");
@@ -21,7 +23,7 @@ export function App(searchProps: AppProps): JSX.Element {
 	return (
 		<div>
 			<div id="scanny-extension" className="scanny-extension">
-				<SearchApp actions={searchProps.actions} />
+				<SearchApp actions={searchProps.actions} setStatus={setStatus} />
 			</div>
 			<Global styles={globalStyle} />
 		</div>

@@ -96,7 +96,7 @@ export function attachOnMessageListener(resetExtension: () => Action[]) {
 				openIncognito();
 				break;
 			case "close-window":
-				closeWindow(sender.tab.windowId);
+				closeWindow(sender.tab!.windowId);
 				break;
 			case "close-tab":
 				closeCurrentTab();
@@ -133,7 +133,7 @@ export function attachOnMessageListener(resetExtension: () => Action[]) {
 							emojiChar: "⭐️",
 							action: "bookmark",
 							url: action.url,
-							description: action.url,
+							description: action.url || "",
 						});
 					});
 					sendResponse({ bookmarks: actions });
@@ -154,7 +154,7 @@ export function attachOnMessageListener(resetExtension: () => Action[]) {
 				break;
 			case "close-scanny":
 				getCurrentTab().then((response) => {
-					chrome.tabs.sendMessage(response.id, { request: "close-scanny" });
+					chrome.tabs.sendMessage(response.id!, { request: "close-scanny" });
 				});
 				break;
 		}

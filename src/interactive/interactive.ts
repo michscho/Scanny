@@ -49,4 +49,5 @@ function clickPlaceholderElement(query: string) {
 		bubbles: true,
 		cancelable: true,
 	});
+	$element[0].dispatchEvent(clickEvent);
 }

@@ -33,7 +33,7 @@ export function ActionComponent({ action, img, index, keys }: ActionProps) {
 function addGlobeIcon(action: Action, index: number) {
 	if (!action.emojiChar) {
 		var loadimg = new Image();
-		loadimg.src = action.favIconUrl;
+		loadimg.src = action.favIconUrl || "";
 
 		// Favicon doesn't load, use a fallback
 		loadimg.onerror = () => {
@@ -52,7 +52,7 @@ interface KeysProps {
 function Keys(action: KeysProps) {
 	return (
 		<div className="scanny-keys">
-			{action.action.keys.map((key: any) => (
+			{action.action.keys?.map((key: any) => (
 				<span css={shortcut}>{key}</span>
 			))}
 		</div>

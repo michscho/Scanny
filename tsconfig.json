@@ -9,6 +9,7 @@
 		"jsxImportSource": "@emotion/react",
 		"sourceMap": true,
 		"allowJs": true,
+		"strict": true,
 		"typeRoots": ["node_modules/@types"]
 	},
 	"include": ["**/*.ts", "**/*.tsx", "./webpack.config.ts"],
