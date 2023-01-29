@@ -9,10 +9,6 @@ const shortHandRecord: Record<string, string> = {
 	"/a": "/actions ",
 };
 
-function getShortHandValues() {
-	return Object.values(shortHandRecord);
-}
-
 export function checkShortHand(
 	keyEvent: React.KeyboardEvent<HTMLInputElement>,
 	value: string
@@ -20,9 +16,7 @@ export function checkShortHand(
 	const shortHand = shortHandRecord[value];
 	if (keyEvent.keyCode !== keyMapings.backspace && shortHand) {
 		keyEvent.currentTarget.value = shortHand;
-	} else if (getShortHandValues().includes(value)) {
-		keyEvent.currentTarget.value = "";
-	}
+	} 
 }
 
 export function addhttp(url: string) {

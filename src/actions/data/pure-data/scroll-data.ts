@@ -16,5 +16,12 @@ export const scrollData: Action[] = [
 		action: "scroll-top",
 		emojiChar: "👆",
 		keys: ["⌘", "↑"],
-	}
+	},
+	{
+		title: "Scroll slowly to bottom",
+		description: "Scroll slowly to the bottom of the page",
+		type: "action",
+		action: "scroll-bottom-slowly",
+		emojiChar: "🐌👇",
+	},
 ];

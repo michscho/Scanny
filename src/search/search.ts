@@ -1,11 +1,9 @@
 import { checkShortHand } from "../extension/utils";
 import { keyMapings } from "../utils/key-mappings";
 import {
-	handleAction,
 	handleBookmarks,
 	handleHistory,
 	handleInteractive,
-	handleTabs,
 } from "./handle-search";
 import { filterSearchAndGoItems } from "../utils/utils";
 import { resetActions } from "../actions/reset-actions";
@@ -13,8 +11,9 @@ import { Action } from "../actions/data/types-data";
 
 export function search(
 	event: React.KeyboardEvent<HTMLInputElement>,
-	actions: Action[]
-): Action[] {
+	actions: Action[],
+	setActions: React.Dispatch<React.SetStateAction<Action[]>>
+) {
 	if (isSpecialKeyEvent(event)) {
 		return;
 	}
@@ -25,28 +24,33 @@ export function search(
 	checkShortHand(event, query);
 
 	if (query.startsWith("/history")) {
-		return handleHistory(query);
+		handleHistory(query, setActions);
+		return;
 	}
 
 	if (query.startsWith("/bookmarks")) {
-		return handleBookmarks(query);
+		handleBookmarks(query, setActions);
+		return;
 	}
 
 	if (query.startsWith(">")) {
-		return handleInteractive(event.currentTarget.value);
+		setActions(handleInteractive(event.currentTarget.value));
+		return;
 	}
 
 	if (query.startsWith("/tabs")) {
-		return handleTabs(query, actions);
+		// handleTabs(query, setActions);
+		// return;
 	}
 
-	if (query.startsWith("/actions")) {
-		return handleAction(query, actions);
-	}
+	// if (query.startsWith("/actions")) {
+	// 	return handleAction(query, actions);
+	// }
 
 	if (query === "") {
 		const allActions = filterSearchAndGoItems(actions);
-		return allActions;
+		setActions(allActions);
+		return;
 	}
 
 	const filteredActions = actions.filter(
@@ -55,7 +59,7 @@ export function search(
 			x.description.toLowerCase().indexOf(query) > -1
 	);
 
-	return filteredActions;
+	setActions(filteredActions);
 }
 
 function isSpecialKeyEvent(e: React.KeyboardEvent<HTMLInputElement>) {

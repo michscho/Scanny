@@ -57,7 +57,7 @@ export function SearchApp(
 			return;
 		}
 
-		setActions(search(event, actions));
+		search(event, actions, setActions);
 	}
 
 	function handleMouseEnter(event: MouseEvent, index: number) {

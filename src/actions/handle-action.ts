@@ -32,6 +32,29 @@ export function handleActionItem(
 		window.open(selectedAction.url, "_self");
 		return;
 	}
+	
+	
+	function smoothScroll() {
+		const duration = 20000;
+		const easeInOutQuad = (t: number, b: number, c: number, d: number) => {
+			t /= d / 2;
+			if (t < 1) return (c / 2) * t * t + b;
+			t--;
+			return (-c / 2) * (t * (t - 2) - 1) + b;
+		};
+		const start = window.pageYOffset;
+		const end = document.body.scrollHeight - window.innerHeight;
+		let currentTime = 0;
+		const animate = () => {
+			currentTime += 2;
+			window.scrollTo(0, easeInOutQuad(currentTime, start, end, duration));
+			if (currentTime < duration) {
+				setTimeout(animate, 2);
+			}
+		};
+		animate();
+	}
+
 
 	if (query.startsWith(">")) {
 		clickElement(selectedAction.title, selectedAction.description);
@@ -56,6 +79,9 @@ export function handleActionItem(
 			break;
 		case "scroll-top":
 			window.scrollTo(0, 0);
+			break;
+		case "scroll-bottom-slowly":
+			smoothScroll();
 			break;
 		case "navigation":
 			if (event.ctrlKey || event.metaKey) {
@@ -82,14 +108,11 @@ export function handleActionItem(
 			}
 			break;
 		case "goto":
-			const query = event.currentTarget.value 
+			const query = event.currentTarget.value;
 			if (event.ctrlKey || event.metaKey) {
 				window.open(addhttp(query));
 			} else {
-				window.open(
-					addhttp(query),
-					"_self"
-				);
+				window.open(addhttp(query), "_self");
 			}
 			break;
 		case "print":

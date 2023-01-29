@@ -10,7 +10,13 @@ export interface ActionProps {
 	isSelected: boolean;
 }
 
-export function ActionComponent({ action, img, index, keys, isSelected }: ActionProps) {
+export function ActionComponent({
+	action,
+	img,
+	index,
+	keys,
+	isSelected,
+}: ActionProps) {
 	// TODO: add on click on this item
 
 	addGlobeIcon(action, index);
@@ -22,16 +28,17 @@ export function ActionComponent({ action, img, index, keys, isSelected }: Action
 				<div className="scanny-item-desc">{action.description}</div>
 			</div>
 			{action.keys && !isSelected ? <Keys action={action} /> : ""}
-			{isSelected && <div css={select}>
-				Select <span css={shortcut}>⏎</span>
-			</div>}
+			{isSelected && (
+				<div css={select}>
+					Select <span css={shortcut}>⏎</span>
+				</div>
+			)}
 		</div>
 	);
 }
 
 const select = css`
 	float: right;
-	vertical-align: middle;
 	color: var(--text-3);
 	font-size: 12px;
 	font-weight: 500;
@@ -40,8 +47,7 @@ const select = css`
 	margin-right: 5%;
 	margin-left: 3px;
 	display: block !important;
-
-`
+`;
 
 function addGlobeIcon(action: Action, index: number) {
 	if (!action.emojiChar) {
@@ -65,8 +71,10 @@ interface KeysProps {
 function Keys(action: KeysProps) {
 	return (
 		<div className="scanny-keys">
-			{action.action.keys?.map((key: any) => (
-				<span css={shortcut}>{key}</span>
+			{action.action.keys?.map((key: any, index: number) => (
+				<span css={shortcut} key={index}>
+					{key}
+				</span>
 			))}
 		</div>
 	);
@@ -103,4 +111,3 @@ function Img(action: ImgProps) {
 		/>
 	);
 }
-
