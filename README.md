@@ -1,4 +1,4 @@
-# :page_facing_up: Scanny
+# :page_facing_up: Scanny - (WORK IN PROGRESS)
 
 Supercharge your productivity with a command palette added to each website. This extension adds a search bar and command palette to every website you visit, allowing you to quickly search for and access specific buttons or page elements.
 
@@ -13,14 +13,6 @@ Supercharge your productivity with a command palette added to each website. This
 1. Type your search query into the search bar and press enter or click the search button.
 2. The extension will highlight any buttons or page elements that match your query.
 3. Use the command palette to access specific buttons or page elements by typing in their name and pressing enter.
-
-## Customization
-
-You can customize the extension's settings by clicking on the extension icon and selecting "Options". Some things you may want to customize include:
-
-- The color of the search bar and command palette
-- The default search engine used when searching the web
-- The list of buttons and page elements that the extension will search for
 
 ## Support
 
