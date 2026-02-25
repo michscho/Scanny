@@ -5,7 +5,9 @@
 	"private": true,
 	"scripts": {
 		"watch": "webpack --mode=development --watch --config webpack/webpack.config.js",
-		"build": "webpack --mode=production --config webpack/webpack.config.js"
+		"build": "webpack --mode=production --config webpack/webpack.config.js",
+		"typecheck": "tsc --noEmit",
+		"test": "npm run typecheck && npm run build"
 	},
 	"devDependencies": {
 		"@types/chrome": "^0.0.210",

@@ -1,25 +1,72 @@
-# :page_facing_up: Scanny - (WORK IN PROGRESS)
+# Scanny (Work In Progress)
 
-Supercharge your productivity with a command palette added to each website. This extension adds a search bar and command palette to every website you visit, allowing you to quickly search for and access specific buttons or page elements.
+Scanny is a Chrome extension that adds a command palette to webpages so you can search for and interact with page elements quickly.
 
-## Installation
+## Requirements
 
-1. Download the extension from the [Chrome Web Store](INSERT_WEB_STORE_LINK_HERE).
-2. Click "Add to Chrome" and confirm the installation.
-3. The extension will automatically run on every website you visit, and the search bar and command palette can be accessed by clicking on the extension icon in the top right corner of your browser.
+- Node.js 18+ (Node.js 20 recommended)
+- npm 9+
+- Google Chrome
 
-## Usage
+## Local Development
 
-1. Type your search query into the search bar and press enter or click the search button.
-2. The extension will highlight any buttons or page elements that match your query.
-3. Use the command palette to access specific buttons or page elements by typing in their name and pressing enter.
+1. Install dependencies:
 
-## Support
+```bash
+npm install
+```
 
-If you have any issues with the extension or have any suggestions for improvements, please contact us at (YOUR_SUPPORT_EMAIL). We are always happy to help.
+2. Build once:
+
+```bash
+npm run build
+```
+
+3. For active development, run watch mode in a separate terminal:
+
+```bash
+npm run watch
+```
+
+## Load the Extension in Chrome
+
+1. Open `chrome://extensions`.
+2. Enable **Developer mode**.
+3. Click **Load unpacked**.
+4. Select the `build/` directory from this project.
+5. Open any website and use `Ctrl+Shift+K` (`Cmd+Shift+K` on macOS) to open Scanny.
+
+## Testing
+
+This project currently has no unit/integration test suite yet. The recommended verification flow is:
+
+1. Static/type checks:
+
+```bash
+npm run typecheck
+```
+
+2. Production build:
+
+```bash
+npm run build
+```
+
+3. Manual smoke test in Chrome:
+- Load `build/` as unpacked extension.
+- Open a regular website (for example `https://example.com`).
+- Trigger Scanny with `Ctrl+Shift+K` / `Cmd+Shift+K`.
+- Confirm the command UI appears.
+- Run a simple page-element search and verify matching elements are found/highlighted.
+- Reload the extension after changes and retest.
+
+## Packaging Notes
+
+- The extension manifest is at `public/manifest.json`.
+- Build artifacts are emitted to `build/`.
 
 ## Credits
 
-Copyright (c) 2022 Alyssa X
-Actions and styles where adapted from:
-https://github.com/alyssaxuu/omni
+- Copyright (c) 2022 Alyssa X
+- Actions/styles adapted from:
+  https://github.com/alyssaxuu/omni
