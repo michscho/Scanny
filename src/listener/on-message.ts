@@ -139,6 +139,9 @@ export function attachOnMessageListener(resetExtension: () => Action[]) {
 					chrome.tabs.sendMessage(response.id!, { request: "close-scanny" });
 				});
 				break;
+			case "open-scanny-settings":
+				chrome.runtime.openOptionsPage();
+				break;
 		}
 	});
 }

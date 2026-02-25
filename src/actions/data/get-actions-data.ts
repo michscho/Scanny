@@ -1,5 +1,6 @@
 import { basicData } from "./pure-data/basic-data";
 import { clearData } from "./pure-data/clear-data";
+import { helpData } from "./pure-data/help-data";
 import { scrollData } from "./pure-data/scroll-data";
 import { searchData } from "./pure-data/search-data";
 import { tabData } from "./pure-data/tab-data";
@@ -14,5 +15,6 @@ export function getActionsData(): Action[] {
 		...scrollData,
 		...urlData,
 		...clearData,
+		...helpData,
 	];
 }

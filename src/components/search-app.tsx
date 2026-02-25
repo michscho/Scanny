@@ -1,5 +1,5 @@
 import { css } from "@emotion/react";
-import { useState, useRef, MouseEvent } from "react";
+import { useState, useRef, useEffect, MouseEvent } from "react";
 import { ActionComponent } from "./action-component";
 import { AppProps } from "./app";
 import { Footer } from "./footer";
@@ -13,9 +13,16 @@ export function SearchApp(
 ): JSX.Element {
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [actions, setActions] = useState(searchProps.actions);
+	const [overlayOpacity, setOverlayOpacity] = useState(0.2);
 	const listRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const reactLegacyRef = useRef<List<any>>(null);
+
+	useEffect(() => {
+		chrome.storage.sync.get({ overlayOpacity: 20 }, (result) => {
+			setOverlayOpacity(result.overlayOpacity / 100);
+		});
+	}, []);
 
 	if (inputRef.current?.value.startsWith(">")) {
 		try {
@@ -112,6 +119,7 @@ export function SearchApp(
 			<div
 				onClick={() => searchProps.setStatus("closed")}
 				css={styles.scannyOverlay}
+				style={{ opacity: overlayOpacity }}
 			></div>
 		</div>
 	);

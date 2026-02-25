@@ -12,6 +12,7 @@ const config = (env, argv) =>
 		entry: {
 			background: path.resolve(__dirname, "..", "src", "background.ts"),
 			content: path.resolve(__dirname, "..", "src", "content.tsx"),
+			options: path.resolve(__dirname, "..", "src", "options.ts"),
 		},
 		output: {
 			path: path.join(__dirname, "../build"),
