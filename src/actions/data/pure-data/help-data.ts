@@ -7,6 +7,7 @@ export const helpData: Action[] = [
 		type: "action",
 		action: "none",
 		emojiChar: "🔍",
+		keys: [">"],
 	},
 	{
 		title: "Search browsing history",
@@ -14,6 +15,7 @@ export const helpData: Action[] = [
 		type: "action",
 		action: "none",
 		emojiChar: "🗂",
+		keys: ["/hi"],
 	},
 	{
 		title: "Search bookmarks",
@@ -21,6 +23,23 @@ export const helpData: Action[] = [
 		type: "action",
 		action: "none",
 		emojiChar: "⭐️",
+		keys: ["/b"],
+	},
+	{
+		title: "Search open tabs",
+		description: "Type /tabs followed by a search term to jump to a tab",
+		type: "action",
+		action: "none",
+		emojiChar: "🗂️",
+		keys: ["/t"],
+	},
+	{
+		title: "Ask AI",
+		description: "Type /ai followed by your question",
+		type: "action",
+		action: "none",
+		emojiChar: "🤖",
+		keys: ["/ai"],
 	},
 	{
 		title: "Remove items",
@@ -28,6 +47,7 @@ export const helpData: Action[] = [
 		type: "action",
 		action: "none",
 		emojiChar: "🗑",
+		keys: ["/r"],
 	},
 	{
 		title: "Open Scanny",
@@ -35,6 +55,7 @@ export const helpData: Action[] = [
 		type: "action",
 		action: "none",
 		emojiChar: "⌨️",
+		keys: ["⌘", "⇧", "K"],
 	},
 	{
 		title: "Navigate results",
@@ -42,6 +63,7 @@ export const helpData: Action[] = [
 		type: "action",
 		action: "none",
 		emojiChar: "🧭",
+		keys: ["↑", "↓", "⏎"],
 	},
 	{
 		title: "Open in new tab",
@@ -49,6 +71,15 @@ export const helpData: Action[] = [
 		type: "action",
 		action: "none",
 		emojiChar: "📑",
+		keys: ["⌘", "⏎"],
+	},
+	{
+		title: "Show help",
+		description: "Type /help to show this help page",
+		type: "action",
+		action: "none",
+		emojiChar: "❓",
+		keys: ["/help"],
 	},
 	{
 		title: "Scanny Settings",

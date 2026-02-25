@@ -1,19 +1,13 @@
 import $ from "jquery";
-import { openExtension } from "./extension/extension";
-import { Action } from "./actions/data/types-data";
+import { closeExtension, openExtension } from "./extension/extension";
 
 $(function () {
-	var actions: Action[] = [];
-
-	chrome.runtime.sendMessage({ request: "get-actions" }, (response) => {
-		actions = response.actions;
-	});
-
-	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+	chrome.runtime.onMessage.addListener((message) => {
 		if (message.request === "open-scanny") {
-			const extensionRoot = document.createElement("div");
-			document.body.appendChild(extensionRoot);
-			openExtension(extensionRoot, actions);
+			openExtension([]);
+		}
+		if (message.request === "close-scanny") {
+			closeExtension();
 		}
 	});
 });

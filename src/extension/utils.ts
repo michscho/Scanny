@@ -3,8 +3,9 @@ import { keyMapings } from "../utils/key-mappings";
 
 const shortHandRecord: Record<string, string> = {
 	"/t": "/tabs ",
+	"/ai": "/ai ",
 	"/b": "/bookmarks ",
-	"/h": "/history ",
+	"/hi": "/history ",
 	"/r": "/remove ",
 	"/a": "/actions ",
 };

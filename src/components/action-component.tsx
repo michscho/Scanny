@@ -1,35 +1,71 @@
 import { css } from "@emotion/react";
 import { Action } from "../actions/data/types-data";
+import { useState } from "react";
 
 export interface ActionProps {
 	action: Action;
-	skip: string;
-	img: string;
 	index: number;
-	keys: string;
 	isSelected: boolean;
+	query?: string;
 }
+
+/** Highlights all occurrences of `query` within `text`. */
+function HighlightText({ text, query }: { text: string; query?: string }) {
+	if (!query || query.length === 0) return <>{text}</>;
+
+	const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+	const regex = new RegExp(`(${escaped})`, "gi");
+	const parts = text.split(regex);
+
+	if (parts.length === 1) return <>{text}</>;
+
+	return (
+		<>
+			{parts.map((part, i) =>
+				i % 2 === 1 ? (
+					<span key={i} css={highlightStyle}>
+						{part}
+					</span>
+				) : (
+					<span key={i}>{part}</span>
+				)
+			)}
+		</>
+	);
+}
+
+const highlightStyle = css`
+	color: var(--accent, #5e9cff);
+	font-weight: 700;
+	background: color-mix(in srgb, var(--accent, #5e9cff) 14%, transparent);
+	border-radius: 3px;
+	padding: 0 1px;
+`;
 
 export function ActionComponent({
 	action,
-	img,
 	index,
-	keys,
 	isSelected,
+	query,
 }: ActionProps) {
-	// TODO: add on click on this item
-
-	addGlobeIcon(action, index);
 	return (
 		<div className="scanny-item" data-index={index} data-type={action.type}>
-			<Img action={action} />
+			{action.emojiChar ? (
+				<span className="scanny-emoji-action">{action.emojiChar}</span>
+			) : (
+				<Img action={action} />
+			)}
 			<div className="scanny-item-details">
-				<div className="scanny-item-name">{action.title}</div>
-				<div className="scanny-item-desc">{action.description}</div>
+				<div className="scanny-item-name">
+					<HighlightText text={action.title} query={query} />
+				</div>
+				<div className="scanny-item-desc">
+					<HighlightText text={action.description} query={query} />
+				</div>
 			</div>
 			{action.keys && !isSelected ? <Keys action={action} /> : ""}
 			{isSelected && (
-				<div css={select}>
+				<div css={selectStyle}>
 					Select <span css={shortcut}>⏎</span>
 				</div>
 			)}
@@ -37,35 +73,20 @@ export function ActionComponent({
 	);
 }
 
-const select = css`
+const selectStyle = css`
 	margin-left: auto;
 	color: var(--text-3);
 	font-size: 12px;
 	font-weight: 600;
-	display: none;
 	margin-top: 0;
 	margin-right: 0;
 	gap: 6px;
-	display: block !important;
 	opacity: 0.94;
 	display: flex !important;
 	align-items: center;
+	white-space: nowrap;
+	flex-shrink: 0;
 `;
-
-function addGlobeIcon(action: Action, index: number) {
-	if (!action.emojiChar) {
-		var loadimg = new Image();
-		loadimg.src = action.favIconUrl || "";
-
-		// Favicon doesn't load, use a fallback
-		loadimg.onerror = () => {
-			$(".scanny-item[data-index='" + index + "'] img").attr(
-				"src",
-				chrome.runtime.getURL("/icons/globe.svg")
-			);
-		};
-	}
-}
 
 interface KeysProps {
 	action: Action;
@@ -103,13 +124,13 @@ interface ImgProps {
 }
 
 function Img(action: ImgProps) {
+	const fallbackIcon = chrome.runtime.getURL("/icons/globe.svg");
+	const [imgSrc, setImgSrc] = useState(action.action.favIconUrl || fallbackIcon);
+
 	return (
 		<img
-			src={
-				action.action.favIconUrl
-					? action.action.favIconUrl
-					: chrome.runtime.getURL("/icons/globe.svg")
-			}
+			src={imgSrc}
+			onError={() => setImgSrc(fallbackIcon)}
 			alt="favicon"
 			className="scanny-icon"
 		/>

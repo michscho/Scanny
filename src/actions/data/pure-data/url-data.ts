@@ -1,13 +1,13 @@
-import { UrlAction } from "../types-data";
+import { Action } from "../types-data";
 
-export const urlData: UrlAction[] = [
+export const urlData: Action[] = [
 	{
 		title: "Help",
-		description: "Get help with scanny on GitHub",
+		description: "Show available commands and shortcuts",
 		type: "action",
-		action: "url",
-		url: "https://github.com/alyssaxuu/scanny",
-		emojiChar: "🤔",
+		action: "show-help",
+		emojiChar: "❓",
+		keys: ["/help"],
 	},
 	{
 		title: "New Notion page",
@@ -250,4 +250,3 @@ export const urlData: UrlAction[] = [
 		favIconUrl: chrome.runtime.getURL("icons/logo-linear.png"),
 	},
 ];
-

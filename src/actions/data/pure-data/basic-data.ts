@@ -2,6 +2,30 @@ import { Action } from "../types-data";
 
 export const basicData: Action[] = [
 	{
+		title: "Search on page",
+		description: "Find and interact with elements on this page",
+		type: "action",
+		action: "search-page",
+		emojiChar: "🔍",
+		keys: [">"],
+	},
+	{
+		title: "Search tabs",
+		description: "Search open browser tabs and jump to one",
+		type: "action",
+		action: "search-tabs",
+		emojiChar: "🗂️",
+		keys: ["/t"],
+	},
+	{
+		title: "Ask AI",
+		description: "Ask AI a question using your configured API key",
+		type: "action",
+		action: "ask-ai",
+		emojiChar: "🤖",
+		keys: ["/ai"],
+	},
+	{
 		title: "New tab",
 		description: "Open a new tab",
 		type: "action",

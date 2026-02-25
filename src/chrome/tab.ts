@@ -19,12 +19,26 @@ export function restoreNewTab(newtaburl: string) {
 	});
 }
 
-export const switchTab = (tab: chrome.tabs.Tab) => {
-	chrome.tabs.highlight({
-		tabs: tab.index,
-		windowId: tab.windowId,
-	});
-	chrome.windows.update(tab.windowId, { focused: true });
+export const switchTab = (tab: {
+	tabId?: number;
+	windowId?: number;
+	tabIndex?: number;
+}) => {
+	if (tab.tabId !== undefined) {
+		chrome.tabs.update(tab.tabId, { active: true });
+		if (tab.windowId !== undefined) {
+			chrome.windows.update(tab.windowId, { focused: true });
+		}
+		return;
+	}
+
+	if (tab.windowId !== undefined && tab.tabIndex !== undefined) {
+		chrome.tabs.highlight({
+			tabs: tab.tabIndex,
+			windowId: tab.windowId,
+		});
+		chrome.windows.update(tab.windowId, { focused: true });
+	}
 };
 
 export const goBack = (tab: chrome.tabs.Tab) => {

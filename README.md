@@ -1,6 +1,6 @@
-# Scanny (Work In Progress)
+# Raycast for the Browser
 
-Scanny is a Chrome extension that adds a command palette to webpages so you can search for and interact with page elements quickly.
+Raycast for the Browser is a Chrome extension that brings a command palette to any webpage so you can search, navigate, and interact without leaving the keyboard.
 
 ## Requirements
 
@@ -34,11 +34,11 @@ npm run watch
 2. Enable **Developer mode**.
 3. Click **Load unpacked**.
 4. Select the `build/` directory from this project.
-5. Open any website and use `Ctrl+Shift+K` (`Cmd+Shift+K` on macOS) to open Scanny.
+5. Open any website and use `Ctrl+Shift+K` (`Cmd+Shift+K` on macOS) to open the command palette.
 
 ## Testing
 
-This project currently has no unit/integration test suite yet. The recommended verification flow is:
+This project currently has no unit/integration test suite yet. Recommended verification flow:
 
 1. Static/type checks:
 
@@ -55,18 +55,11 @@ npm run build
 3. Manual smoke test in Chrome:
 - Load `build/` as unpacked extension.
 - Open a regular website (for example `https://example.com`).
-- Trigger Scanny with `Ctrl+Shift+K` / `Cmd+Shift+K`.
-- Confirm the command UI appears.
-- Run a simple page-element search and verify matching elements are found/highlighted.
-- Reload the extension after changes and retest.
+- Trigger the palette with `Ctrl+Shift+K` / `Cmd+Shift+K`.
+- Confirm the UI appears.
+- Run a simple page-element search in `>` mode and verify matching elements are found/highlighted.
 
 ## Packaging Notes
 
 - The extension manifest is at `public/manifest.json`.
 - Build artifacts are emitted to `build/`.
-
-## Credits
-
-- Copyright (c) 2022 Alyssa X
-- Actions/styles adapted from:
-  https://github.com/alyssaxuu/omni

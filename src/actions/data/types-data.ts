@@ -11,6 +11,9 @@ interface BasicAction {
 	description: string;
 	type: "action" | "bookmark" | "tab" | "history" | "interactive";
 	id?: string;
+	tabId?: number;
+	windowId?: number;
+	tabIndex?: number;
 	emojiChar?: string;
 	favIconUrl?: string;
 	keys?: string[];

@@ -106,6 +106,58 @@
 			.saved-msg.show {
 				opacity: 1;
 			}
+			.select-row {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+			}
+			.select-row select {
+				width: 220px;
+				background: #383e4a;
+				color: #f1f1f1;
+				border: 1px solid #4a5160;
+				border-radius: 6px;
+				padding: 8px 10px;
+				font-size: 14px;
+				outline: none;
+			}
+			.select-row select:focus {
+				border-color: #6068d2;
+				box-shadow: 0 0 0 2px rgba(96, 104, 210, 0.2);
+			}
+			.key-row {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+			}
+			.key-row input[type="password"] {
+				flex: 1;
+				background: #383e4a;
+				color: #f1f1f1;
+				border: 1px solid #4a5160;
+				border-radius: 6px;
+				padding: 10px 12px;
+				font-size: 14px;
+				outline: none;
+			}
+			.key-row input[type="password"]:focus {
+				border-color: #6068d2;
+				box-shadow: 0 0 0 2px rgba(96, 104, 210, 0.2);
+			}
+			.key-row button {
+				background: #6068d2;
+				border: 1px solid #6068d2;
+				color: #fff;
+				border-radius: 6px;
+				padding: 10px 14px;
+				font-size: 13px;
+				font-weight: 600;
+				cursor: pointer;
+			}
+			.key-row button:hover {
+				background: #5259bb;
+				border-color: #5259bb;
+			}
 		</style>
 	</head>
 	<body>
@@ -125,6 +177,33 @@
 					<div class="preview-overlay" id="opacity-preview"></div>
 				</div>
 				<div class="saved-msg" id="saved-msg">✓ Settings saved</div>
+			</div>
+
+			<div class="setting-group">
+				<h2>Command Bar Position</h2>
+				<p>Choose where the command bar appears on the page.</p>
+				<div class="select-row">
+					<select id="position-select">
+						<option value="top">Top</option>
+						<option value="center">Center</option>
+						<option value="bottom">Bottom</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="setting-group">
+				<h2>AI Integration</h2>
+				<p>Add your OpenAI API key to enable the "Ask AI" action in Scanny.</p>
+				<div class="key-row">
+					<input
+						type="password"
+						id="openai-key-input"
+						placeholder="sk-..."
+						autocomplete="off"
+						spellcheck="false"
+					/>
+					<button id="save-openai-key" type="button">Save key</button>
+				</div>
 			</div>
 		</div>
 

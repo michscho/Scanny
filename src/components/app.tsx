@@ -6,12 +6,14 @@ import React, { useEffect } from "react";
 
 export interface AppProps {
 	actions: Action[];
+	onClose?: () => void;
 }
 
 type Status = "open" | "closed";
 
 export function App(searchProps: AppProps): JSX.Element {
 	const [status, setStatus] = React.useState<Status>("open");
+
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key === "Escape") {
@@ -23,9 +25,14 @@ export function App(searchProps: AppProps): JSX.Element {
 			document.removeEventListener("keydown", handleKeyDown);
 		};
 	}, []);
-	if (status === "closed") {
-		return <div></div>;
-	}
+
+	useEffect(() => {
+		if (status === "closed") {
+			searchProps.onClose?.();
+		}
+	}, [searchProps.onClose, status]);
+
+	if (status === "closed") return <></>;
 	return (
 		<div>
 			<div id="scanny-extension" className="scanny-extension">
@@ -102,7 +109,7 @@ const globalStyle = css`
 	}
 
 	.scanny-extension ::-webkit-scrollbar-thumb:vertical:active,
-	::-webkit-scrollbar-thumb:horizontal:active {
+	.scanny-extension ::-webkit-scrollbar-thumb:horizontal:active {
 		background-color: rgba(88, 114, 148, 1);
 	}
 

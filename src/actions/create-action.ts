@@ -3,7 +3,8 @@ import { Action } from "./data/types-data";
 export function createInteractiveAction(
 	title: string,
 	desc: string,
-	emojiChar: string
+	emojiChar: string,
+	id?: string
 ): Action {
 	return {
 		title: title,
@@ -11,6 +12,7 @@ export function createInteractiveAction(
 		type: "interactive",
 		action: "web-element",
 		emojiChar: emojiChar,
+		id,
 		url: desc,
 	};
 }
@@ -50,5 +52,8 @@ export function createTabAction(tab: chrome.tabs.Tab): Action {
 		action: "switch-tab",
 		url: tab.url,
 		description: tab.url || "",
+		tabId: tab.id,
+		windowId: tab.windowId,
+		tabIndex: tab.index,
 	};
 }

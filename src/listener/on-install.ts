@@ -1,22 +1,28 @@
 export function attachOnInstallListener() {
 	chrome.runtime.onInstalled.addListener((object) => {
 		const manifest = chrome.runtime.getManifest();
+		const contentScript = manifest.content_scripts?.[0];
+		const scripts = contentScript?.js ?? [];
+		const cssFiles = contentScript?.css ?? [];
 
 		const injectIntoTab = (tab: chrome.tabs.Tab) => {
-			const scripts = manifest.content_scripts![0].js;
-			const s = scripts!.length;
+			if (!tab.id) {
+				return;
+			}
 
-			for (let i = 0; i < s; i++) {
+			for (let i = 0; i < scripts.length; i++) {
 				chrome.scripting.executeScript({
 					target: { tabId: tab.id },
-					files: [scripts![i]],
+					files: [scripts[i]],
 				});
 			}
 
-			chrome.scripting.insertCSS({
-				target: { tabId: tab.id },
-				files: [manifest.content_scripts![0].css![0]],
-			});
+			if (cssFiles.length > 0) {
+				chrome.scripting.insertCSS({
+					target: { tabId: tab.id },
+					files: [cssFiles[0]],
+				});
+			}
 		};
 
 		chrome.windows.getAll(
@@ -24,17 +30,15 @@ export function attachOnInstallListener() {
 				populate: true,
 			},
 			(windows) => {
-				let currentWindow: chrome.windows.Window;
-				const w = windows.length;
+				for (let i = 0; i < windows.length; i++) {
+					const currentWindow = windows[i];
+					const tabs = currentWindow.tabs ?? [];
 
-				for (let i = 0; i < w; i++) {
-					currentWindow = windows[i];
-
-					let currentTab: chrome.tabs.Tab;
-					const t = currentWindow.tabs.length;
-
-					for (let j = 0; j < t; j++) {
-						currentTab = currentWindow.tabs[j];
+					for (let j = 0; j < tabs.length; j++) {
+						const currentTab = tabs[j];
+						if (!currentTab.url) {
+							continue;
+						}
 						if (
 							!currentTab.url.includes("chrome://") &&
 							!currentTab.url.includes("chrome-extension://") &&

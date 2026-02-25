@@ -5,8 +5,27 @@ import { Action } from "./data/types-data";
 export function handleActionItem(
 	query: string,
 	selectedAction: Action,
-	event: React.KeyboardEvent<HTMLInputElement>
+	event: Pick<
+		React.KeyboardEvent<HTMLInputElement>,
+		"ctrlKey" | "metaKey" | "currentTarget"
+	>
 ) {
+	function copyText(text: string) {
+		if (navigator.clipboard?.writeText) {
+			navigator.clipboard.writeText(text).catch(() => {});
+			return;
+		}
+		const textarea = document.createElement("textarea");
+		textarea.value = text;
+		textarea.style.position = "fixed";
+		textarea.style.opacity = "0";
+		document.body.appendChild(textarea);
+		textarea.focus();
+		textarea.select();
+		document.execCommand("copy");
+		document.body.removeChild(textarea);
+	}
+
 	if (query.startsWith("/remove")) {
 		chrome.runtime.sendMessage({
 			request: "remove",
@@ -58,12 +77,17 @@ export function handleActionItem(
 
 
 	if (query.startsWith(">")) {
-		clickElement(selectedAction.title, selectedAction.description);
+		clickElement(selectedAction);
 		return;
 	}
 
 	if (selectedAction.action === "open-scanny-settings") {
 		chrome.runtime.sendMessage({ request: "open-scanny-settings" });
+		return;
+	}
+
+	if (selectedAction.action === "copy-ai-answer") {
+		copyText(selectedAction.description);
 		return;
 	}
 

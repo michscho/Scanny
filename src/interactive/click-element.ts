@@ -1,14 +1,32 @@
 import $ from "jquery";
 import { Scanny, mapDescriptionToScanny } from "./elements-actions";
+import { Action } from "../actions/data/types-data";
 
-export function clickElement(query: string, description: string) {
-	const elementAction = mapDescriptionToScanny(description);
-	if (!elementAction) return;
-	clickElements(query, elementAction);
+const TARGET_ATTRIBUTE = "data-scanny-target-id";
+
+function escapeAttributeValue(value: string): string {
+	return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
-function clickElements(query: string, element: Scanny) {
-	var $element = $(element.selector).filter(element.filter(query)).first();
+function findElementForAction(action: Action, elementAction: Scanny) {
+	if (action.id) {
+		const selector = `[${TARGET_ATTRIBUTE}="${escapeAttributeValue(action.id)}"]`;
+		const byId = $(selector).first();
+		if (byId.length > 0) {
+			return byId;
+		}
+	}
+	return $(elementAction.selector).filter(elementAction.filter(action.title)).first();
+}
+
+export function clickElement(action: Action) {
+	const elementAction = mapDescriptionToScanny(action.description);
+	if (!elementAction) return;
+	clickElements(action, elementAction);
+}
+
+function clickElements(action: Action, element: Scanny) {
+	var $element = findElementForAction(action, element);
 	if ($element.length === 0) return;
 
 	var el = $element[0];
