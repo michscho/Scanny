@@ -2,6 +2,7 @@ import focusLock from "dom-focus-lock";
 import { App } from "../components/app";
 import * as ReactDOM from "react-dom/client";
 import { Action } from "../actions/data/types-data";
+import { removeShortcutOverlays } from "../interactive/shortcut-overlays";
 
 const ROOT_ID = "scanny-extension-root";
 let extensionContainer: HTMLDivElement | null = null;
@@ -19,6 +20,7 @@ function focusSearchInput() {
 }
 
 export function closeExtension() {
+	removeShortcutOverlays();
 	const input = document.querySelector<HTMLInputElement>("#scanny-extension input");
 	if (input) {
 		focusLock.off(input);

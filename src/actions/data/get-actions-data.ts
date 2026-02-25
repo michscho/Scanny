@@ -8,7 +8,7 @@ import { urlData } from "./pure-data/url-data";
 import { Action } from "./types-data";
 
 export function getActionsData(): Action[] {
-	return [
+	const all = [
 		...basicData,
 		...searchData,
 		...tabData,
@@ -17,4 +17,12 @@ export function getActionsData(): Action[] {
 		...clearData,
 		...helpData,
 	];
+	// Deduplicate: keep first occurrence per action+title combo
+	const seen = new Set<string>();
+	return all.filter((item) => {
+		const key = `${item.action}::${item.title}`;
+		if (seen.has(key)) return false;
+		seen.add(key);
+		return true;
+	});
 }

@@ -96,6 +96,16 @@
 	min-width: 0;
 	flex: 1;
 }
+.scanny-extension .scanny-item-name-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+.scanny-extension .scanny-item-name-row .scanny-item-name {
+	flex: 1;
+	min-width: 0;
+}
 .scanny-extension .scanny-item-name {
 	color: var(--text-2);
 	font-size: 14px;
@@ -109,6 +119,23 @@
 .scanny-extension .scanny-item-active .scanny-item-name {
 	color: var(--text) !important;
 }
+.scanny-extension .scanny-item-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 8px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	color: color-mix(in srgb, var(--accent) 80%, white 20%);
+	background: color-mix(in srgb, var(--accent) 18%, transparent);
+	border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border));
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+.scanny-extension .scanny-item-active .scanny-item-badge {
+	background: color-mix(in srgb, var(--accent) 28%, transparent);
+	border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+}
 .scanny-extension .scanny-item-desc {
 	color: var(--text-3);
 	margin-top: 3px;
@@ -117,6 +144,46 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	width: 100%;
+}
+.scanny-extension .scanny-item[data-type="interactive"] {
+	position: relative;
+}
+.scanny-extension .scanny-item[data-type="interactive"]::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 10px;
+	bottom: 10px;
+	width: 3px;
+	border-radius: 2px;
+	background: color-mix(in srgb, var(--accent) 64%, transparent);
+	opacity: 0.7;
+}
+.scanny-extension .scanny-item[data-type="interactive"] .scanny-emoji-action {
+	background: color-mix(in srgb, var(--accent) 18%, var(--background-solid));
+	border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+}
+.scanny-extension .scanny-item-desc-interactive {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 5px;
+	overflow: hidden;
+}
+.scanny-extension .scanny-item-desc-interactive .scanny-meta-pill {
+	display: inline-flex;
+	align-items: center;
+	max-width: 100%;
+	border-radius: 999px;
+	padding: 2px 8px;
+	font-size: 12px;
+	line-height: 1.3;
+	color: var(--text-3);
+	background: color-mix(in srgb, var(--background-solid) 86%, white 14%);
+	border: 1px solid var(--border);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 .scanny-extension #scanny-arrows {
 	color: var(--text-3);
@@ -141,4 +208,59 @@
 }
 .scanny-extension .scanny-keys span {
 	margin-left: 3px;
+}
+
+/* Shortcut overlays on page elements */
+.scanny-shortcut-overlay {
+	position: absolute;
+	z-index: 2147483646;
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 2px 6px;
+	border-radius: 6px;
+	background: rgba(20, 20, 28, 0.92);
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.32);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	pointer-events: none;
+	white-space: nowrap;
+	max-width: 220px;
+	animation: scanny-overlay-in 0.15s ease-out;
+}
+
+@keyframes scanny-overlay-in {
+	from {
+		opacity: 0;
+		transform: translateY(-4px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.scanny-overlay-key {
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.5px;
+	line-height: 18px;
+	min-width: 22px;
+	text-align: center;
+	padding: 0 4px;
+	border-radius: 4px;
+	background: #3b82f6;
+	color: #fff;
+}
+
+.scanny-overlay-label {
+	font-size: 11px;
+	font-weight: 500;
+	line-height: 18px;
+	color: rgba(255, 255, 255, 0.82);
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

@@ -7,21 +7,56 @@ import { FixedSizeList, FixedSizeList as List } from "react-window";
 import { search, handleShorthand } from "../search/search";
 import { handleActionItem } from "../actions/handle-action";
 import { focusOnElement } from "../interactive/focus";
+import {
+	showShortcutOverlays,
+	removeShortcutOverlays,
+} from "../interactive/shortcut-overlays";
 
 type CommandBarPosition = "top" | "center" | "bottom";
 
-const onboardingScreens = [
+type OnboardingAction = "search-page" | "search-tabs" | "ask-ai" | "help";
+
+interface OnboardingScreen {
+	title: string;
+	body: string;
+	tips: string[];
+	ctaLabel: string;
+	ctaAction: OnboardingAction;
+}
+
+const onboardingScreens: OnboardingScreen[] = [
 	{
 		title: "Willkommen bei Scanny",
-		body: "Scanny bringt eine Command Bar auf jede Website. Oeffne sie jederzeit mit Cmd/Ctrl + Shift + K.",
+		body: "Scanny bringt eine Command Bar auf jede Website. Oeffne sie jederzeit mit Cmd/Ctrl + Shift + K und starte direkt auf der aktuellen Seite.",
+		tips: [
+			"Tippe einen Begriff fuer Befehle und Aktionen",
+			"Druecke Enter fuer Ausfuehren",
+			"Esc schliesst die Palette sofort",
+		],
+		ctaLabel: "Seitenmodus testen",
+		ctaAction: "search-page",
 	},
 	{
 		title: "Schnell finden und handeln",
-		body: "Suche nach Befehlen, Bookmarks, History oder Tabs. Mit > startest du die interaktive Seitensuche fuer klickbare Elemente.",
+		body: "Suche nach Befehlen, Bookmarks, History oder Tabs. Mit Slash-Befehlen kommst du direkt in den passenden Modus.",
+		tips: [
+			"/tabs fuer offene Tabs",
+			"/history fuer Verlauf und /bookmarks fuer Lesezeichen",
+			"/help zeigt alle Kommandos",
+		],
+		ctaLabel: "Tab-Suche testen",
+		ctaAction: "search-tabs",
 	},
 	{
 		title: "Komplett per Tastatur",
-		body: "Navigiere mit Pfeiltasten, bestaetige mit Enter und schliesse mit Escape. Passe Overlay und Position in den Settings an.",
+		body: "Navigiere komplett mit der Tastatur und nutze Ask AI, wenn du einen OpenAI-Key hinterlegt hast.",
+		tips: [
+			"Pfeile oder Ctrl+N/Ctrl+P fuer Navigation",
+			"Enter bestaetigt, Esc schliesst",
+			"Settings unten rechts fuer Feinjustierung",
+		],
+		ctaLabel: "Ask AI testen",
+		ctaAction: "ask-ai",
 	},
 ];
 
@@ -30,12 +65,14 @@ export function SearchApp(
 		setStatus: React.Dispatch<React.SetStateAction<"open" | "closed">>;
 	}
 ): JSX.Element {
-	const MAX_ROWS = 6;
 	const ROW_HEIGHT = 64;
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [actions, setActions] = useState(searchProps.actions);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [overlayOpacity, setOverlayOpacity] = useState(0.2);
+	const [overlayBlur, setOverlayBlur] = useState(2);
+	const [maxRows, setMaxRows] = useState(6);
+	const [autoPreviewPageElements, setAutoPreviewPageElements] = useState(true);
 	const [commandBarPosition, setCommandBarPosition] =
 		useState<CommandBarPosition>("top");
 	const [showOnboarding, setShowOnboarding] = useState(false);
@@ -45,6 +82,41 @@ export function SearchApp(
 	);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const reactLegacyRef = useRef<List<any>>(null);
+
+	function applySettings(result: {
+		overlayOpacity?: number;
+		overlayBlur?: number;
+		maxVisibleRows?: number;
+		autoPreviewPageElements?: boolean;
+		commandBarPosition?: CommandBarPosition;
+		onboardingCompleted?: boolean;
+	}) {
+		const value = Number(result.overlayOpacity);
+		if (Number.isFinite(value)) {
+			setOverlayOpacity(Math.max(0, Math.min(100, value)) / 100);
+		}
+		const blurValue = Number(result.overlayBlur);
+		if (Number.isFinite(blurValue)) {
+			setOverlayBlur(Math.max(0, Math.min(12, blurValue)));
+		}
+		const rowValue = Number(result.maxVisibleRows);
+		if (Number.isFinite(rowValue)) {
+			setMaxRows(Math.max(4, Math.min(10, rowValue)));
+		}
+		if (typeof result.autoPreviewPageElements === "boolean") {
+			setAutoPreviewPageElements(result.autoPreviewPageElements);
+		}
+		if (
+			result.commandBarPosition === "top" ||
+			result.commandBarPosition === "center" ||
+			result.commandBarPosition === "bottom"
+		) {
+			setCommandBarPosition(result.commandBarPosition);
+		}
+		if (typeof result.onboardingCompleted === "boolean") {
+			setShowOnboarding(!result.onboardingCompleted);
+		}
+	}
 
 	useEffect(() => {
 		const onResize = () => setViewportWidth(window.innerWidth);
@@ -62,39 +134,61 @@ export function SearchApp(
 		chrome.storage.sync.get(
 			{
 				overlayOpacity: 20,
+				overlayBlur: 2,
+				maxVisibleRows: 6,
+				autoPreviewPageElements: true,
 				commandBarPosition: "top" as CommandBarPosition,
-				onboardingCompleted: false,
+				onboardingCompleted: true,
 			},
-			(result) => {
-				const value = Number(result.overlayOpacity);
-				if (Number.isFinite(value)) {
-					setOverlayOpacity(Math.max(0, Math.min(100, value)) / 100);
-				}
-				if (
-					result.commandBarPosition === "top" ||
-					result.commandBarPosition === "center" ||
-					result.commandBarPosition === "bottom"
-				) {
-					setCommandBarPosition(result.commandBarPosition);
-				}
-				setShowOnboarding(!result.onboardingCompleted);
-			}
+			(result) => applySettings(result)
 		);
+
+		const onSettingsChanged: Parameters<
+			typeof chrome.storage.onChanged.addListener
+		>[0] = (changes, areaName) => {
+			if (areaName !== "sync") {
+				return;
+			}
+			applySettings({
+				overlayOpacity: changes.overlayOpacity?.newValue,
+				overlayBlur: changes.overlayBlur?.newValue,
+				maxVisibleRows: changes.maxVisibleRows?.newValue,
+				autoPreviewPageElements: changes.autoPreviewPageElements?.newValue,
+				commandBarPosition: changes.commandBarPosition?.newValue,
+				onboardingCompleted: changes.onboardingCompleted?.newValue,
+			});
+		};
+		chrome.storage.onChanged.addListener(onSettingsChanged);
+		return () => chrome.storage.onChanged.removeListener(onSettingsChanged);
 	}, []);
+
+	// Show shortcut overlays whenever the action list changes
+	useEffect(() => {
+		if (showOnboarding) {
+			removeShortcutOverlays();
+			return;
+		}
+		showShortcutOverlays(actions);
+		return () => removeShortcutOverlays();
+	}, [actions, showOnboarding]);
 
 	useEffect(() => {
 		if (showOnboarding) {
 			return;
 		}
-		if (!searchQuery.startsWith(">")) {
-			return;
+		// Highlight interactive page elements when navigating results
+		const currentAction = actions[activeIndex];
+		if (currentAction?.type === "interactive") {
+			try {
+				focusOnElement(currentAction);
+				inputRef.current?.focus();
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			focusOnElement();
 		}
-		try {
-			focusOnElement(actions[activeIndex]);
-		} catch (error) {
-			console.log(error);
-		}
-	}, [actions, activeIndex, searchQuery, showOnboarding]);
+	}, [actions, activeIndex, showOnboarding]);
 
 	useEffect(() => {
 		if (actions.length === 0) {
@@ -106,10 +200,36 @@ export function SearchApp(
 		}
 	}, [actions, activeIndex]);
 
-	function completeOnboarding() {
+	function completeOnboarding(startAction?: OnboardingAction) {
 		chrome.storage.sync.set({ onboardingCompleted: true }, () => {
 			setShowOnboarding(false);
 			setOnboardingStep(0);
+			if (!startAction) {
+				return;
+			}
+			window.setTimeout(() => {
+				if (!inputRef.current) {
+					return;
+				}
+				if (startAction === "search-page") {
+					inputRef.current.value = "> ";
+					setSearchQuery("> ");
+					search("> ", setActions, setActiveIndex);
+				} else if (startAction === "search-tabs") {
+					inputRef.current.value = "/tabs ";
+					setSearchQuery("/tabs ");
+					search("/tabs ", setActions, setActiveIndex);
+				} else if (startAction === "ask-ai") {
+					inputRef.current.value = "/ai ";
+					setSearchQuery("/ai ");
+					search("/ai ", setActions, setActiveIndex);
+				} else {
+					inputRef.current.value = "/help";
+					setSearchQuery("/help");
+					search("/help", setActions, setActiveIndex);
+				}
+				inputRef.current.focus();
+			}, 0);
 		});
 	}
 
@@ -198,6 +318,27 @@ export function SearchApp(
 			search("/ai ", setActions, setActiveIndex);
 			return true;
 		}
+		if (actionName === "search-history") {
+			inputRef.current.value = "/history ";
+			inputRef.current.focus();
+			setSearchQuery("/history ");
+			search("/history ", setActions, setActiveIndex);
+			return true;
+		}
+		if (actionName === "search-bookmarks") {
+			inputRef.current.value = "/bookmarks ";
+			inputRef.current.focus();
+			setSearchQuery("/bookmarks ");
+			search("/bookmarks ", setActions, setActiveIndex);
+			return true;
+		}
+		if (actionName === "search-remove") {
+			inputRef.current.value = "/remove ";
+			inputRef.current.focus();
+			setSearchQuery("/remove ");
+			search("/remove ", setActions, setActiveIndex);
+			return true;
+		}
 		return false;
 	}
 
@@ -236,13 +377,13 @@ export function SearchApp(
 
 		if (event.key === "PageDown") {
 			event.preventDefault();
-			moveSelection(activeIndex + MAX_ROWS, "smart");
+			moveSelection(activeIndex + maxRows, "smart");
 			return;
 		}
 
 		if (event.key === "PageUp") {
 			event.preventDefault();
-			moveSelection(activeIndex - MAX_ROWS, "smart");
+			moveSelection(activeIndex - maxRows, "smart");
 			return;
 		}
 
@@ -280,7 +421,7 @@ export function SearchApp(
 
 	const panelWidth = Math.min(760, Math.max(320, viewportWidth - 24));
 	const listWidth = panelWidth - 4;
-	const listHeight = Math.max(ROW_HEIGHT, Math.min(MAX_ROWS, actions.length) * ROW_HEIGHT);
+	const listHeight = Math.max(ROW_HEIGHT, Math.min(maxRows, actions.length) * ROW_HEIGHT);
 	const effectivePosition: CommandBarPosition = showOnboarding
 		? "center"
 		: commandBarPosition;
@@ -298,7 +439,6 @@ export function SearchApp(
 						bottom: "auto",
 						transform: "none",
 				  };
-
 	return (
 		<div>
 			<div css={styles.scannyWrap} style={wrapPositionStyle}>
@@ -314,6 +454,22 @@ export function SearchApp(
 							<p css={styles.onboardingBody}>
 								{onboardingScreens[onboardingStep].body}
 							</p>
+							<div css={styles.onboardingProgressTrack}>
+								<div
+									css={styles.onboardingProgressFill}
+									style={{
+										width: `${((onboardingStep + 1) / onboardingScreens.length) * 100}%`,
+									}}
+								/>
+							</div>
+							<div css={styles.onboardingTipList}>
+								{onboardingScreens[onboardingStep].tips.map((tip, index) => (
+									<div key={index} css={styles.onboardingTipItem}>
+										<span css={styles.tipBullet}>•</span>
+										<span>{tip}</span>
+									</div>
+								))}
+							</div>
 							<div css={styles.onboardingDots}>
 								{onboardingScreens.map((_screen, index) => (
 									<span
@@ -323,7 +479,10 @@ export function SearchApp(
 								))}
 							</div>
 							<div css={styles.onboardingActions}>
-								<button css={styles.secondaryButton} onClick={completeOnboarding}>
+								<button
+									css={styles.secondaryButton}
+									onClick={() => completeOnboarding()}
+								>
 									Ueberspringen <span css={styles.buttonShortcut}>Esc</span>
 								</button>
 								<div css={styles.onboardingNav}>
@@ -339,6 +498,14 @@ export function SearchApp(
 											? "Loslegen "
 											: "Weiter "}
 										<span css={styles.buttonShortcut}>Enter/→</span>
+									</button>
+									<button
+										css={styles.primaryGhostButton}
+										onClick={() =>
+											completeOnboarding(onboardingScreens[onboardingStep].ctaAction)
+										}
+									>
+										{onboardingScreens[onboardingStep].ctaLabel}
 									</button>
 								</div>
 							</div>
@@ -417,7 +584,7 @@ export function SearchApp(
 			<div
 				onClick={() => searchProps.setStatus("closed")}
 				css={styles.scannyOverlay}
-				style={{ opacity: overlayOpacity }}
+				style={{ opacity: overlayOpacity, backdropFilter: `blur(${overlayBlur}px)` }}
 			></div>
 		</div>
 	);
@@ -496,7 +663,6 @@ const styles = {
 		background: radial-gradient(circle at top, rgba(17, 43, 68, 0.28), rgba(8, 11, 16, 0.6));
 		z-index: 9999;
 		opacity: 1;
-		backdrop-filter: blur(2px);
 		transition: all 0.1s cubic-bezier(0.05, 0.03, 0.35, 1);
 	`,
 	searchBar: css`
@@ -565,6 +731,37 @@ const styles = {
 		line-height: 1.5;
 		margin: 0;
 	`,
+	onboardingProgressTrack: css`
+		margin-top: 14px;
+		height: 6px;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--border) 70%, transparent);
+		overflow: hidden;
+	`,
+	onboardingProgressFill: css`
+		height: 100%;
+		background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+		transition: width 0.2s ease;
+	`,
+	onboardingTipList: css`
+		display: flex;
+		flex-direction: column;
+		gap: 7px;
+		margin-top: 14px;
+	`,
+	onboardingTipItem: css`
+		display: flex;
+		align-items: flex-start;
+		gap: 8px;
+		color: var(--text-2);
+		font-size: 13px;
+		line-height: 1.35;
+	`,
+	tipBullet: css`
+		color: var(--accent);
+		font-size: 14px;
+		line-height: 1.1;
+	`,
 	onboardingDots: css`
 		display: flex;
 		gap: 8px;
@@ -602,6 +799,17 @@ const styles = {
 		font-weight: 600;
 		background: var(--accent);
 		color: white;
+		cursor: pointer;
+	`,
+	primaryGhostButton: css`
+		height: 34px;
+		border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border));
+		border-radius: 8px;
+		padding: 0 12px;
+		font-size: 13px;
+		font-weight: 600;
+		background: color-mix(in srgb, var(--accent) 14%, transparent);
+		color: var(--text);
 		cursor: pointer;
 	`,
 	secondaryButton: css`

@@ -2,6 +2,8 @@
 
 Raycast for the Browser is a Chrome extension that brings a command palette to any webpage so you can search, navigate, and interact without leaving the keyboard.
 
+![Scanny Preview](public/icons/preview.png)
+
 ## Requirements
 
 - Node.js 18+ (Node.js 20 recommended)

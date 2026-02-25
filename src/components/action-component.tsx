@@ -48,6 +48,8 @@ export function ActionComponent({
 	isSelected,
 	query,
 }: ActionProps) {
+	const isInteractive = action.type === "interactive";
+
 	return (
 		<div className="scanny-item" data-index={index} data-type={action.type}>
 			{action.emojiChar ? (
@@ -56,11 +58,24 @@ export function ActionComponent({
 				<Img action={action} />
 			)}
 			<div className="scanny-item-details">
-				<div className="scanny-item-name">
-					<HighlightText text={action.title} query={query} />
+				<div className="scanny-item-name-row">
+					<div className="scanny-item-name">
+						<HighlightText text={action.title} query={query} />
+					</div>
+					{isInteractive ? (
+						<span className="scanny-item-badge" aria-label="Page element result">
+							Element
+						</span>
+					) : null}
 				</div>
-				<div className="scanny-item-desc">
-					<HighlightText text={action.description} query={query} />
+				<div
+					className={`scanny-item-desc ${isInteractive ? "scanny-item-desc-interactive" : ""}`}
+				>
+					{isInteractive ? (
+						<InteractiveDescription text={action.description} query={query} />
+					) : (
+						<HighlightText text={action.description} query={query} />
+					)}
 				</div>
 			</div>
 			{action.keys && !isSelected ? <Keys action={action} /> : ""}
@@ -70,6 +85,33 @@ export function ActionComponent({
 				</div>
 			)}
 		</div>
+	);
+}
+
+function InteractiveDescription({
+	text,
+	query,
+}: {
+	text: string;
+	query?: string;
+}) {
+	const parts = text
+		.split(" · ")
+		.map((part) => part.trim())
+		.filter(Boolean);
+
+	if (parts.length <= 1) {
+		return <HighlightText text={text} query={query} />;
+	}
+
+	return (
+		<>
+			{parts.map((part, i) => (
+				<span className="scanny-meta-pill" key={`${part}-${i}`}>
+					<HighlightText text={part} query={query} />
+				</span>
+			))}
+		</>
 	);
 }
 

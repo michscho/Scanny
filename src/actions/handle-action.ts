@@ -81,6 +81,12 @@ export function handleActionItem(
 		return;
 	}
 
+	// Handle interactive (page) elements found in regular search mode
+	if (selectedAction.action === "web-element") {
+		clickElement(selectedAction);
+		return;
+	}
+
 	if (selectedAction.action === "open-scanny-settings") {
 		chrome.runtime.sendMessage({ request: "open-scanny-settings" });
 		return;
@@ -142,7 +148,10 @@ export function handleActionItem(
 			}
 			break;
 		case "goto":
-			const query = event.currentTarget.value;
+			const query = event.currentTarget.value.trim();
+			if (!query) {
+				break;
+			}
 			if (event.ctrlKey || event.metaKey) {
 				window.open(addhttp(query));
 			} else {

@@ -32,12 +32,39 @@
 				font-size: 14px;
 				margin-bottom: 32px;
 			}
+			.settings-tabs {
+				display: flex;
+				gap: 8px;
+				margin-bottom: 14px;
+				flex-wrap: wrap;
+			}
+			.settings-tab {
+				background: #2e3138;
+				border: 1px solid #3b3f49;
+				color: #b8bfcd;
+				border-radius: 999px;
+				padding: 7px 12px;
+				font-size: 13px;
+				font-weight: 600;
+				cursor: pointer;
+			}
+			.settings-tab.is-active {
+				background: #6068d2;
+				border-color: #6068d2;
+				color: #fff;
+			}
 			.setting-group {
 				background: #25272c;
 				border: 1px solid #35373e;
 				border-radius: 8px;
 				padding: 24px;
 				margin-bottom: 16px;
+			}
+			.tab-panel {
+				display: none;
+			}
+			.tab-panel.is-active {
+				display: block;
 			}
 			.setting-group h2 {
 				font-size: 16px;
@@ -95,6 +122,134 @@
 				text-shadow: 0 1px 3px rgba(0,0,0,0.8);
 				z-index: 1;
 			}
+			.scanny-preview {
+				position: relative;
+				margin-bottom: 20px;
+				height: 300px;
+				border-radius: 12px;
+				overflow: hidden;
+				border: 1px solid #3a3d45;
+				background:
+					radial-gradient(circle at 20% 15%, rgba(89, 144, 255, 0.22), transparent 50%),
+					linear-gradient(160deg, #1a2434, #12141a 60%);
+			}
+			.scanny-preview-page {
+				position: absolute;
+				inset: 0;
+				padding: 18px;
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+			}
+			.scanny-preview-line {
+				height: 11px;
+				border-radius: 99px;
+				background: rgba(255, 255, 255, 0.16);
+			}
+			.scanny-preview-line.wide {
+				width: 82%;
+			}
+			.scanny-preview-line.mid {
+				width: 58%;
+			}
+			.scanny-preview-line.short {
+				width: 36%;
+			}
+			.scanny-preview-overlay {
+				position: absolute;
+				inset: 0;
+				background: #000;
+				pointer-events: none;
+			}
+			.scanny-preview-shell {
+				position: absolute;
+				left: 16px;
+				right: 16px;
+				top: 16px;
+				bottom: 16px;
+				pointer-events: none;
+			}
+			.scanny-preview-command {
+				position: absolute;
+				left: 0;
+				right: 0;
+				width: 100%;
+				background: rgba(22, 24, 30, 0.95);
+				border: 1px solid #4a4f5d;
+				border-radius: 12px;
+				box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+				overflow: hidden;
+			}
+			.scanny-preview-shell[data-position="top"] .scanny-preview-command {
+				top: 0;
+			}
+			.scanny-preview-shell[data-position="center"] .scanny-preview-command {
+				top: 50%;
+				transform: translateY(-50%);
+			}
+			.scanny-preview-shell[data-position="bottom"] .scanny-preview-command {
+				bottom: 0;
+			}
+			.scanny-preview-search {
+				height: 44px;
+				display: flex;
+				align-items: center;
+				padding: 0 14px;
+				color: #d8dce6;
+				font-size: 13px;
+				border-bottom: 1px solid #363a46;
+			}
+			.scanny-preview-list {
+				display: flex;
+				flex-direction: column;
+			}
+			.scanny-preview-item {
+				height: 38px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 0 14px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+				color: #c4c9d5;
+				font-size: 12px;
+			}
+			.scanny-preview-item:last-child {
+				border-bottom: 0;
+			}
+			.scanny-preview-dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 99px;
+				background: #6f7587;
+				flex-shrink: 0;
+			}
+			.scanny-preview-item.preview-selected {
+				background: linear-gradient(90deg, rgba(96, 104, 210, 0.35), transparent);
+				color: #eef2ff;
+				position: relative;
+			}
+			.scanny-preview-item.preview-selected::before {
+				content: "";
+				position: absolute;
+				left: 0;
+				top: 7px;
+				bottom: 7px;
+				width: 3px;
+				border-radius: 2px;
+				background: #7396ff;
+			}
+			.scanny-preview-shell[data-auto-preview="off"] .preview-selected {
+				background: transparent;
+				color: #c4c9d5;
+			}
+			.scanny-preview-shell[data-auto-preview="off"] .preview-selected::before {
+				display: none;
+			}
+			.preview-caption {
+				margin-top: 10px;
+				font-size: 12px;
+				color: #9ba2b3;
+			}
 			.saved-msg {
 				color: #6068d2;
 				font-size: 13px;
@@ -124,6 +279,18 @@
 			.select-row select:focus {
 				border-color: #6068d2;
 				box-shadow: 0 0 0 2px rgba(96, 104, 210, 0.2);
+			}
+			.select-row label {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 14px;
+				color: #f1f1f1;
+			}
+			.select-row input[type="checkbox"] {
+				accent-color: #6068d2;
+				width: 16px;
+				height: 16px;
 			}
 			.key-row {
 				display: flex;
@@ -165,20 +332,59 @@
 			<h1>⚙️ Scanny Settings</h1>
 			<p class="subtitle">Customize your command palette experience</p>
 
+			<div class="settings-tabs" role="tablist" aria-label="Settings sections">
+				<button class="settings-tab is-active" data-tab-target="appearance" role="tab" aria-selected="true" type="button">Appearance</button>
+				<button class="settings-tab" data-tab-target="behavior" role="tab" aria-selected="false" type="button">Behavior</button>
+				<button class="settings-tab" data-tab-target="advanced" role="tab" aria-selected="false" type="button">Advanced</button>
+				<button class="settings-tab" data-tab-target="ai" role="tab" aria-selected="false" type="button">AI</button>
+			</div>
+
+			<div class="tab-panel is-active" data-tab-panel="appearance">
+			<div class="setting-group">
+				<h2>Live Preview</h2>
+				<p>See how Scanny looks with your current settings.</p>
+				<div class="scanny-preview">
+					<div class="scanny-preview-page">
+						<div class="scanny-preview-line wide"></div>
+						<div class="scanny-preview-line mid"></div>
+						<div class="scanny-preview-line short"></div>
+						<div class="scanny-preview-line wide"></div>
+						<div class="scanny-preview-line mid"></div>
+					</div>
+					<div class="scanny-preview-overlay" id="opacity-preview"></div>
+					<div class="scanny-preview-shell" id="scanny-preview-shell" data-position="top" data-auto-preview="on">
+						<div class="scanny-preview-command" id="scanny-preview-command">
+							<div class="scanny-preview-search">&gt; search buttons</div>
+							<div class="scanny-preview-list" id="scanny-preview-list">
+								<div class="scanny-preview-item"><span class="scanny-preview-dot"></span>Primary button</div>
+								<div class="scanny-preview-item"><span class="scanny-preview-dot"></span>Login button</div>
+								<div class="scanny-preview-item preview-selected"><span class="scanny-preview-dot"></span>Filter dropdown</div>
+								<div class="scanny-preview-item"><span class="scanny-preview-dot"></span>Save settings</div>
+								<div class="scanny-preview-item"><span class="scanny-preview-dot"></span>Newsletter input</div>
+								<div class="scanny-preview-item"><span class="scanny-preview-dot"></span>Pagination next</div>
+								<div class="scanny-preview-item"><span class="scanny-preview-dot"></span>Profile menu</div>
+								<div class="scanny-preview-item"><span class="scanny-preview-dot"></span>Checkout CTA</div>
+								<div class="scanny-preview-item"><span class="scanny-preview-dot"></span>Cookie dialog accept</div>
+								<div class="scanny-preview-item"><span class="scanny-preview-dot"></span>Search field</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="preview-caption">Preview updates live when you change overlay, blur, position, rows, or auto-preview.</div>
+				<div class="saved-msg" id="saved-msg">✓ Settings saved</div>
+			</div>
+
 			<div class="setting-group">
 				<h2>Overlay Transparency</h2>
 				<p>Adjust how transparent the background overlay is when Scanny is open (0% = fully transparent, 100% = fully opaque)</p>
 				<div class="slider-row">
 					<input type="range" id="opacity-slider" min="0" max="100" value="20" />
-					<span class="slider-value" id="opacity-value">20%</span>
+						<span class="slider-value" id="opacity-value">20%</span>
+					</div>
 				</div>
-				<div class="preview">
-					<span class="preview-label">Preview</span>
-					<div class="preview-overlay" id="opacity-preview"></div>
-				</div>
-				<div class="saved-msg" id="saved-msg">✓ Settings saved</div>
 			</div>
 
+			<div class="tab-panel" data-tab-panel="behavior">
 			<div class="setting-group">
 				<h2>Command Bar Position</h2>
 				<p>Choose where the command bar appears on the page.</p>
@@ -188,9 +394,51 @@
 						<option value="center">Center</option>
 						<option value="bottom">Bottom</option>
 					</select>
+					</div>
+				</div>
+
+			<div class="setting-group">
+				<h2>Overlay Blur</h2>
+				<p>Set how much the page behind Scanny is blurred.</p>
+				<div class="slider-row">
+					<input type="range" id="blur-slider" min="0" max="12" value="2" />
+					<span class="slider-value" id="blur-value">2px</span>
+					</div>
 				</div>
 			</div>
 
+			<div class="tab-panel" data-tab-panel="advanced">
+			<div class="setting-group">
+				<h2>Max Visible Results</h2>
+				<p>Control how many results are visible at once in the command list.</p>
+				<div class="slider-row">
+					<input type="range" id="rows-slider" min="4" max="10" value="6" />
+					<span class="slider-value" id="rows-value">6</span>
+					</div>
+				</div>
+
+			<div class="setting-group">
+				<h2>Search on Page Preview</h2>
+				<p>Automatically highlight the selected page element while using &gt; search mode.</p>
+				<div class="select-row">
+					<label>
+						<input type="checkbox" id="auto-preview-checkbox" checked />
+						Enable automatic page element preview
+					</label>
+					</div>
+				</div>
+
+			<div class="setting-group">
+				<h2>Onboarding</h2>
+				<p>Show the intro walkthrough again the next time you open Scanny.</p>
+				<div class="key-row">
+					<button id="reset-onboarding" type="button">Show onboarding again</button>
+					<button id="reset-settings" type="button">Reset settings</button>
+				</div>
+			</div>
+			</div>
+
+			<div class="tab-panel" data-tab-panel="ai">
 			<div class="setting-group">
 				<h2>AI Integration</h2>
 				<p>Add your OpenAI API key to enable the "Ask AI" action in Scanny.</p>
@@ -204,6 +452,7 @@
 					/>
 					<button id="save-openai-key" type="button">Save key</button>
 				</div>
+			</div>
 			</div>
 		</div>
 

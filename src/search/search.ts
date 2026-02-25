@@ -48,6 +48,30 @@ function escapeRegex(s: string) {
 	return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function buildQueryActions(value: string): Action[] {
+	const rawQuery = value.trim();
+	if (!rawQuery) {
+		return [];
+	}
+
+	return [
+		{
+			title: `Search "${rawQuery}"`,
+			description: "Search the web for this query",
+			type: "action",
+			action: "search",
+			emojiChar: "🔍",
+		},
+		{
+			title: `Go to ${rawQuery}`,
+			description: "Open this as a website URL",
+			type: "action",
+			action: "goto",
+			emojiChar: "🌐",
+		},
+	];
+}
+
 /**
  * Perform search based on the current input value.
  * Called from onChange so the value is already up-to-date.
@@ -96,15 +120,18 @@ export function search(
 		return;
 	}
 
+	// Always include page elements in results
+	const pageElements = handleInteractive(value);
+
 	if (query === "") {
 		const allActions = filterSearchAndGoItems(actions);
-		setActions(allActions);
+		setActions([...allActions, ...pageElements]);
 		setActiveIndex?.(0);
 		return;
 	}
 
 	// Score each action by how well title & description match the query
-	const scored = actions
+	const scored = filterSearchAndGoItems(actions)
 		.map((action) => {
 			const titleScore = scoreMatch(action.title, query);
 			const descScore = scoreMatch(action.description, query);
@@ -113,10 +140,24 @@ export function search(
 		.filter(({ score }) => score > 0)
 		.sort((a, b) => b.score - a.score);
 
-	// Also search page elements and append them
-	const pageElements = handleInteractive(value);
+	// Score page elements and merge them with command results by score
+	const scoredPage = pageElements.map((action) => {
+		const titleScore = scoreMatch(action.title, query);
+		const descScore = scoreMatch(action.description, query);
+		// Boost elements whose letter-key matches the query — these should appear at the top
+		const keyExact = action.keys?.some((k) => k.toLowerCase() === query);
+		const keyPrefix = action.keys?.some((k) => k.toLowerCase().startsWith(query));
+		const keyBoost = keyExact ? 200 : keyPrefix ? 150 : 0;
+		return { action, score: Math.max(titleScore, descScore * 0.8, keyBoost, 15) };
+	});
 
-	setActions([...scored.map(({ action }) => action), ...pageElements]);
+	const merged = [...scored, ...scoredPage]
+		.sort((a, b) => b.score - a.score)
+		.map((entry) => entry.action);
+
+	// Only append "Search X" / "Go to X" for longer queries, at the bottom
+	const queryActions = query.length > 2 ? buildQueryActions(value) : [];
+	setActions([...merged, ...queryActions]);
 	setActiveIndex?.(0);
 }
 

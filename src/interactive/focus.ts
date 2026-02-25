@@ -10,37 +10,36 @@ function escapeAttributeValue(value: string): string {
 }
 
 function findElementForAction(action: Action): JQuery<HTMLElement> | null {
+	// Primary: use data-scanny-target-id (works for all element types)
 	if (action.id) {
 		const selector = `[${TARGET_ATTRIBUTE}="${escapeAttributeValue(action.id)}"]`;
 		const byId = $(selector).first();
-		if (byId.length > 0) {
-			return byId;
-		}
+		if (byId.length > 0) return byId;
 	}
+	// Fallback: description-based lookup
 	const elementAction = mapDescriptionToScanny(action.description);
-	if (!elementAction) {
-		return null;
-	}
-	return $(elementAction.selector).filter(elementAction.filter(action.title)).first();
+	if (!elementAction) return null;
+	const $el = $(elementAction.selector)
+		.filter(elementAction.filter(action.title))
+		.first();
+	return $el.length > 0 ? $el : null;
 }
 
-export function focusOnElement(action: Action) {
+export function focusOnElement(action?: Action) {
 	// Remove previous highlight
 	focusedElement?.css({
 		outline: "",
 		"outline-offset": "",
 		"box-shadow": "",
 	});
-	if (!action) {
-		return;
-	}
+	if (!action) return;
+
+	// Only focus interactive (page) elements
+	if (action.type !== "interactive") return;
+
 	const newFocusElement = findElementForAction(action);
-	if (!newFocusElement) {
-		return;
-	}
-	if (newFocusElement.length === 0) {
-		return;
-	}
+	if (!newFocusElement || newFocusElement.length === 0) return;
+
 	newFocusElement.css({
 		outline: "2px solid #3ba6ff",
 		"outline-offset": "2px",

@@ -43,7 +43,7 @@ const resultStyle = css`
 const rightSection = css`
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: 8px;
 `;
 
 const footerShortcut = css`
@@ -62,19 +62,19 @@ const footerShortcut = css`
 `;
 
 const settingsButton = css`
+	height: 28px;
 	border: 1px solid var(--border);
-	background: color-mix(in srgb, var(--background-solid) 90%, white 10%);
+	background: color-mix(in srgb, var(--background-solid) 88%, white 12%);
 	color: var(--text-2);
 	font-size: 12px;
 	font-weight: 600;
-	border-radius: 8px;
-	padding: 5px 10px;
-	line-height: 1;
+	border-radius: 7px;
+	padding: 0 10px;
 	cursor: pointer;
-	transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+	transition: border-color 0.15s ease, color 0.15s ease;
 
 	:hover {
-		border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+		border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
 		color: var(--text);
 	}
 `;

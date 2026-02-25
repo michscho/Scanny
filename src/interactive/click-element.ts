@@ -8,29 +8,34 @@ function escapeAttributeValue(value: string): string {
 	return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
-function findElementForAction(action: Action, elementAction: Scanny) {
-	if (action.id) {
-		const selector = `[${TARGET_ATTRIBUTE}="${escapeAttributeValue(action.id)}"]`;
-		const byId = $(selector).first();
-		if (byId.length > 0) {
-			return byId;
-		}
-	}
-	return $(elementAction.selector).filter(elementAction.filter(action.title)).first();
+function findElementByTargetId(action: Action): HTMLElement | null {
+	if (!action.id) return null;
+	const selector = `[${TARGET_ATTRIBUTE}="${escapeAttributeValue(action.id)}"]`;
+	const el = document.querySelector<HTMLElement>(selector);
+	return el || null;
+}
+
+function findElementForAction(action: Action): HTMLElement | null {
+	// Primary: use data-scanny-target-id (works for all element types)
+	const byId = findElementByTargetId(action);
+	if (byId) return byId;
+
+	// Fallback: use description-based selector lookup
+	const elementAction = mapDescriptionToScanny(action.description);
+	if (!elementAction) return null;
+	const $el = $(elementAction.selector)
+		.filter(elementAction.filter(action.title))
+		.first();
+	return $el.length > 0 ? $el[0] : null;
 }
 
 export function clickElement(action: Action) {
-	const elementAction = mapDescriptionToScanny(action.description);
-	if (!elementAction) return;
-	clickElements(action, elementAction);
+	const el = findElementForAction(action);
+	if (!el) return;
+	clickHTMLElement(el);
 }
 
-function clickElements(action: Action, element: Scanny) {
-	var $element = findElementForAction(action, element);
-	if ($element.length === 0) return;
-
-	var el = $element[0];
-
+function clickHTMLElement(el: HTMLElement) {
 	// Scroll element into view first
 	el.scrollIntoView({ block: "center", behavior: "smooth" });
 
@@ -40,26 +45,27 @@ function clickElements(action: Action, element: Scanny) {
 	}
 
 	// Dispatch full mouse event sequence for better reliability
-	var mouseDownEvent = new MouseEvent("mousedown", {
-		view: window,
-		bubbles: true,
-		cancelable: true,
-	});
-	el.dispatchEvent(mouseDownEvent);
-
-	var mouseUpEvent = new MouseEvent("mouseup", {
-		view: window,
-		bubbles: true,
-		cancelable: true,
-	});
-	el.dispatchEvent(mouseUpEvent);
-
-	var clickEvent = new MouseEvent("click", {
-		view: window,
-		bubbles: true,
-		cancelable: true,
-	});
-	el.dispatchEvent(clickEvent);
+	el.dispatchEvent(
+		new MouseEvent("mousedown", {
+			view: window,
+			bubbles: true,
+			cancelable: true,
+		})
+	);
+	el.dispatchEvent(
+		new MouseEvent("mouseup", {
+			view: window,
+			bubbles: true,
+			cancelable: true,
+		})
+	);
+	el.dispatchEvent(
+		new MouseEvent("click", {
+			view: window,
+			bubbles: true,
+			cancelable: true,
+		})
+	);
 
 	// Fallback: use native click for frameworks that intercept it differently
 	if (typeof el.click === "function") {
