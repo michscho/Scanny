@@ -48,7 +48,7 @@ export function attachOnInstallListener() {
 		);
 
 		if (object.reason === "install") {
-			chrome.tabs.create({ url: "mischo.github.com" });
+			chrome.tabs.create({ url: "https://github.com/michscho/Scanny" });
 		}
 	});
 }

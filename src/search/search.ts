@@ -1,5 +1,4 @@
 import { checkShortHand } from "../extension/utils";
-import { keyMapings } from "../utils/key-mappings";
 import {
 	handleBookmarks,
 	handleHistory,
@@ -64,10 +63,10 @@ export function search(
 
 function isSpecialKeyEvent(e: React.KeyboardEvent<HTMLInputElement>) {
 	return (
-		e.keyCode == keyMapings.down ||
-		e.keyCode == keyMapings.enter ||
-		e.keyCode == keyMapings.left ||
-		e.keyCode == keyMapings.right ||
-		e.keyCode == keyMapings.up
+		e.key === "ArrowDown" ||
+		e.key === "Enter" ||
+		e.key === "ArrowLeft" ||
+		e.key === "ArrowRight" ||
+		e.key === "ArrowUp"
 	);
 }

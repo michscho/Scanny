@@ -209,7 +209,8 @@ const styles = {
 		bottom: 0px;
 		left: 0px;
 		z-index: 9999999999;
-		height: 540px;
+		height: fit-content;
+		max-height: 80vh;
 		transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
 		pointer-events: all;
 	`,
