@@ -17,31 +17,34 @@ export function Footer(resultProps: FooterProps) {
 }
 
 const style = css`
-	height: 45px;
-	line-height: 45px;
-	border-top: 1px solid #35373e;
+	height: 46px;
+	line-height: 46px;
+	border-top: 1px solid var(--border);
 	width: 92%;
 	margin-left: auto;
 	margin-right: auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 `;
 
 const resultStyle = css`
-	color: #a5a5ae;
+	color: var(--text-3);
 	font-size: 12px;
-	font-weight: 500;
-	float: left;
+	font-weight: 600;
 `;
 
 const shortcut = css`
 	display: inline-block !important;
-	font-size: 13px;
+	font-size: 12px;
+	font-weight: 600;
 	border-radius: 5px;
-	background-color: #383e4a;
-	color: #f1f1f1;
+	background-color: var(--chip-bg);
+	color: var(--chip-text);
 	text-align: center;
-	height: 20px;
-	line-height: 20px;
-	min-width: 20px;
-	padding-left: 3px;
-	padding-right: 3px;
+	height: 21px;
+	line-height: 21px;
+	min-width: 22px;
+	padding-left: 5px;
+	padding-right: 5px;
 `;

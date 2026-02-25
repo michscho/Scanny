@@ -21,7 +21,7 @@ export function ActionComponent({
 
 	addGlobeIcon(action, index);
 	return (
-		<div data-index={index} data-type={action.type}>
+		<div className="scanny-item" data-index={index} data-type={action.type}>
 			<Img action={action} />
 			<div className="scanny-item-details">
 				<div className="scanny-item-name">{action.title}</div>
@@ -38,15 +38,18 @@ export function ActionComponent({
 }
 
 const select = css`
-	float: right;
+	margin-left: auto;
 	color: var(--text-3);
 	font-size: 12px;
-	font-weight: 500;
+	font-weight: 600;
 	display: none;
-	margin-top: 20px;
-	margin-right: 5%;
-	margin-left: 3px;
+	margin-top: 0;
+	margin-right: 0;
+	gap: 6px;
 	display: block !important;
+	opacity: 0.94;
+	display: flex !important;
+	align-items: center;
 `;
 
 function addGlobeIcon(action: Action, index: number) {
@@ -82,16 +85,17 @@ function Keys(action: KeysProps) {
 
 const shortcut = css`
 	display: inline-block !important;
-	font-size: 13px;
+	font-size: 12px;
+	font-weight: 600;
 	border-radius: 5px;
-	background-color: #383e4a;
-	color: #f1f1f1;
+	background-color: var(--chip-bg);
+	color: var(--chip-text);
 	text-align: center;
 	height: 20px;
 	line-height: 20px;
-	min-width: 20px;
-	padding-left: 3px;
-	padding-right: 3px;
+	min-width: 22px;
+	padding-left: 5px;
+	padding-right: 5px;
 `;
 
 interface ImgProps {

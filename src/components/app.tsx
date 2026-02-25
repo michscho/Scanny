@@ -39,36 +39,45 @@ export function App(searchProps: AppProps): JSX.Element {
 const globalStyle = css`
 	@media (prefers-color-scheme: dark) {
 		.scanny-extension {
-			--background: #281e1e9e;
-			--border: #35373e;
-			--text: #f1f1f1;
-			--text-2: #c5c6ca;
-			--text-3: #a5a5ae;
-			--select: #17191e84;
-			--accent: #6068d2;
-			--accent-hover: #484fac96;
-			--placeholder: #63687b;
-			--background-2: #292d36;
+			--background: rgba(16, 21, 29, 0.88);
+			--background-solid: #10151d;
+			--border: #2a313d;
+			--text: #f4f7fb;
+			--text-2: #d7dee8;
+			--text-3: #95a3b7;
+			--select: #182331;
+			--select-soft: rgba(33, 49, 70, 0.55);
+			--accent: #3ba6ff;
+			--accent-hover: #5cb7ff;
+			--placeholder: #74859d;
+			--chip-bg: #253244;
+			--chip-text: #e6f0ff;
+			--shadow: 0 22px 70px rgba(0, 0, 0, 0.46);
 		}
 	}
 	@media (prefers-color-scheme: light) {
 		.scanny-extension {
-			--background: #fafcff;
-			--border: #f2f3fb;
-			--text: #2b2d41;
-			--text-2: #2b2d41;
-			--text-3: #929db2;
-			--select: #eff3f9;
-			--accent: #6068d2;
-			--accent-hover: #484fac;
-			--placeholder: #bac2d1;
-			--background-2: #292d36;
+			--background: rgba(247, 251, 255, 0.95);
+			--background-solid: #f7fbff;
+			--border: #d5e1ee;
+			--text: #16263a;
+			--text-2: #273a52;
+			--text-3: #5d728e;
+			--select: #e4f0fb;
+			--select-soft: rgba(211, 231, 249, 0.5);
+			--accent: #0f80d4;
+			--accent-hover: #005f9f;
+			--placeholder: #7b92ae;
+			--chip-bg: #d8e8f8;
+			--chip-text: #1e3550;
+			--shadow: 0 20px 65px rgba(16, 34, 57, 0.25);
 		}
 	}
 
 	.scanny-extension {
-		font-family: Inter !important;
+		font-family: "Inter", "Avenir Next", "Segoe UI", sans-serif !important;
 		z-index: 99999999999;
+		letter-spacing: 0.01em;
 	}
 
 	.scanny-extension ::-webkit-scrollbar {
@@ -77,7 +86,7 @@ const globalStyle = css`
 	}
 
 	.scanny-extension ::-webkit-scrollbar-thumb {
-		background-color: rgba(127, 127, 127, 0.6);
+		background-color: rgba(87, 113, 145, 0.75);
 		background-clip: padding-box;
 		border: 2px solid transparent;
 		border-radius: 5px;
@@ -85,7 +94,7 @@ const globalStyle = css`
 
 	.scanny-extension ::-webkit-scrollbar-thumb:vertical:hover,
 	.scanny-extension::-webkit-scrollbar-thumb:horizontal:hover {
-		background-color: rgb(110, 110, 110);
+		background-color: rgb(105, 134, 169);
 	}
 
 	.scanny-extension ::-webkit-scrollbar-track {
@@ -94,10 +103,17 @@ const globalStyle = css`
 
 	.scanny-extension ::-webkit-scrollbar-thumb:vertical:active,
 	::-webkit-scrollbar-thumb:horizontal:active {
-		background-color: rgba(95, 91, 91, 1);
+		background-color: rgba(88, 114, 148, 1);
 	}
 
 	.scanny-extension ::-webkit-scrollbar-corner {
 		background: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.scanny-extension * {
+			transition: none !important;
+			animation: none !important;
+		}
 	}
 `;

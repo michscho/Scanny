@@ -11,17 +11,22 @@ import { focusOnElement } from "../interactive/focus";
 export function SearchApp(
 	searchProps: AppProps & { setStatus: any }
 ): JSX.Element {
+	const MAX_ROWS = 6;
+	const ROW_HEIGHT = 64;
 	const [activeIndex, setActiveIndex] = useState(0);
 	const [actions, setActions] = useState(searchProps.actions);
 	const [overlayOpacity, setOverlayOpacity] = useState(0.2);
+	const [viewportWidth, setViewportWidth] = useState(
+		typeof window === "undefined" ? 760 : window.innerWidth
+	);
 	const listRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const reactLegacyRef = useRef<List<any>>(null);
 
 	useEffect(() => {
-		chrome.storage.sync.get({ overlayOpacity: 20 }, (result) => {
-			setOverlayOpacity(result.overlayOpacity / 100);
-		});
+		const onResize = () => setViewportWidth(window.innerWidth);
+		window.addEventListener("resize", onResize);
+		return () => window.removeEventListener("resize", onResize);
 	}, []);
 
 	if (inputRef.current?.value.startsWith(">")) {
@@ -71,11 +76,15 @@ export function SearchApp(
 		setActiveIndex(index);
 	}
 
+	const panelWidth = Math.min(760, Math.max(320, viewportWidth - 24));
+	const listWidth = panelWidth - 4;
+	const listHeight = Math.max(ROW_HEIGHT, Math.min(MAX_ROWS, actions.length) * ROW_HEIGHT);
+
 	return (
 		<div>
 			<div css={styles.scannyWrap}>
 				<div id="scanny" css={extension}>
-					<div id="scanny-search">
+					<div id="scanny-search" css={styles.searchBar}>
 						<input
 							ref={inputRef}
 							css={styles.input}
@@ -85,10 +94,10 @@ export function SearchApp(
 					</div>
 					<div ref={listRef} id="scanny-list">
 						<FixedSizeList
-							height={59 * 6}
+							height={listHeight}
 							itemCount={actions.length}
-							itemSize={60}
-							width={696}
+							itemSize={ROW_HEIGHT}
+							width={listWidth}
 							ref={reactLegacyRef}
 						>
 							{({ index, style }) => (
@@ -96,6 +105,7 @@ export function SearchApp(
 									key={index}
 									style={style}
 									css={index === activeIndex && styles.active}
+									className={`${index === activeIndex ? "scanny-item-active" : ""}`}
 									onMouseEnter={(e) => handleMouseEnter(e, index)}
 									onMouseDown={(e) => {
 										//handleAction(e, inputRef.current?.value, actions[index]);
@@ -182,43 +192,64 @@ const toastStyles = {
 const extension = css`
 	position: absolute;
 	width: 100%;
-	background: #281e1e9e;
-	border: 1px solid #35373e;
-	border-radius: 5px;
+	background: var(--background);
+	border: 1px solid var(--border);
+	border-radius: 16px;
 	top: 0px;
 	left: 0px;
 	z-index: 9999999998;
 	height: fit-content;
 	transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
+	backdrop-filter: blur(20px);
+	box-shadow: var(--shadow);
+	overflow: hidden;
 	display: block;
+	animation: scanny-reveal 0.22s ease-out;
+
+	@keyframes scanny-reveal {
+		from {
+			transform: translateY(-8px) scale(0.985);
+			opacity: 0;
+		}
+		to {
+			transform: translateY(0) scale(1);
+			opacity: 1;
+		}
+	}
 `;
 
 const styles = {
 	active: css`
-		background-color: var(--select);
+		background: linear-gradient(
+			90deg,
+			var(--select),
+			var(--select-soft) 80%,
+			transparent
+		);
 		position: relative;
 		:before {
 			height: 100%;
 			position: absolute;
 			display: block;
 			content: "";
-			width: 2px;
+			width: 3px;
 			background-color: var(--accent);
+			box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 80%, transparent);
 		}
 	`,
 	scannyWrap: css`
 		position: fixed;
-		width: 700px;
+		width: min(760px, calc(100vw - 24px));
 		border: 1px solid transparent;
-		border-radius: 5px;
+		border-radius: 16px;
 		margin: auto;
-		top: 0px;
+		top: max(16px, env(safe-area-inset-top));
 		right: 0px;
-		bottom: 0px;
+		bottom: 16px;
 		left: 0px;
 		z-index: 9999999999;
 		height: fit-content;
-		max-height: 80vh;
+		max-height: calc(100vh - 32px);
 		transition: all 0.2s cubic-bezier(0.05, 0.03, 0.35, 1);
 		pointer-events: all;
 	`,
@@ -228,30 +259,39 @@ const styles = {
 		position: fixed;
 		top: 0px;
 		left: 0px;
-		background-color: #000;
+		background: radial-gradient(circle at top, rgba(17, 43, 68, 0.28), rgba(8, 11, 16, 0.6));
 		z-index: 9999;
-		opacity: 0.2;
+		opacity: 1;
+		backdrop-filter: blur(2px);
 		transition: all 0.1s cubic-bezier(0.05, 0.03, 0.35, 1);
 	`,
+	searchBar: css`
+		padding: 10px 14px;
+	`,
 	input: css`
-		background: transparent;
-		border: 0px;
+		background: color-mix(in srgb, var(--background-solid) 88%, white 12%);
+		border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
 		outline: none;
-		font-size: 20px;
-		font-weight: 400;
-		height: 50px;
-		width: 92%;
+		font-size: 18px;
+		font-weight: 500;
+		height: 52px;
+		width: 100%;
 		margin-left: auto;
 		margin-right: auto;
 		display: block;
 		color: var(--text);
 		caret-color: var(--text);
-		font-family: Inter !important;
-		margin-top: 5px;
-		margin-bottom: 5px;
+		font-family: "Inter", "Avenir Next", "Segoe UI", sans-serif !important;
 		box-sizing: border-box;
 		outline: none;
-		border: 0px;
 		box-shadow: none;
+		border-radius: 11px;
+		padding: 0 14px;
+		transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+		:focus {
+			border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+			box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+		}
 	`,
 };

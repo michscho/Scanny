@@ -44,80 +44,92 @@
 }
 .scanny-extension #scanny-list {
 	width: 100%;
-	overflow: overlay;
+	overflow: auto;
 	height: 100%;
 	max-height: 400px;
 	border-top: 1px solid var(--border);
 	position: relative;
 }
 .scanny-extension .scanny-item {
-	height: 60px;
+	height: 64px;
 	width: 100%;
+	display: flex;
+	align-items: center;
+	padding: 0 20px;
+	box-sizing: border-box;
+	transition: background-color 0.12s ease;
 }
 .scanny-extension .scanny-item:hover {
 	cursor: pointer;
 }
 .scanny-extension .scanny-icon {
-	width: 20px;
-	height: 20px;
-	margin-left: 5%;
-	display: inline-block;
-	vertical-align: middle;
-	margin-top: -12px;
+	width: 24px;
+	height: 24px;
+	border-radius: 8px;
+	border: 1px solid var(--border);
+	background: color-mix(in srgb, var(--background-solid) 86%, white 14%);
+	padding: 2px;
+	box-sizing: border-box;
+	display: inline-flex;
+	flex-shrink: 0;
 }
 .scanny-extension .scanny-emoji-action {
-	display: inline-block;
-	vertical-align: middle;
-	margin-top: -12px;
-	width: 20px;
-	height: 20px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	border-radius: 8px;
+	border: 1px solid var(--border);
+	background: color-mix(in srgb, var(--background-solid) 86%, white 14%);
 	text-align: center;
-	margin-left: 5%;
 	font-size: 18px;
+	flex-shrink: 0;
 }
 .scanny-extension .scanny-item-details {
 	display: inline-block !important;
-	margin-left: 10px;
+	margin-left: 12px;
 	vertical-align: middle;
-	margin-top: 10px;
+	width: calc(100% - 175px);
 }
 .scanny-extension .scanny-item-name {
 	color: var(--text-2);
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 600;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 460px;
+	width: 100%;
 }
 .scanny-extension .scanny-item-active .scanny-item-name {
 	color: var(--text) !important;
 }
 .scanny-extension .scanny-item-desc {
 	color: var(--text-3);
-	margin-top: 5px;
-	font-size: 14px;
+	margin-top: 4px;
+	font-size: 13px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 460px;
+	width: 100%;
 }
 .scanny-extension #scanny-arrows {
 	color: var(--text-3);
 	font-size: 12px;
-	font-weight: 500;
-	float: right;
+	font-weight: 600;
 }
 .scanny-extension #scanny-arrows span {
 	margin-left: 3px;
 	margin-right: 3px;
 }
 .scanny-extension .scanny-keys {
-	float: right;
+	margin-left: auto;
 	vertical-align: middle;
-	font-weight: 500;
-	margin-top: 20px;
-	margin-right: 5%;
+	font-weight: 600;
+	margin-top: 0;
+	margin-right: 0;
+	display: flex;
+	align-items: center;
 }
 .scanny-extension .scanny-item-active .scanny-keys {
 	display: none !important;
