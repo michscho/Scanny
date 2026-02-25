@@ -82,7 +82,8 @@ export function attachOnMessageListener(resetExtension: () => Action[]) {
 				break;
 			case "remove-passwords":
 				clearPasswords();
-			case "history": // Fallthrough
+				break;
+			case "history":
 			case "downloads":
 			case "extensions":
 			case "settings":
@@ -103,7 +104,7 @@ export function attachOnMessageListener(resetExtension: () => Action[]) {
 				break;
 			case "search-history":
 				chrome.history
-					.search({ text: message.query, maxResults: 0, startTime: 0 })
+					.search({ text: message.query, maxResults: 50, startTime: 0 })
 					.then((data) => {
 						var actions: Action[] = [];
 						data.forEach((ele, _index) => {
@@ -114,28 +115,9 @@ export function attachOnMessageListener(resetExtension: () => Action[]) {
 				return true;
 			case "search-bookmarks":
 				chrome.bookmarks.search({ query: message.query }).then((data) => {
-					var actions: Action[] = [];
-					data
-						.filter((x) => x.index == 0)
-						.forEach((action, index) => {
-							if (!action.url) {
-								data.splice(index, 1);
-							}
-							actions.push(createBookmarkAction(action));
-						});
-					data.forEach((action, index) => {
-						if (!action.url) {
-							data.splice(index, 1);
-						}
-						actions.push({
-							title: action.title,
-							type: "bookmark",
-							emojiChar: "⭐️",
-							action: "bookmark",
-							url: action.url,
-							description: action.url || "",
-						});
-					});
+					const actions: Action[] = data
+						.filter((bookmark) => bookmark.url)
+						.map((bookmark) => createBookmarkAction(bookmark));
 					sendResponse({ bookmarks: actions });
 				});
 				return true;

@@ -20,6 +20,9 @@ export function checkShortHand(
 }
 
 export function addhttp(url: string) {
+	if (/^javascript:/i.test(url)) {
+		return "about:blank";
+	}
 	if (!/^(?:f|ht)tps?\:\/\//.test(url)) {
 		url = "http://" + url;
 	}

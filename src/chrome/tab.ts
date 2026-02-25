@@ -57,14 +57,9 @@ export const pinTab = (pin: boolean) => {
 	});
 };
 
-export const getTabs = () => {
-	const actions: Action[] = [];
-	chrome.tabs.query({}, (tabs) => {
-		tabs.forEach((tab) => {
-			actions.push(createTabAction(tab));
-		});
-	});
-	return actions;
+export const getTabs = async (): Promise<Action[]> => {
+	const tabs = await chrome.tabs.query({});
+	return tabs.map((tab) => createTabAction(tab));
 };
 
 export const openChromeUrl = (url: string) => {

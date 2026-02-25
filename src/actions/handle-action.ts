@@ -28,6 +28,7 @@ export function handleActionItem(
 	if (query.startsWith("/bookmarks")) {
 		if (event.ctrlKey || event.metaKey) {
 			window.open(selectedAction.url);
+			return;
 		}
 		window.open(selectedAction.url, "_self");
 		return;

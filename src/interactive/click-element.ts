@@ -9,6 +9,7 @@ export function clickElement(query: string, description: string) {
 
 function clickElements(query: string, element: Scanny) {
 	var $element = $(element.selector).filter(element.filter(query)).first();
+	if ($element.length === 0) return;
 	var clickEvent = new MouseEvent("click", {
 		view: window,
 		bubbles: true,

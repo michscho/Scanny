@@ -1,4 +1,3 @@
-import $ from "jquery";
 import { Action } from "../actions/data/types-data";
 import { findClickableElements } from "../interactive/search-element";
 

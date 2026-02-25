@@ -2,7 +2,7 @@ import "../../public/content.css";
 import { Action } from "../actions/data/types-data";
 import { css, Global } from "@emotion/react";
 import { SearchApp } from "./search-app";
-import React from "react";
+import React, { useEffect } from "react";
 
 export interface AppProps {
 	actions: Action[];
@@ -12,11 +12,17 @@ type Status = "open" | "closed";
 
 export function App(searchProps: AppProps): JSX.Element {
 	const [status, setStatus] = React.useState<Status>("open");
-	document.addEventListener("keydown", (event) => {
-		if (event.key === "Escape") {
-			setStatus("closed");
-		}
-	});
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Escape") {
+				setStatus("closed");
+			}
+		};
+		document.addEventListener("keydown", handleKeyDown);
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown);
+		};
+	}, []);
 	if (status === "closed") {
 		return <div></div>;
 	}

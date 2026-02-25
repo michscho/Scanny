@@ -1,5 +1,5 @@
 import { Action } from "../actions/data/types-data";
-import $ from "jQuery";
+import $ from "jquery";
 import { mapDescriptionToScanny } from "./elements-actions";
 
 var focusedElement: JQuery<HTMLElement> | null = null;
