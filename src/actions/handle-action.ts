@@ -62,6 +62,15 @@ export function handleActionItem(
 		return;
 	}
 
+	if (selectedAction.action === "open-scanny-settings") {
+		chrome.runtime.sendMessage({ request: "open-scanny-settings" });
+		return;
+	}
+
+	if (selectedAction.action === "none") {
+		return;
+	}
+
 	chrome.runtime.sendMessage({
 		request: selectedAction.action,
 		tab: selectedAction,

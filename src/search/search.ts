@@ -7,6 +7,7 @@ import {
 import { filterSearchAndGoItems } from "../utils/utils";
 import { resetActions } from "../actions/reset-actions";
 import { Action } from "../actions/data/types-data";
+import { helpData } from "../actions/data/pure-data/help-data";
 
 export function search(
 	event: React.KeyboardEvent<HTMLInputElement>,
@@ -34,6 +35,11 @@ export function search(
 
 	if (query.startsWith(">")) {
 		setActions(handleInteractive(event.currentTarget.value));
+		return;
+	}
+
+	if (query.startsWith("/help")) {
+		setActions(helpData);
 		return;
 	}
 

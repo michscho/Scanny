@@ -48,6 +48,7 @@
 			"matches": ["<all_urls>"]
 		}
 	],
+	"options_page": "options.html",
 	"permissions": [
 		"tabs",
 		"activeTab",
@@ -55,7 +56,8 @@
 		"browsingData",
 		"history",
 		"scripting",
-		"search"
+		"search",
+		"storage"
 	],
 	"host_permissions": [
 		"https://www.googleapis.com/*",
