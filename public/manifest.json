@@ -2,7 +2,7 @@
 	"name": "Scanny - your command palette for each website",
 	"description": "Supercharge each website with a command palette, search for elements on the page, use tabs and more.",
 	"offline_enabled": true,
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"manifest_version": 3,
 	"action": {
 		"icons": {
