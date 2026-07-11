@@ -35,7 +35,7 @@ export function clickElement(action: Action) {
 	clickHTMLElement(el);
 }
 
-function clickHTMLElement(el: HTMLElement) {
+export function clickHTMLElement(el: HTMLElement) {
 	// Scroll element into view first
 	el.scrollIntoView({ block: "center", behavior: "smooth" });
 

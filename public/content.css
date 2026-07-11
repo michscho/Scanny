@@ -264,3 +264,35 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+
+/* Modeless hint mode (press `f` on any page) — TokyoNight Storm chips */
+
+.scanny-hint {
+	position: absolute;
+	z-index: 2147483647;
+	padding: 2px 5px;
+	border-radius: 4px;
+	background: #7aa2f7;
+	border: 1px solid #1f2335;
+	box-shadow: 0 2px 6px rgba(15, 17, 28, 0.55);
+	font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", ui-monospace,
+		Menlo, monospace;
+	font-size: 12px;
+	font-weight: 700;
+	line-height: 1;
+	color: #1f2335;
+	text-transform: uppercase;
+	pointer-events: none;
+	white-space: nowrap;
+	animation: scanny-overlay-in 0.1s ease-out;
+}
+
+/* `F` (new tab) uses the bright-cyan chip, like the active tmux window */
+.scanny-hint-newtab {
+	background: #89ddff;
+}
+
+/* already-typed characters fade out */
+.scanny-hint .scanny-hint-typed {
+	opacity: 0.4;
+}

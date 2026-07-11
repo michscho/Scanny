@@ -20,7 +20,7 @@ function normalize(value: string) {
 	return value.toLowerCase().replace(/\s+/g, " ").trim();
 }
 
-function isVisibleAndEnabled(el: HTMLElement): boolean {
+export function isVisibleAndEnabled(el: HTMLElement): boolean {
 	const style = window.getComputedStyle(el);
 	if (
 		style.display === "none" ||

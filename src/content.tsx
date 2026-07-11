@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { closeExtension, openExtension } from "./extension/extension";
+import { initHintMode } from "./interactive/hint-mode";
 
 $(function () {
 	chrome.runtime.onMessage.addListener((message) => {
@@ -10,4 +11,6 @@ $(function () {
 			closeExtension();
 		}
 	});
+
+	initHintMode();
 });
