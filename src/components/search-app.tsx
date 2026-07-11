@@ -576,7 +576,12 @@ export function SearchApp(
 									</div>
 								)}
 							</div>
-							<Footer result={actions.length} onOpenSettings={openSettings} />
+							<Footer
+									result={actions.length}
+									query={searchQuery}
+									selected={actions[activeIndex]}
+									onOpenSettings={openSettings}
+								/>
 						</>
 					)}
 				</div>
