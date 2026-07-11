@@ -48,6 +48,41 @@ function escapeRegex(s: string) {
 	return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+/** Commands selectable from the slash menu (info-only help rows are excluded). */
+const SLASH_COMMAND_ACTIONS = new Set([
+	"search-page",
+	"search-history",
+	"search-bookmarks",
+	"search-tabs",
+	"ask-ai",
+	"search-remove",
+	"show-help",
+	"open-scanny-settings",
+]);
+
+/**
+ * Build the slash-command menu for a "/…" query. With no term it lists every
+ * command; otherwise it ranks them by how well the title or shortcut matches.
+ */
+function filterCommandMenu(term: string): Action[] {
+	const commands = helpData.filter((a) => SLASH_COMMAND_ACTIONS.has(a.action));
+	if (!term) {
+		return commands;
+	}
+	const matched = commands
+		.map((action) => {
+			const keyScore = Math.max(
+				0,
+				...(action.keys ?? []).map((k) => scoreMatch(k, "/" + term))
+			);
+			return { action, score: Math.max(scoreMatch(action.title, term), keyScore) };
+		})
+		.filter(({ score }) => score > 0)
+		.sort((a, b) => b.score - a.score)
+		.map(({ action }) => action);
+	return matched.length > 0 ? matched : commands;
+}
+
 function buildQueryActions(value: string): Action[] {
 	const rawQuery = value.trim();
 	if (!rawQuery) {
@@ -116,6 +151,13 @@ export function search(
 
 	if (query.startsWith("/ai")) {
 		handleAskAI(value, setActions);
+		setActiveIndex?.(0);
+		return;
+	}
+
+	// Slash-command discovery: any other "/…" shows the filterable command menu
+	if (query.startsWith("/")) {
+		setActions(filterCommandMenu(query.slice(1).trim()));
 		setActiveIndex?.(0);
 		return;
 	}
