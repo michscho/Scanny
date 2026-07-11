@@ -1,5 +1,6 @@
 import { clickElement } from "../interactive/click-element";
 import { addhttp } from "../extension/utils";
+import { toggleAutoScroll } from "../interactive/auto-scroll";
 import { Action } from "./data/types-data";
 
 export function handleActionItem(
@@ -52,30 +53,6 @@ export function handleActionItem(
 		window.open(selectedAction.url, "_self");
 		return;
 	}
-	
-	
-	function smoothScroll() {
-		const duration = 20000;
-		const easeInOutQuad = (t: number, b: number, c: number, d: number) => {
-			t /= d / 2;
-			if (t < 1) return (c / 2) * t * t + b;
-			t--;
-			return (-c / 2) * (t * (t - 2) - 1) + b;
-		};
-		const start = window.pageYOffset;
-		const end = document.body.scrollHeight - window.innerHeight;
-		let currentTime = 0;
-		const animate = () => {
-			currentTime += 2;
-			window.scrollTo(0, easeInOutQuad(currentTime, start, end, duration));
-			if (currentTime < duration) {
-				setTimeout(animate, 2);
-			}
-		};
-		animate();
-	}
-
-
 	if (query.startsWith(">")) {
 		clickElement(selectedAction);
 		return;
@@ -120,8 +97,8 @@ export function handleActionItem(
 		case "scroll-top":
 			window.scrollTo(0, 0);
 			break;
-		case "scroll-bottom-slowly":
-			smoothScroll();
+		case "auto-scroll":
+			toggleAutoScroll();
 			break;
 		case "navigation":
 			if (event.ctrlKey || event.metaKey) {

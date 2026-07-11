@@ -18,10 +18,10 @@ export const scrollData: Action[] = [
 		keys: ["⌘", "↑"],
 	},
 	{
-		title: "Scroll slowly to bottom",
-		description: "Scroll slowly to the bottom of the page",
+		title: "Auto-scroll page",
+		description: "Slowly scroll down on its own — press any key or click to stop",
 		type: "action",
-		action: "scroll-bottom-slowly",
-		emojiChar: "🐌👇",
+		action: "auto-scroll",
+		emojiChar: "🐌",
 	},
 ];
