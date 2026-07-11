@@ -26,39 +26,50 @@ interface OnboardingScreen {
 
 const onboardingScreens: OnboardingScreen[] = [
 	{
-		title: "Willkommen bei Scanny",
-		body: "Scanny bringt eine Command Bar auf jede Website. Oeffne sie jederzeit mit Cmd/Ctrl + Shift + K und starte direkt auf der aktuellen Seite.",
+		title: "Welcome to Scanny",
+		body: "Scanny brings a command bar to every website. Open it anytime with Cmd/Ctrl + Shift + K and start right on the current page.",
 		tips: [
-			"Tippe einen Begriff fuer Befehle und Aktionen",
-			"Druecke Enter fuer Ausfuehren",
-			"Esc schliesst die Palette sofort",
+			"Type a term to find commands and actions",
+			"Press Enter to run the selected item",
+			"Esc closes the palette instantly",
 		],
-		ctaLabel: "Seitenmodus testen",
+		ctaLabel: "Try page mode",
 		ctaAction: "search-page",
 	},
 	{
-		title: "Schnell finden und handeln",
-		body: "Suche nach Befehlen, Bookmarks, History oder Tabs. Mit Slash-Befehlen kommst du direkt in den passenden Modus.",
+		title: "Find and act fast",
+		body: "Search commands, bookmarks, history or tabs. Slash commands take you straight into the matching mode.",
 		tips: [
-			"/tabs fuer offene Tabs",
-			"/history fuer Verlauf und /bookmarks fuer Lesezeichen",
-			"/help zeigt alle Kommandos",
+			"/tabs for open tabs",
+			"/history for your history and /bookmarks for bookmarks",
+			"/help shows every command",
 		],
-		ctaLabel: "Tab-Suche testen",
+		ctaLabel: "Try tab search",
 		ctaAction: "search-tabs",
 	},
 	{
-		title: "Komplett per Tastatur",
-		body: "Navigiere komplett mit der Tastatur und nutze Ask AI, wenn du einen OpenAI-Key hinterlegt hast.",
+		title: "Fully keyboard-driven",
+		body: "Navigate entirely with the keyboard and use Ask AI once you've added an OpenAI key.",
 		tips: [
-			"Pfeile oder Ctrl+N/Ctrl+P fuer Navigation",
-			"Enter bestaetigt, Esc schliesst",
-			"Settings unten rechts fuer Feinjustierung",
+			"Arrows or Ctrl+N/Ctrl+P to navigate",
+			"Enter confirms, Esc closes",
+			"Settings in the bottom-right for fine-tuning",
 		],
-		ctaLabel: "Ask AI testen",
+		ctaLabel: "Try Ask AI",
 		ctaAction: "ask-ai",
 	},
 ];
+
+/** Maps a special action name to the input value that activates its mode. */
+const SPECIAL_MODE_PREFIX: Record<string, string> = {
+	"search-page": "> ",
+	"show-help": "/help",
+	"search-tabs": "/tabs ",
+	"ask-ai": "/ai ",
+	"search-history": "/history ",
+	"search-bookmarks": "/bookmarks ",
+	"search-remove": "/remove ",
+};
 
 export function SearchApp(
 	searchProps: AppProps & {
@@ -77,11 +88,14 @@ export function SearchApp(
 		useState<CommandBarPosition>("top");
 	const [showOnboarding, setShowOnboarding] = useState(false);
 	const [onboardingStep, setOnboardingStep] = useState(0);
+	const [settingsLoaded, setSettingsLoaded] = useState(false);
 	const [viewportWidth, setViewportWidth] = useState(
 		typeof window === "undefined" ? 760 : window.innerWidth
 	);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const reactLegacyRef = useRef<List<any>>(null);
+	// Ensures the default mode is applied only once per open session.
+	const didInitRef = useRef(false);
 
 	function applySettings(result: {
 		overlayOpacity?: number;
@@ -130,6 +144,15 @@ export function SearchApp(
 		}
 	}, [showOnboarding]);
 
+	// Start in page-element search mode by default once settings have loaded.
+	useEffect(() => {
+		if (!settingsLoaded || showOnboarding || didInitRef.current) {
+			return;
+		}
+		didInitRef.current = true;
+		runQuery("> ");
+	}, [settingsLoaded, showOnboarding]);
+
 	useEffect(() => {
 		chrome.storage.sync.get(
 			{
@@ -140,7 +163,10 @@ export function SearchApp(
 				commandBarPosition: "top" as CommandBarPosition,
 				onboardingCompleted: true,
 			},
-			(result) => applySettings(result)
+			(result) => {
+				applySettings(result);
+				setSettingsLoaded(true);
+			}
 		);
 
 		const onSettingsChanged: Parameters<
@@ -200,6 +226,17 @@ export function SearchApp(
 		}
 	}, [actions, activeIndex]);
 
+	/** Set the input to `value`, focus it, and run the search for that value. */
+	function runQuery(value: string) {
+		if (!inputRef.current) {
+			return;
+		}
+		inputRef.current.value = value;
+		inputRef.current.focus();
+		setSearchQuery(value);
+		search(value, setActions, setActiveIndex);
+	}
+
 	function completeOnboarding(startAction?: OnboardingAction) {
 		chrome.storage.sync.set({ onboardingCompleted: true }, () => {
 			setShowOnboarding(false);
@@ -207,29 +244,10 @@ export function SearchApp(
 			if (!startAction) {
 				return;
 			}
-			window.setTimeout(() => {
-				if (!inputRef.current) {
-					return;
-				}
-				if (startAction === "search-page") {
-					inputRef.current.value = "> ";
-					setSearchQuery("> ");
-					search("> ", setActions, setActiveIndex);
-				} else if (startAction === "search-tabs") {
-					inputRef.current.value = "/tabs ";
-					setSearchQuery("/tabs ");
-					search("/tabs ", setActions, setActiveIndex);
-				} else if (startAction === "ask-ai") {
-					inputRef.current.value = "/ai ";
-					setSearchQuery("/ai ");
-					search("/ai ", setActions, setActiveIndex);
-				} else {
-					inputRef.current.value = "/help";
-					setSearchQuery("/help");
-					search("/help", setActions, setActiveIndex);
-				}
-				inputRef.current.focus();
-			}, 0);
+			// A chosen CTA mode takes precedence over the default page mode.
+			didInitRef.current = true;
+			const prefix = SPECIAL_MODE_PREFIX[startAction] ?? "/help";
+			window.setTimeout(() => runQuery(prefix), 0);
 		});
 	}
 
@@ -287,59 +305,12 @@ export function SearchApp(
 	}
 
 	function activateSpecialMode(actionName: string) {
-		if (!inputRef.current) {
+		const prefix = SPECIAL_MODE_PREFIX[actionName];
+		if (!prefix || !inputRef.current) {
 			return false;
 		}
-		if (actionName === "search-page") {
-			inputRef.current.value = "> ";
-			inputRef.current.focus();
-			setSearchQuery("> ");
-			search("> ", setActions, setActiveIndex);
-			return true;
-		}
-		if (actionName === "show-help") {
-			inputRef.current.value = "/help";
-			inputRef.current.focus();
-			setSearchQuery("/help");
-			search("/help", setActions, setActiveIndex);
-			return true;
-		}
-		if (actionName === "search-tabs") {
-			inputRef.current.value = "/tabs ";
-			inputRef.current.focus();
-			setSearchQuery("/tabs ");
-			search("/tabs ", setActions, setActiveIndex);
-			return true;
-		}
-		if (actionName === "ask-ai") {
-			inputRef.current.value = "/ai ";
-			inputRef.current.focus();
-			setSearchQuery("/ai ");
-			search("/ai ", setActions, setActiveIndex);
-			return true;
-		}
-		if (actionName === "search-history") {
-			inputRef.current.value = "/history ";
-			inputRef.current.focus();
-			setSearchQuery("/history ");
-			search("/history ", setActions, setActiveIndex);
-			return true;
-		}
-		if (actionName === "search-bookmarks") {
-			inputRef.current.value = "/bookmarks ";
-			inputRef.current.focus();
-			setSearchQuery("/bookmarks ");
-			search("/bookmarks ", setActions, setActiveIndex);
-			return true;
-		}
-		if (actionName === "search-remove") {
-			inputRef.current.value = "/remove ";
-			inputRef.current.focus();
-			setSearchQuery("/remove ");
-			search("/remove ", setActions, setActiveIndex);
-			return true;
-		}
-		return false;
+		runQuery(prefix);
+		return true;
 	}
 
 	function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
